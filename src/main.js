@@ -1,8 +1,10 @@
 'use strict';
 
-const CARDS_COUNT = 5;
-const TOP_RATED_CARDS_COUNT = 2;
-const MOST_COMMENTED_CARDS_COUNT = 2;
+const CardsCount = {
+  MAIN: 5,
+  TOP_RATED: 2,
+  MOST_COMMENTED: 2
+};
 
 const createHeaderProfileTemplate = () => {
   return (
@@ -77,7 +79,7 @@ const createLoadMoreButtonTemplate = () => {
   );
 };
 
-const createTopRatedFilmsElement = () => {
+const createTopRatedFilmsTemplate = () => {
   return (
     `<section class="films-list--extra">
        <h2 class="films-list__title">Top rated</h2>
@@ -87,7 +89,7 @@ const createTopRatedFilmsElement = () => {
   );
 };
 
-const createMostCommentedFilmsElement = () => {
+const createMostCommentedFilmsTemplate = () => {
   return (
     `<section class="films-list--extra">
        <h2 class="films-list__title">Most commented</h2>
@@ -118,25 +120,25 @@ render(siteMainElement, createFilmsTemplate());
 
 const filmsElement = siteMainElement.querySelector(`.films`);
 const filmsListElement = filmsElement.querySelector(`.films-list`);
-const filmsListContainer = filmsListElement.querySelector(`.films-list__container`);
+const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-for (let i = 0; i < CARDS_COUNT; i++) {
-  render(filmsListContainer, createFilmCardTemplate());
+for (let i = 0; i < CardsCount.MAIN; i++) {
+  render(filmsListContainerElement, createFilmCardTemplate());
 }
 
 render(filmsListElement, createLoadMoreButtonTemplate());
-render(filmsElement, createTopRatedFilmsElement());
-render(filmsElement, createMostCommentedFilmsElement());
+render(filmsElement, createTopRatedFilmsTemplate());
+render(filmsElement, createMostCommentedFilmsTemplate());
 
-const topRatedList = filmsElement.querySelector(`.films-list--extra .films-list__container`);
-const mostCommentedList = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
+const topRatedListElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
+const mostCommentedListElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-for (let i = 0; i < TOP_RATED_CARDS_COUNT; i++) {
-  render(topRatedList, createFilmCardTemplate());
+for (let i = 0; i < CardsCount.TOP_RATED; i++) {
+  render(topRatedListElement, createFilmCardTemplate());
 }
 
-for (let i = 0; i < MOST_COMMENTED_CARDS_COUNT; i++) {
-  render(mostCommentedList, createFilmCardTemplate());
+for (let i = 0; i < CardsCount.MOST_COMMENTED; i++) {
+  render(mostCommentedListElement, createFilmCardTemplate());
 }
 
 render(footerStaticticsElement, createFooterStatisticsTemplate());
