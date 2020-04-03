@@ -1,4 +1,4 @@
-'use strict';
+
 
 const CardsCount = {
   MAIN: 5,
