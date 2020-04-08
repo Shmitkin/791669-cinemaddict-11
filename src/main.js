@@ -15,7 +15,6 @@ import {createNewCommentTemplate} from "./components/new-comment.js";
 
 import {generateFilms} from "./mock/film.js";
 
-
 const CardCount = {
   SUMMARY: 17,
   DEFAULT_SHOW: 5,
@@ -25,6 +24,18 @@ const CardCount = {
 };
 
 const films = generateFilms(CardCount.SUMMARY);
+const filmsInWatchlist = films.filter((film) => film.isAddedToWatchlist);
+const filmsInHistory = films.filter((film) => film.isMarkedAsWatched);
+const filmsInFavorite = films.filter((film) => film.isFavorite);
+
+const FIRST_FILM = films[0];
+
+const watchStats = {
+  watchlist: filmsInWatchlist.length,
+  history: filmsInHistory.length,
+  favorites: filmsInFavorite.length
+};
+
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -35,14 +46,14 @@ const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 const footerStaticticsElement = siteFooterElement.querySelector(`.footer__statistics`);
 
-render(siteHeaderElement, createHeaderProfileTemplate());
-render(siteMainElement, createMainNavigationTemplate());
+render(siteHeaderElement, createHeaderProfileTemplate(watchStats.history));
+render(siteMainElement, createMainNavigationTemplate({watchStats}));
 render(siteMainElement, createSortTemplate());
 render(siteMainElement, createFilmsTemplate());
 
 const filmsElement = siteMainElement.querySelector(`.films`);
 
-render(filmsElement, createFilmsListTemplate(``, `All movies. Upcoming`, `visually-hidden`));
+render(filmsElement, createFilmsListTemplate({title: `All movies. Upcoming`, isHidden: true}));
 
 const filmsListElement = filmsElement.querySelector(`.films-list`);
 const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
@@ -72,8 +83,8 @@ showMoreButton.addEventListener(`click`, () => {
   }
 });
 
-render(filmsElement, createFilmsListTemplate(`--extra`, `Top rated`));
-render(filmsElement, createFilmsListTemplate(`--extra`, `Most commented`));
+render(filmsElement, createFilmsListTemplate({title: `Top rated`, isExtra: true}));
+render(filmsElement, createFilmsListTemplate({title: `Most commented`, isExtra: true}));
 
 const topRatedListElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
 const mostCommentedListElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
@@ -86,7 +97,7 @@ for (let i = 0; i < CardCount.MOST_COMMENTED; i++) {
   render(mostCommentedListElement, createFilmCardTemplate(films[1]));
 }
 
-render(footerStaticticsElement, createStatTemplate());
+render(footerStaticticsElement, createStatTemplate(films.length));
 
 const renderFilmDetails = (film) => {
 
@@ -106,5 +117,5 @@ const renderFilmDetails = (film) => {
   }
 };
 
-renderFilmDetails(films[0]);
+renderFilmDetails(FIRST_FILM);
 

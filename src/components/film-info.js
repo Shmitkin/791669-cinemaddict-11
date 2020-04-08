@@ -1,13 +1,4 @@
-const createGenreMarkup = (genre) => {
-  return (
-    `<span class="film-details__genre">${genre}</span>`
-  );
-};
-
-const createGenresTemplate = (genres) => {
-  const genresMarkup = genres.map((genre, i) => createGenreMarkup(genre, i === 0)).join(`\n`);
-  return genresMarkup;
-};
+import {createGenresTemplate} from "./genre.js";
 
 export const createFilmInfoTemplate = (film) => {
   const {
