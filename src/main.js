@@ -30,6 +30,30 @@ const filmsInFavorite = films.filter((film) => film.isFavorite);
 
 const FIRST_FILM = films[0];
 
+const topRatedFilms = films.slice()
+.sort((a, b) => {
+  if (a.rating > b.rating) {
+    return -1;
+  }
+  if (a.rating < b.rating) {
+    return 1;
+  }
+  return 0;
+})
+.slice(0, CardCount.TOP_RATED);
+
+const nostCommentedFilms = films.slice()
+.sort((a, b) => {
+  if (a.comments.length > b.comments.length) {
+    return -1;
+  }
+  if (a.comments.length < b.comments.length) {
+    return 1;
+  }
+  return 0;
+})
+.slice(0, CardCount.MOST_COMMENTED);
+
 const watchStats = {
   watchlist: filmsInWatchlist.length,
   history: filmsInHistory.length,
@@ -90,11 +114,11 @@ const topRatedListElement = filmsElement.querySelector(`.films-list--extra .film
 const mostCommentedListElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
 
 for (let i = 0; i < CardCount.TOP_RATED; i++) {
-  render(topRatedListElement, createFilmCardTemplate(films[1]));
+  render(topRatedListElement, createFilmCardTemplate(topRatedFilms[i]));
 }
 
 for (let i = 0; i < CardCount.MOST_COMMENTED; i++) {
-  render(mostCommentedListElement, createFilmCardTemplate(films[1]));
+  render(mostCommentedListElement, createFilmCardTemplate(nostCommentedFilms[i]));
 }
 
 render(footerStaticticsElement, createStatTemplate(films.length));
