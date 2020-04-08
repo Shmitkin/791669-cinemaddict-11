@@ -1,4 +1,5 @@
-export const createFilmDetailsTemplate = (commentsCount = 4) => {
+export const createFilmDetailsTemplate = (film) => {
+  const {comments} = film;
   return (
     `<section class="film-details visually-hidden">
        <form class="film-details__inner" action="" method="get">
@@ -9,7 +10,7 @@ export const createFilmDetailsTemplate = (commentsCount = 4) => {
          </div>
          <div class="form-details__bottom-container">
            <section class="film-details__comments-wrap">
-             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
+             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
              <ul class="film-details__comments-list">
              </ul>
            </section>
