@@ -3,9 +3,15 @@ import {
   getRandomIntegerNumber
 } from "./utils.js";
 
+import {MONTH_NAMES} from "../consts.js";
+
 const Film = {
   RELEASE_YEAR_MIN: 1945,
   RELEASE_YEAR_MAX: 2020,
+  RELEASE_DAY_MIN: 1,
+  RELEASE_DAY_MAX: 30,
+  RELEASE_MONTH_MIN: 1,
+  RELEASE_MONTH_MAX: 12,
   COMMENTS_MIN: 0,
   COMMENTS_MAX: 5,
   DESCRIPTION_SENTENCES_MIN: 1,
@@ -26,9 +32,6 @@ const MINUTES_IN_HOUR = 60;
 
 const getRandomWriters = (writers) =>
   getRandomArray(writers, Film.WRITERS_MIN, Film.WRITERS_MAX).join(`, `);
-
-const getRandomReleaseYear = () =>
-  getRandomIntegerNumber(Film.RELEASE_YEAR_MIN, Film.RELEASE_YEAR_MAX);
 
 const getCommentsCount = () =>
   getRandomIntegerNumber(Film.COMMENTS_MIN, Film.COMMENTS_MAX);
@@ -55,11 +58,21 @@ const getRandomRating = () => {
   return rating;
 };
 
+const getRandomReleaseDate = () => {
+  const ReleaseDate = {
+    day: getRandomIntegerNumber(Film.RELEASE_DAY_MIN, Film.RELEASE_DAY_MAX),
+    month: MONTH_NAMES[getRandomIntegerNumber(Film.RELEASE_MONTH_MIN, Film.RELEASE_MONTH_MAX) - 1],
+    year: getRandomIntegerNumber(Film.RELEASE_YEAR_MIN, Film.RELEASE_YEAR_MAX)
+  };
+  return ReleaseDate;
+};
+
+
 export {
   getRandomWriters,
   getRandomCast,
   getRandomRating,
-  getRandomReleaseYear,
+  getRandomReleaseDate,
   getRandomDuration,
   getRandomGenres,
   getRandomDescription,

@@ -19,7 +19,7 @@ import {
   getRandomWriters,
   getRandomCast,
   getRandomRating,
-  getRandomReleaseYear,
+  getRandomReleaseDate,
   getRandomDuration,
   getRandomGenres,
   getRandomDescription,
@@ -31,6 +31,7 @@ import {generateComments} from "./comment.js";
 const generateFilm = () => {
 
   const title = getRandomArrayItem(FilmTitles);
+  const releaseDate = getRandomReleaseDate();
 
   return {
     title: {
@@ -40,9 +41,9 @@ const generateFilm = () => {
     director: getRandomArrayItem(Directors),
     writers: getRandomWriters(Writers),
     cast: getRandomCast(Actors),
-    release: `1 January 2020`,
+    release: `${releaseDate.day} ${releaseDate.month} ${releaseDate.year}`,
     rating: getRandomRating(),
-    year: getRandomReleaseYear(),
+    year: `${releaseDate.year}`,
     duration: getRandomDuration(),
     country: getRandomArrayItem(Countries),
     ageLimit: getRandomArrayItem(AgeLimits),

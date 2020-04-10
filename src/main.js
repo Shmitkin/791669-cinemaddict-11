@@ -30,6 +30,8 @@ const filmsInFavorite = films.filter((film) => film.isFavorite);
 
 const FIRST_FILM = films[0];
 
+let showingFilmCount = CardCount.DEFAULT_SHOW;
+
 const topRatedFilms = films.slice()
 .sort((a, b) => {
   if (a.rating > b.rating) {
@@ -82,8 +84,6 @@ render(filmsElement, createFilmsListTemplate({title: `All movies. Upcoming`, isH
 const filmsListElement = filmsElement.querySelector(`.films-list`);
 const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-let showingFilmCount = CardCount.DEFAULT_SHOW;
-
 films
   .slice(0, showingFilmCount)
   .forEach((film)=> {
@@ -91,7 +91,6 @@ films
   });
 
 render(filmsListElement, createShowMoreButtonTemplate());
-
 const showMoreButton = filmsListElement.querySelector(`.films-list__show-more`);
 
 showMoreButton.addEventListener(`click`, () => {
@@ -113,13 +112,8 @@ render(filmsElement, createFilmsListTemplate({title: `Most commented`, isExtra: 
 const topRatedListElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
 const mostCommentedListElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-for (let i = 0; i < CardCount.TOP_RATED; i++) {
-  render(topRatedListElement, createFilmCardTemplate(topRatedFilms[i]));
-}
-
-for (let i = 0; i < CardCount.MOST_COMMENTED; i++) {
-  render(mostCommentedListElement, createFilmCardTemplate(nostCommentedFilms[i]));
-}
+topRatedFilms.forEach((film) => render(topRatedListElement, createFilmCardTemplate(film)));
+nostCommentedFilms.forEach((film) => render(mostCommentedListElement, createFilmCardTemplate(film)));
 
 render(footerStaticticsElement, createStatTemplate(films.length));
 
@@ -136,9 +130,7 @@ const renderFilmDetails = (film) => {
   render(filmDetailsTopContainerElement, createFilmControlsTemplate(film));
   render(filmDetailsCommentsElement, createNewCommentTemplate());
 
-  for (let i = 0; i < film.comments.length; i++) {
-    render(filmDetailsCommentsListElement, createCommentTemplate(film.comments[i]));
-  }
+  film.comments.forEach((comment) => render(filmDetailsCommentsListElement, createCommentTemplate(comment)));
 };
 
 renderFilmDetails(FIRST_FILM);
