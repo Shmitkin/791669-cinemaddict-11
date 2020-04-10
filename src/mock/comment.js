@@ -8,12 +8,14 @@ import {
   getRandomArrayItem
 } from "./utils.js";
 
+import {getRandomCommentDate} from "./comment-utils.js";
+
 const generateComment = () => {
   return {
     emoji: `./images/emoji/${getRandomArrayItem(Emoji)}.png`,
     text: getRandomArrayItem(DummyText),
     author: getRandomArrayItem(Authors),
-    day: `yesterday`
+    date: getRandomCommentDate()
   };
 };
 
