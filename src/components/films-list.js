@@ -1,4 +1,4 @@
-import {addProperty} from "./utils.js";
+import {addProperty} from "../utils.js";
 
 const HIDDEN_CLASS = `visually-hidden`;
 const EXTRA_CLASS = `--extra`;

@@ -1,3 +1,10 @@
+import {
+  MONTH_NAMES,
+  MINUTES_IN_HOUR,
+  HOURS_IN_DAY,
+  DAYS_IN_MONTH
+} from "../consts.js";
+
 const DUMMY_TEXTS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -40,10 +47,22 @@ const getRandomArray = (array, minLength, maxLength) =>
   getShuffledArray(array)
   .slice(0, getRandomIntegerNumber(minLength, maxLength));
 
+const getRandomDate = (minYear, maxYear) => {
+  const date = new Date(
+      getRandomIntegerNumber(minYear, maxYear),
+      getRandomIntegerNumber(0, MONTH_NAMES.length),
+      getRandomIntegerNumber(0, DAYS_IN_MONTH),
+      getRandomIntegerNumber(0, HOURS_IN_DAY),
+      getRandomIntegerNumber(0, MINUTES_IN_HOUR)
+  );
+  return date;
+};
+
 export {
   getRandomArrayItem,
   getRandomArray,
   getRandomIntegerNumber,
   getRandomBoolean,
+  getRandomDate,
   DUMMY_TEXTS
 };

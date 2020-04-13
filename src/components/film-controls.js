@@ -1,4 +1,4 @@
-import {addProperty} from "./utils.js";
+import {addProperty} from "../utils.js";
 
 const ACTIVE_INPUT = `checked`;
 

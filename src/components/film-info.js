@@ -1,14 +1,22 @@
 import {createGenresTemplate} from "./genre.js";
+import {formatDuration} from "../utils";
+import {MONTH_NAMES} from "../consts.js";
 
 const GenreTitle = {
   SOLO: `Genre`,
   MANY: `Genres`
 };
 
-const checkGenresTitleGrammar = (genres) =>
-  genres.length > 1
-    ? GenreTitle.MANY
-    : GenreTitle.SOLO;
+const checkGenresTitleGrammar = (genres) => {
+  if (genres.length > 1) {
+    return GenreTitle.MANY;
+  } else {
+    return GenreTitle.SOLO;
+  }
+};
+
+const formatReleaseDate = (date) =>
+  `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
 
 const createFilmInfoTemplate = (film) => {
   const {
@@ -18,7 +26,7 @@ const createFilmInfoTemplate = (film) => {
     rating,
     director,
     writers,
-    cast,
+    actors,
     release,
     duration,
     country,
@@ -30,7 +38,7 @@ const createFilmInfoTemplate = (film) => {
     `<div class="film-details__info-wrap">
        <div class="film-details__poster">
          <img class="film-details__poster-img" src="${poster}" alt="">
-         <p class="film-details__age">${ageLimit}</p>
+         <p class="film-details__age">${ageLimit}+</p>
        </div>
        <div class="film-details__info">
          <div class="film-details__info-head">
@@ -48,20 +56,20 @@ const createFilmInfoTemplate = (film) => {
              <td class="film-details__cell">${director}</td>
            </tr>
            <tr class="film-details__row">
-             <td class="film-details__term">WRITERS</td>
-             <td class="film-details__cell">${writers}</td>
+             <td class="film-details__term">Writers</td>
+             <td class="film-details__cell">${writers.join(`, `)}</td>
            </tr>
            <tr class="film-details__row">
-             <td class="film-details__term">ACTORS</td>
-             <td class="film-details__cell">${cast}</td>
+             <td class="film-details__term">Actors</td>
+             <td class="film-details__cell">${actors.join(`, `)}</td>
            </tr>
            <tr class="film-details__row">
              <td class="film-details__term">Release Date</td>
-             <td class="film-details__cell">${release}</td>
+             <td class="film-details__cell">${formatReleaseDate(release)}</td>
            </tr>
            <tr class="film-details__row">
              <td class="film-details__term">Runtime</td>
-             <td class="film-details__cell">${duration}</td>
+             <td class="film-details__cell">${formatDuration(duration)}</td>
            </tr>
            <tr class="film-details__row">
              <td class="film-details__term">Country</td>

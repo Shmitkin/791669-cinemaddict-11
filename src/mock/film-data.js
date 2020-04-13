@@ -41,8 +41,6 @@ const POSTERS = [
 
 const GENRES = [`Drama`, `Triller`, `Horror`, `Comedy`, `Musical`, `Clip`, `Crime`, `War`];
 
-const AGE_LIMITS = [`6+`, `10+`, `16+`, `18+`, `0+`];
-
 const COUNTRIES = [`UK`, `US`, `RU`, `ES`, `IT`, `FR`];
 
 const DIRECTORS = [`Christopher Nolan`, `Alfonso Cuarón`, `Andrea Arnold`, `Spike Jonze`, `Chan-wook Park`, `Martin Scorsese`, `Pedro Almodóvar`];
@@ -51,4 +49,4 @@ const WRITERS = [`William Monahan`, `Christopher Nolan`, `David Ayer`, `Steven Z
 
 const ACTORS = [`Yalitza Aparicio`, `Luke Combs`, `Zoey Deutch`, `DaBaby`, `Beanie Feldstein`, `Paul George`, `Jharrel Jerome`, `Joey King`];
 
-export {FILM_TITLES, POSTERS, GENRES, AGE_LIMITS, COUNTRIES, DIRECTORS, WRITERS, ACTORS};
+export {FILM_TITLES, POSTERS, GENRES, COUNTRIES, DIRECTORS, WRITERS, ACTORS};

@@ -1,4 +1,7 @@
-import {addProperty} from "./utils.js";
+import {
+  addProperty,
+  formatDuration
+} from "../utils.js";
 
 const GENRE_MAIN = 0;
 const MAX_DESCRIPTION_LENGTH = 140;
@@ -15,12 +18,15 @@ const truncateDescription = (description, maxLength = MAX_DESCRIPTION_LENGTH) =>
   }
 };
 
+const formatYearDate = (date) =>
+  `${date.getFullYear()}`;
+
 const createFilmCardTemplate = (film) => {
 
   const {
     title,
     rating,
-    year,
+    release,
     duration,
     genres,
     poster,
@@ -36,8 +42,8 @@ const createFilmCardTemplate = (film) => {
        <h3 class="film-card__title">${title.main}</h3>
        <p class="film-card__rating">${rating}</p>
        <p class="film-card__info">
-         <span class="film-card__year">${year}</span>
-         <span class="film-card__duration">${duration}</span>
+         <span class="film-card__year">${formatYearDate(release)}</span>
+         <span class="film-card__duration">${formatDuration(duration)}</span>
          <span class="film-card__genre">${genres[GENRE_MAIN]}</span>
        </p>
        <img src="${poster}" alt="" class="film-card__poster">

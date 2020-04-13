@@ -5,17 +5,21 @@ import {
 
 import {
   DUMMY_TEXTS,
-  getRandomArrayItem
+  getRandomArrayItem,
+  getRandomDate
 } from "./utils.js";
 
-import {getRandomCommentDate} from "./comment-utils.js";
+const Comment = {
+  YEAR_MIN: 2014,
+  YEAR_MAX: 2020
+};
 
 const generateComment = () => {
   return {
-    emoji: `images/emoji/${getRandomArrayItem(EMOJIS)}.png`,
+    emoji: getRandomArrayItem(EMOJIS),
     text: getRandomArrayItem(DUMMY_TEXTS),
     author: getRandomArrayItem(COMMENT_AUTHORS),
-    date: getRandomCommentDate()
+    date: getRandomDate(Comment.YEAR_MIN, Comment.YEAR_MAX)
   };
 };
 

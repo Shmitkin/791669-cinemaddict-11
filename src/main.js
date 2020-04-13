@@ -24,7 +24,7 @@ const CardCount = {
 };
 
 const films = generateFilms(CardCount.SUMMARY);
-
+console.log(films[0]);
 const firstFilm = films[0];
 
 let watchStats = {
