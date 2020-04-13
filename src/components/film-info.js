@@ -1,6 +1,16 @@
 import {createGenresTemplate} from "./genre.js";
 
-export const createFilmInfoTemplate = (film) => {
+const GenreTitle = {
+  SOLO: `Genre`,
+  MANY: `Genres`
+};
+
+const checkGenresTitleGrammar = (genres) =>
+  genres.length > 1
+    ? GenreTitle.MANY
+    : GenreTitle.SOLO;
+
+const createFilmInfoTemplate = (film) => {
   const {
     poster,
     ageLimit,
@@ -38,11 +48,11 @@ export const createFilmInfoTemplate = (film) => {
              <td class="film-details__cell">${director}</td>
            </tr>
            <tr class="film-details__row">
-             <td class="film-details__term">Writers</td>
+             <td class="film-details__term">WRITERS</td>
              <td class="film-details__cell">${writers}</td>
            </tr>
            <tr class="film-details__row">
-             <td class="film-details__term">Actors</td>
+             <td class="film-details__term">ACTORS</td>
              <td class="film-details__cell">${cast}</td>
            </tr>
            <tr class="film-details__row">
@@ -58,7 +68,7 @@ export const createFilmInfoTemplate = (film) => {
              <td class="film-details__cell">${country}</td>
            </tr>
            <tr class="film-details__row">
-             <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
+             <td class="film-details__term">${checkGenresTitleGrammar(genres)}</td>
              <td class="film-details__cell">
                ${createGenresTemplate(genres)}
               </td>
@@ -69,3 +79,5 @@ export const createFilmInfoTemplate = (film) => {
      </div>`
   );
 };
+
+export {createFilmInfoTemplate};

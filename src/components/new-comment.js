@@ -1,4 +1,20 @@
-export const createNewCommentTemplate = () => {
+const COMMENT_EMOJI = [
+  `smile`,
+  `sleeping`,
+  `puke`,
+  `angry`
+];
+
+const createEmojiItemTeplate = (emoji) => {
+  return (
+    `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+   <label class="film-details__emoji-label" for="emoji-${emoji}">
+     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+  </label>`
+  );
+};
+
+const createNewCommentTemplate = () => {
   return (
     `<div class="film-details__new-comment">
        <div for="add-emoji" class="film-details__add-emoji-label"></div>
@@ -8,26 +24,10 @@ export const createNewCommentTemplate = () => {
        </label>
      
        <div class="film-details__emoji-list">
-         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-         <label class="film-details__emoji-label" for="emoji-smile">
-           <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-         </label>
-     
-         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-         <label class="film-details__emoji-label" for="emoji-sleeping">
-           <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-         </label>
-     
-         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-         <label class="film-details__emoji-label" for="emoji-puke">
-           <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-         </label>
-     
-         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-         <label class="film-details__emoji-label" for="emoji-angry">
-           <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-         </label>
+       ${COMMENT_EMOJI.map(createEmojiItemTeplate).join(``)}
        </div>
     </div>`
   );
 };
+
+export {createNewCommentTemplate};

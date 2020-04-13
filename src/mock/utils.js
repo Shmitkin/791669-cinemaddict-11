@@ -1,4 +1,4 @@
-const DummyText = [
+const DUMMY_TEXTS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`,
@@ -11,11 +11,6 @@ const DummyText = [
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`,
 ];
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-  return array[randomIndex];
-};
 
 const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
@@ -33,17 +28,22 @@ const getShuffledArray = (array) => {
   return array;
 };
 
+const getRandomBoolean = () =>
+  Math.random() > 0.5;
+
+const getRandomArrayItem = (array) => {
+  const randomIndex = getRandomIntegerNumber(0, array.length);
+  return array[randomIndex];
+};
+
 const getRandomArray = (array, minLength, maxLength) =>
   getShuffledArray(array)
   .slice(0, getRandomIntegerNumber(minLength, maxLength));
-
-const getRandomBoolean = () =>
-  Math.random() > 0.5;
 
 export {
   getRandomArrayItem,
   getRandomArray,
   getRandomIntegerNumber,
   getRandomBoolean,
-  DummyText
+  DUMMY_TEXTS
 };

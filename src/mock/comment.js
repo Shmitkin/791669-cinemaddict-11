@@ -1,10 +1,10 @@
 import {
-  Authors,
-  Emoji
+  COMMENT_AUTHORS,
+  EMOJIS
 } from "./comment-data.js";
 
 import {
-  DummyText,
+  DUMMY_TEXTS,
   getRandomArrayItem
 } from "./utils.js";
 
@@ -12,9 +12,9 @@ import {getRandomCommentDate} from "./comment-utils.js";
 
 const generateComment = () => {
   return {
-    emoji: `./images/emoji/${getRandomArrayItem(Emoji)}.png`,
-    text: getRandomArrayItem(DummyText),
-    author: getRandomArrayItem(Authors),
+    emoji: `images/emoji/${getRandomArrayItem(EMOJIS)}.png`,
+    text: getRandomArrayItem(DUMMY_TEXTS),
+    author: getRandomArrayItem(COMMENT_AUTHORS),
     date: getRandomCommentDate()
   };
 };
