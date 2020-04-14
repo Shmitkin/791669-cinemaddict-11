@@ -29,15 +29,27 @@ const firstFilm = films[0];
 
 let showingCardsCount = CardCount.DEFAULT_SHOW;
 
-const getWatchStats = () => {
-  return {
-    watchlist: films.reduce((count, film) => film.isAddedToWatchlist ? count + 1 : count, 0),
-    history: films.reduce((count, film) => film.isMarkedAsWatched ? count + 1 : count, 0),
-    favorites: films.reduce((count, film) => film.isFavorite ? count + 1 : count, 0)
+const getWatchStats = (filmsArray) => {
+  const reducer = (stats, film) => {
+    if (film.isAddedToWatchlist) {
+      stats.watchlist += 1;
+    }
+    if (film.isMarkedAsWatched) {
+      stats.history += 1;
+    }
+    if (film.isFavorite) {
+      stats.favorites += 1;
+    }
+    return stats;
   };
+  return filmsArray.reduce(reducer, {
+    watchlist: 0,
+    history: 0,
+    favorites: 0
+  });
 };
 
-const watchStats = getWatchStats();
+const watchStats = getWatchStats(films);
 
 const topRatedFilms = films.slice()
 .sort((a, b) => {

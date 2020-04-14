@@ -1,11 +1,11 @@
-const ratingTitles = [
+const RATING_TITLES = [
   {rating: 21, title: `movie buff`},
   {rating: 11, title: `fan`},
   {rating: 1, title: `novice`},
   {rating: 0, title: ``},
 ];
 
-const getRatingTitle = (value) => ratingTitles.find(({rating}) => value >= rating).title;
+const getRatingTitle = (value) => RATING_TITLES.find(({rating}) => value >= rating).title;
 
 const createHeaderProfileTemplate = (filmsInHistory) => {
   return (
