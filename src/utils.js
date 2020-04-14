@@ -8,8 +8,8 @@ const formatDuration = (duration) => {
   return `${hours}h ${minutes}m`;
 };
 
-const castTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
-};
+const castTimeFormat = (value) =>
+  String(value).padStart(2, `0`);
+
 
 export {addProperty, formatDuration, castTimeFormat};

@@ -1,15 +1,14 @@
 import {castTimeFormat} from "../utils.js";
 
 const formatCommentDate = (date) =>
-  `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}
-   ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
+  `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
 
 export const createCommentTemplate = (comment) => {
   const {emoji, text, author, date} = comment;
   return (
     `<li class="film-details__comment">
        <span class="film-details__comment-emoji">
-         <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-sleeping">
+         <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
        </span>
        <div>
          <p class="film-details__comment-text">${text}</p>

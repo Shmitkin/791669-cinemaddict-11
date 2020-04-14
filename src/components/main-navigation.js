@@ -1,4 +1,4 @@
-export const createMainNavigationTemplate = ({watchStats}) => {
+export const createMainNavigationTemplate = (watchStats) => {
   const {watchlist, history, favorites} = watchStats;
   return (
     `<nav class="main-navigation">

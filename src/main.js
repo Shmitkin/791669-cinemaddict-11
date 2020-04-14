@@ -24,28 +24,20 @@ const CardCount = {
 };
 
 const films = generateFilms(CardCount.SUMMARY);
-console.log(films[0]);
+
 const firstFilm = films[0];
 
-let watchStats = {
-  watchlist: 0,
-  history: 0,
-  favorites: 0
+let showingCardsCount = CardCount.DEFAULT_SHOW;
+
+const getWatchStats = () => {
+  return {
+    watchlist: films.reduce((count, film) => film.isAddedToWatchlist ? count + 1 : count, 0),
+    history: films.reduce((count, film) => film.isMarkedAsWatched ? count + 1 : count, 0),
+    favorites: films.reduce((count, film) => film.isFavorite ? count + 1 : count, 0)
+  };
 };
 
-films.forEach((film) => {
-  if (film.isAddedToWatchlist) {
-    watchStats.watchlist += 1;
-  }
-  if (film.isMarkedAsWatched) {
-    watchStats.history += 1;
-  }
-  if (film.isFavorite) {
-    watchStats.favorites += 1;
-  }
-});
-
-let showingCardsCount = CardCount.DEFAULT_SHOW;
+const watchStats = getWatchStats();
 
 const topRatedFilms = films.slice()
 .sort((a, b) => {
@@ -81,7 +73,7 @@ const siteFooterElement = document.querySelector(`.footer`);
 const footerStaticticsElement = siteFooterElement.querySelector(`.footer__statistics`);
 
 render(siteHeaderElement, createHeaderProfileTemplate(watchStats.history));
-render(siteMainElement, createMainNavigationTemplate({watchStats}));
+render(siteMainElement, createMainNavigationTemplate(watchStats));
 render(siteMainElement, createSortTemplate());
 render(siteMainElement, createFilmsTemplate());
 

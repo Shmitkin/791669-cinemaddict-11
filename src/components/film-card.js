@@ -13,9 +13,8 @@ const makeButtonActive = (watchStat) =>
 const truncateDescription = (description, maxLength = MAX_DESCRIPTION_LENGTH) => {
   if (description.length > maxLength) {
     return `${description.slice(0, maxLength - 1)}...`;
-  } else {
-    return description;
   }
+  return description;
 };
 
 const formatYearDate = (date) =>

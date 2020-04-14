@@ -1,19 +1,14 @@
 import {createGenresTemplate} from "./genre.js";
-import {formatDuration} from "../utils";
+import {formatDuration} from "../utils.js";
 import {MONTH_NAMES} from "../consts.js";
 
-const GenreTitle = {
-  SOLO: `Genre`,
-  MANY: `Genres`
+const Title = {
+  GENRE: `Genre`,
+  GENRES: `Genres`
 };
 
-const checkGenresTitleGrammar = (genres) => {
-  if (genres.length > 1) {
-    return GenreTitle.MANY;
-  } else {
-    return GenreTitle.SOLO;
-  }
-};
+const getGenreTitle = (genres) =>
+  genres.length > 1 ? Title.GENRES : Title.GENRE;
 
 const formatReleaseDate = (date) =>
   `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
@@ -76,7 +71,7 @@ const createFilmInfoTemplate = (film) => {
              <td class="film-details__cell">${country}</td>
            </tr>
            <tr class="film-details__row">
-             <td class="film-details__term">${checkGenresTitleGrammar(genres)}</td>
+             <td class="film-details__term">${getGenreTitle(genres)}</td>
              <td class="film-details__cell">
                ${createGenresTemplate(genres)}
               </td>
