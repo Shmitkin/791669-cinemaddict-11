@@ -13,14 +13,67 @@ import {createFilmControlsTemplate} from "./components/film-controls.js";
 import {createCommentTemplate} from "./components/comment.js";
 import {createNewCommentTemplate} from "./components/new-comment.js";
 
+import {generateFilms} from "./mock/film.js";
 
 const CardCount = {
-  MAIN: 5,
+  SUMMARY: 27,
+  DEFAULT_SHOW: 5,
+  SHOW_MORE: 5,
   TOP_RATED: 2,
   MOST_COMMENTED: 2
 };
 
-const COMMENT_COUNT = 4;
+const films = generateFilms(CardCount.SUMMARY);
+
+const firstFilm = films[0];
+
+let showingCardsCount = CardCount.DEFAULT_SHOW;
+
+const getWatchStats = (filmsArray) => {
+  const reducer = (stats, film) => {
+    if (film.isAddedToWatchlist) {
+      stats.watchlist += 1;
+    }
+    if (film.isMarkedAsWatched) {
+      stats.history += 1;
+    }
+    if (film.isFavorite) {
+      stats.favorites += 1;
+    }
+    return stats;
+  };
+  return filmsArray.reduce(reducer, {
+    watchlist: 0,
+    history: 0,
+    favorites: 0
+  });
+};
+
+const watchStats = getWatchStats(films);
+
+const topRatedFilms = films.slice()
+.sort((a, b) => {
+  if (a.rating > b.rating) {
+    return -1;
+  }
+  if (a.rating < b.rating) {
+    return 1;
+  }
+  return 0;
+})
+.slice(0, CardCount.TOP_RATED);
+
+const mostCommentedFilms = films.slice()
+.sort((a, b) => {
+  if (a.comments.length > b.comments.length) {
+    return -1;
+  }
+  if (a.comments.length < b.comments.length) {
+    return 1;
+  }
+  return 0;
+})
+.slice(0, CardCount.MOST_COMMENTED);
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -31,52 +84,66 @@ const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 const footerStaticticsElement = siteFooterElement.querySelector(`.footer__statistics`);
 
-render(siteHeaderElement, createHeaderProfileTemplate());
-render(siteMainElement, createMainNavigationTemplate());
+render(siteHeaderElement, createHeaderProfileTemplate(watchStats.history));
+render(siteMainElement, createMainNavigationTemplate(watchStats));
 render(siteMainElement, createSortTemplate());
 render(siteMainElement, createFilmsTemplate());
 
 const filmsElement = siteMainElement.querySelector(`.films`);
 
-render(filmsElement, createFilmsListTemplate(``, `All movies. Upcoming`, `visually-hidden`));
+render(filmsElement, createFilmsListTemplate({title: `All movies. Upcoming`, isHidden: true}));
 
 const filmsListElement = filmsElement.querySelector(`.films-list`);
 const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-for (let i = 0; i < CardCount.MAIN; i++) {
-  render(filmsListContainerElement, createFilmCardTemplate());
-}
+films
+  .slice(0, showingCardsCount)
+  .forEach((film)=> {
+    render(filmsListContainerElement, createFilmCardTemplate(film));
+  });
 
 render(filmsListElement, createShowMoreButtonTemplate());
-render(filmsElement, createFilmsListTemplate(`--extra`, `Top rated`));
-render(filmsElement, createFilmsListTemplate(`--extra`, `Most commented`));
+const showMoreButtonElement = filmsListElement.querySelector(`.films-list__show-more`);
+
+showMoreButtonElement.addEventListener(`click`, () => {
+
+  const prevCardsCount = showingCardsCount;
+  showingCardsCount = showingCardsCount + CardCount.SHOW_MORE;
+
+  films.slice(prevCardsCount, showingCardsCount)
+    .forEach((film) => render(filmsListContainerElement, createFilmCardTemplate(film)));
+
+  if (showingCardsCount >= films.length) {
+    showMoreButtonElement.remove();
+  }
+});
+
+render(filmsElement, createFilmsListTemplate({title: `Top rated`, isExtra: true}));
+render(filmsElement, createFilmsListTemplate({title: `Most commented`, isExtra: true}));
 
 const topRatedListElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
 const mostCommentedListElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-for (let i = 0; i < CardCount.TOP_RATED; i++) {
-  render(topRatedListElement, createFilmCardTemplate());
-}
+topRatedFilms.forEach((film) => render(topRatedListElement, createFilmCardTemplate(film)));
+mostCommentedFilms.forEach((film) => render(mostCommentedListElement, createFilmCardTemplate(film)));
 
-for (let i = 0; i < CardCount.MOST_COMMENTED; i++) {
-  render(mostCommentedListElement, createFilmCardTemplate());
-}
+render(footerStaticticsElement, createStatTemplate(films.length));
 
-render(footerStaticticsElement, createStatTemplate());
+const renderFilmDetails = (film) => {
 
-render(siteFooterElement, createFilmDetailsTemplate(COMMENT_COUNT), `afterend`);
+  render(siteFooterElement, createFilmDetailsTemplate(film), `afterend`);
 
-const filmDetailsElement = document.querySelector(`.film-details`);
-const filmDetailsTopContainerElement = filmDetailsElement.querySelector(`.form-details__top-container`);
-const filmDetailsCommentsElement = filmDetailsElement.querySelector(`.film-details__comments-wrap`);
-const filmDetailsCommentsListElement = filmDetailsCommentsElement.querySelector(`.film-details__comments-list`);
+  const filmDetailsElement = document.querySelector(`.film-details`);
+  const filmDetailsTopContainerElement = filmDetailsElement.querySelector(`.form-details__top-container`);
+  const filmDetailsCommentsElement = filmDetailsElement.querySelector(`.film-details__comments-wrap`);
+  const filmDetailsCommentsListElement = filmDetailsCommentsElement.querySelector(`.film-details__comments-list`);
 
-render(filmDetailsTopContainerElement, createFilmInfoTemplate());
-render(filmDetailsTopContainerElement, createFilmControlsTemplate());
-render(filmDetailsCommentsElement, createNewCommentTemplate());
+  render(filmDetailsTopContainerElement, createFilmInfoTemplate(film));
+  render(filmDetailsTopContainerElement, createFilmControlsTemplate(film));
+  render(filmDetailsCommentsElement, createNewCommentTemplate());
 
+  film.comments.forEach((comment) => render(filmDetailsCommentsListElement, createCommentTemplate(comment)));
+};
 
-for (let i = 0; i < COMMENT_COUNT; i++) {
-  render(filmDetailsCommentsListElement, createCommentTemplate());
-}
+renderFilmDetails(firstFilm);
 

@@ -1,16 +1,17 @@
 'use strict';
 const path = require('path');
+const pathToPublic = path.join(__dirname, 'public');
 
 module.exports = {
   mode: 'development',
   entry: './src/main.js',
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, 'public'),
+    path: pathToPublic,
   },
   devtool: 'source-map',
   devServer: {
-    contentBase: path.join(__dirname, 'public'),
+    contentBase: pathToPublic,
     watchContentBase: true,
   }
 };
