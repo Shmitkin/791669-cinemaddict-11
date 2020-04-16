@@ -1,9 +1,9 @@
-import {castTimeFormat} from "../utils.js";
+import {castTimeFormat, createElement} from "../utils.js";
 
 const formatCommentDate = (date) =>
   `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
 
-export const createCommentTemplate = (comment) => {
+const createCommentTemplate = (comment) => {
   const {emoji, text, author, date} = comment;
   return (
     `<li class="film-details__comment">
@@ -21,3 +21,23 @@ export const createCommentTemplate = (comment) => {
     </li>`
   );
 };
+
+export default class Comment {
+  constructor(comment) {
+    this._comment = comment;
+    this._element = null;
+  }
+  getTemplate() {
+    return createCommentTemplate(this._comment);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
+

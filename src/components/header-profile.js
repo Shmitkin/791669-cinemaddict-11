@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const RATING_TITLES = [
   {rating: 21, title: `movie buff`},
   {rating: 11, title: `fan`},
@@ -16,5 +18,23 @@ const createHeaderProfileTemplate = (filmsInHistory) => {
   );
 };
 
-export {createHeaderProfileTemplate};
+
+export default class HeaderProfile {
+  constructor(filmsInHistory) {
+    this._filmsInHistory = filmsInHistory;
+    this._element = null;
+  }
+  getTemplate() {
+    return createHeaderProfileTemplate(this._filmsInHistory);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
 
