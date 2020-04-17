@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createMainNavigationTemplate = (watchStats) => {
   const {watchlist, history, favorites} = watchStats;
@@ -15,21 +15,12 @@ const createMainNavigationTemplate = (watchStats) => {
   );
 };
 
-export default class MainNavigation {
+export default class MainNavigation extends AbstractComponent {
   constructor(watchStats) {
+    super();
     this._watchStats = watchStats;
-    this._element = null;
   }
   getTemplate() {
     return createMainNavigationTemplate(this._watchStats);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,5 @@
-import {castTimeFormat, createElement} from "../utils.js";
+import {castTimeFormat} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const formatCommentDate = (date) =>
   `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
@@ -22,22 +23,13 @@ const createCommentTemplate = (comment) => {
   );
 };
 
-export default class Comment {
+export default class Comment extends AbstractComponent {
   constructor(comment) {
+    super();
     this._comment = comment;
-    this._element = null;
   }
   getTemplate() {
     return createCommentTemplate(this._comment);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
 

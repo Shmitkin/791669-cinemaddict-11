@@ -1,4 +1,5 @@
-import {addProperty, createElement} from "../utils.js";
+import {addProperty} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const ACTIVE_INPUT = `checked`;
 
@@ -22,21 +23,12 @@ const createFilmControlsTemplate = (film) => {
   );
 };
 
-export default class FilmControls {
+export default class FilmControls extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
   getTemplate() {
     return createFilmControlsTemplate(this._film);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
