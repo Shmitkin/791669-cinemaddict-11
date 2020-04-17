@@ -44,6 +44,32 @@ const getWatchStats = (films) => {
   });
 };
 
+const getMostCommentedFilms = (films) => {
+  return films.slice().sort((a, b) => {
+    if (a.comments.length > b.comments.length) {
+      return -1;
+    }
+    if (a.comments.length < b.comments.length) {
+      return 1;
+    }
+    return 0;
+  })
+  .slice(0, CardCount.MOST_COMMENTED);
+};
+
+const getTopRatedFilms = (films) => {
+  return films.slice().sort((a, b) => {
+    if (a.rating > b.rating) {
+      return -1;
+    }
+    if (a.rating < b.rating) {
+      return 1;
+    }
+    return 0;
+  })
+.slice(0, CardCount.TOP_RATED);
+};
+
 const renderFilmDetails = (film) => {
   const onCloseButtonClick = () => {
     filmDetailsComponent.getElement().parentNode.removeChild(filmDetailsComponent.getElement());
@@ -96,28 +122,6 @@ const renderFilms = (filmsElement, films) => {
 
   let showingCardsCount = CardCount.DEFAULT_SHOW;
 
-  const mostCommentedFilms = films.slice().sort((a, b) => {
-    if (a.comments.length > b.comments.length) {
-      return -1;
-    }
-    if (a.comments.length < b.comments.length) {
-      return 1;
-    }
-    return 0;
-  })
-  .slice(0, CardCount.MOST_COMMENTED);
-
-  const topRatedFilms = films.slice().sort((a, b) => {
-    if (a.rating > b.rating) {
-      return -1;
-    }
-    if (a.rating < b.rating) {
-      return 1;
-    }
-    return 0;
-  })
-  .slice(0, CardCount.TOP_RATED);
-
   render(filmsElement, new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true}));
 
   const filmsListElement = filmsElement.querySelector(`.films-list`);
@@ -142,6 +146,10 @@ const renderFilms = (filmsElement, films) => {
     }
   });
 
+  // Создаем списки Top Rated и Most Commented
+  const mostCommentedFilms = getMostCommentedFilms(films);
+  const topRatedFilms = getTopRatedFilms(films);
+
   render(filmsElement, new FilmsListComponent({title: `Top rated`, isExtra: true}));
   render(filmsElement, new FilmsListComponent({title: `Most commented`, isExtra: true}));
 
@@ -165,10 +173,10 @@ render(siteMainElement, new MainNavigationComponent(watchStats));
 render(siteMainElement, new SortComponent());
 
 const filmsElement = new FilmsComponent();
+
 render(siteMainElement, filmsElement);
 
 renderFilms(filmsElement.getElement(), films);
-
 
 render(footerStaticticsElement, new StatComponent(films.length));
 
