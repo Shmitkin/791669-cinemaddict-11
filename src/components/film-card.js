@@ -1,4 +1,4 @@
-import {addProperty, formatDuration} from "../utils.js";
+import {addProperty, formatDuration} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 const GENRE_MAIN = 0;

@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-import {addProperty} from "../utils.js";
+import {addProperty} from "../utils/common.js";
 
 const HIDDEN_CLASS = `visually-hidden`;
 const EXTRA_CLASS = `--extra`;

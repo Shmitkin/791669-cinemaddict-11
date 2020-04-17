@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 import {createGenresTemplate} from "./genre.js";
-import {formatDuration} from "../utils.js";
+import {formatDuration} from "../utils/common.js";
 import {MONTH_NAMES} from "../consts.js";
 
 const Title = {

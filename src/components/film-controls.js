@@ -1,4 +1,4 @@
-import {addProperty} from "../utils.js";
+import {addProperty} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 const ACTIVE_INPUT = `checked`;
