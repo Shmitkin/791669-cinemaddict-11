@@ -17,7 +17,7 @@ import {generateFilms} from "./mock/film.js";
 import {render} from "./utils/render.js";
 
 const CardCount = {
-  SUMMARY: 27,
+  SUMMARY: 0,
   DEFAULT_SHOW: 5,
   SHOW_MORE: 5,
   TOP_RATED: 2,
@@ -132,6 +132,11 @@ const renderFilmCard = (filmListElement, film) => {
 };
 
 const renderFilms = (filmsElement, films) => {
+
+  if (films.length === 0) {
+    render(filmsElement, new FilmsListComponent({title: `There are no movies in our database`}));
+    return;
+  }
 
   let showingCardsCount = CardCount.DEFAULT_SHOW;
 
