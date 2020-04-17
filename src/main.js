@@ -17,7 +17,7 @@ import {generateFilms} from "./mock/film.js";
 import {render} from "./utils/render.js";
 
 const CardCount = {
-  SUMMARY: 0,
+  SUMMARY: 15,
   DEFAULT_SHOW: 5,
   SHOW_MORE: 5,
   TOP_RATED: 2,
