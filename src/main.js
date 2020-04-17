@@ -71,8 +71,21 @@ const getTopRatedFilms = (films) => {
 };
 
 const renderFilmDetails = (film) => {
-  const onCloseButtonClick = () => {
+  const closeFilmDetails = () => {
     filmDetailsComponent.getElement().parentNode.removeChild(filmDetailsComponent.getElement());
+  };
+
+  const onCloseButtonClick = () => {
+    closeFilmDetails();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  };
+
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    if (isEscKey) {
+      closeFilmDetails();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
   };
 
   const filmDetailsComponent = new FilmDetailsComponent(film);
@@ -86,9 +99,9 @@ const renderFilmDetails = (film) => {
   film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
 
   const closeButton = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
-  closeButton.addEventListener(`click`, () => {
-    onCloseButtonClick();
-  });
+
+  closeButton.addEventListener(`click`, onCloseButtonClick);
+  document.addEventListener(`keydown`, onEscKeyDown);
 
   return filmDetailsComponent.getElement();
 };
