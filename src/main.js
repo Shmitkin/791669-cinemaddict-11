@@ -14,7 +14,7 @@ import NewCommentComponent from "./components/new-comment.js";
 
 import {generateFilms} from "./mock/film.js";
 
-import {render} from "./utils/render.js";
+import {render, remove, RenderPosition, removeElement} from "./utils/render.js";
 
 const CardCount = {
   SUMMARY: 15,
@@ -22,6 +22,11 @@ const CardCount = {
   SHOW_MORE: 5,
   TOP_RATED: 2,
   MOST_COMMENTED: 2
+};
+
+const Key = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`
 };
 
 const getWatchStats = (films) => {
@@ -70,9 +75,10 @@ const getTopRatedFilms = (films) => {
 .slice(0, CardCount.TOP_RATED);
 };
 
-const renderFilmDetails = (film) => {
+const getFilmDetailsComponent = (film) => {
+
   const closeFilmDetails = () => {
-    filmDetailsComponent.getElement().parentNode.removeChild(filmDetailsComponent.getElement());
+    remove(filmDetailsComponent);
   };
 
   const onCloseButtonClick = () => {
@@ -80,9 +86,10 @@ const renderFilmDetails = (film) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
+  const isEscKey = (evt) => evt.key === Key.ESCAPE || evt.key === Key.ESC;
+
   const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-    if (isEscKey) {
+    if (isEscKey(evt)) {
       closeFilmDetails();
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
@@ -98,37 +105,43 @@ const renderFilmDetails = (film) => {
   render(filmDetailsCommentsElement, new NewCommentComponent());
   film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
 
-  const closeButton = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
+  const closeButtonElement = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
 
-  closeButton.addEventListener(`click`, onCloseButtonClick);
+  closeButtonElement.addEventListener(`click`, onCloseButtonClick);
   document.addEventListener(`keydown`, onEscKeyDown);
 
-  return filmDetailsComponent.getElement();
+  return filmDetailsComponent;
 };
 
-const renderFilmCard = (filmListElement, film) => {
+const getFilmCardComponent = (film) => {
 
   const showFilmDetails = () => {
-    siteFooterElement.after(renderFilmDetails(film));
+    const anotherFilmDetailsElement = document.querySelector(`.film-details`);
+
+    if (anotherFilmDetailsElement !== null) {
+      removeElement(anotherFilmDetailsElement);
+      render(siteFooterElement, getFilmDetailsComponent(film), RenderPosition.AFTEREND);
+    } else {
+      render(siteFooterElement, getFilmDetailsComponent(film), RenderPosition.AFTEREND);
+    }
+  };
+
+  const onFilmCardElementClick = () => {
+    showFilmDetails();
   };
 
   const filmCardComponent = new FilmCardComponent(film);
 
-  const filmCommentsLink = filmCardComponent.getElement().querySelector(`.film-card__comments`);
-  filmCommentsLink.addEventListener(`click`, () => {
-    showFilmDetails();
-  });
+  const filmCommentsLinkElement = filmCardComponent.getElement().querySelector(`.film-card__comments`);
+  filmCommentsLinkElement.addEventListener(`click`, onFilmCardElementClick);
 
-  const filmTitle = filmCardComponent.getElement().querySelector(`.film-card__title`);
-  filmTitle.addEventListener(`click`, () => {
-    showFilmDetails();
-  });
+  const filmTitleElement = filmCardComponent.getElement().querySelector(`.film-card__title`);
+  filmTitleElement.addEventListener(`click`, onFilmCardElementClick);
 
-  const filmPoster = filmCardComponent.getElement().querySelector(`.film-card__poster`);
-  filmPoster.addEventListener(`click`, () => {
-    showFilmDetails();
-  });
-  render(filmListElement, filmCardComponent);
+  const filmPosterElement = filmCardComponent.getElement().querySelector(`.film-card__poster`);
+  filmPosterElement.addEventListener(`click`, onFilmCardElementClick);
+
+  return filmCardComponent;
 };
 
 const renderFilms = (filmsElement, films) => {
@@ -148,7 +161,7 @@ const renderFilms = (filmsElement, films) => {
   films
     .slice(0, showingCardsCount)
     .forEach((film)=> {
-      renderFilmCard(filmsListContainerElement, film);
+      render(filmsListContainerElement, getFilmCardComponent(film));
     });
 
   render(filmsListElement, new ShowMoreButtonComponent());
@@ -156,9 +169,12 @@ const renderFilms = (filmsElement, films) => {
 
   showMoreButtonElement.addEventListener(`click`, () => {
     const prevCardsCount = showingCardsCount;
+
     showingCardsCount = showingCardsCount + CardCount.SHOW_MORE;
+
     films.slice(prevCardsCount, showingCardsCount)
-      .forEach((film) => renderFilmCard(filmsListContainerElement, film));
+      .forEach((film) => render(filmsListContainerElement, getFilmCardComponent(film)));
+
     if (showingCardsCount >= films.length) {
       showMoreButtonElement.remove();
     }
@@ -174,8 +190,8 @@ const renderFilms = (filmsElement, films) => {
   const topRatedListElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
   const mostCommentedListElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-  topRatedFilms.forEach((film) => renderFilmCard(topRatedListElement, film));
-  mostCommentedFilms.forEach((film) => renderFilmCard(mostCommentedListElement, film));
+  topRatedFilms.forEach((film) => render(topRatedListElement, getFilmCardComponent(film)));
+  mostCommentedFilms.forEach((film) => render(mostCommentedListElement, getFilmCardComponent(film)));
 };
 
 const films = generateFilms(CardCount.SUMMARY);
@@ -190,11 +206,11 @@ render(siteHeaderElement, new HeaderProfileComponent(watchStats.history));
 render(siteMainElement, new MainNavigationComponent(watchStats));
 render(siteMainElement, new SortComponent());
 
-const filmsElement = new FilmsComponent();
+const filmsComponent = new FilmsComponent();
 
-render(siteMainElement, filmsElement);
+render(siteMainElement, filmsComponent);
 
-renderFilms(filmsElement.getElement(), films);
+renderFilms(filmsComponent.getElement(), films);
 
 render(footerStaticticsElement, new StatComponent(films.length));
 
