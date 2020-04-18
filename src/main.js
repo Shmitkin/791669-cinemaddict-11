@@ -6,15 +6,11 @@ import ShowMoreButtonComponent from "./components/show-more-button.js";
 import MainNavigationComponent from "./components/main-navigation.js";
 import SortComponent from "./components/sort.js";
 import FilmsListComponent from "./components/films-list.js";
-import FilmDetailsComponent from "./components/film-details.js";
-import FilmInfoComponent from "./components/film-info.js";
-import FilmControlsComponent from "./components/film-controls.js";
-import CommentComponent from "./components/comment.js";
-import NewCommentComponent from "./components/new-comment.js";
+
+import FilmDetailsController from "./controllers/film-details.js";
 
 import {generateFilms} from "./mock/film.js";
 import {render, remove, RenderPosition, removeElement} from "./utils/render.js";
-import {isEscKey} from "./utils/common.js";
 
 const CardCount = {
   SUMMARY: 15,
@@ -70,49 +66,18 @@ const getTopRatedFilms = (films) => {
 .slice(0, CardCount.TOP_RATED);
 };
 
-const getFilmDetailsComponent = (film) => {
-
-  const closeFilmDetails = () => {
-    remove(filmDetailsComponent);
-  };
-
-  const onCloseButtonClick = () => {
-    closeFilmDetails();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  };
-
-  const onEscKeyDown = (evt) => {
-    if (isEscKey(evt)) {
-      closeFilmDetails();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  const filmDetailsComponent = new FilmDetailsComponent(film);
-  const filmDetailsTopContainerElement = filmDetailsComponent.getElement().querySelector(`.form-details__top-container`);
-  const filmDetailsCommentsElement = filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-  const filmDetailsCommentsListElement = filmDetailsCommentsElement.querySelector(`.film-details__comments-list`);
-
-  render(filmDetailsTopContainerElement, new FilmInfoComponent(film));
-  render(filmDetailsTopContainerElement, new FilmControlsComponent(film));
-  render(filmDetailsCommentsElement, new NewCommentComponent());
-  film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
-
-  filmDetailsComponent.setOnCloseButtonClickHandler(onCloseButtonClick);
-  document.addEventListener(`keydown`, onEscKeyDown);
-
-  return filmDetailsComponent;
-};
 
 const getFilmCardComponent = (film) => {
+  const filmDetailsController = new FilmDetailsController(film);
 
   const showFilmDetails = () => {
     const anotherFilmDetailsElement = document.querySelector(`.film-details`);
     if (anotherFilmDetailsElement !== null) {
       removeElement(anotherFilmDetailsElement);
-      render(siteFooterElement, getFilmDetailsComponent(film), RenderPosition.AFTEREND);
+
+      filmDetailsController.render(siteFooterElement, RenderPosition.AFTEREND);
     } else {
-      render(siteFooterElement, getFilmDetailsComponent(film), RenderPosition.AFTEREND);
+      filmDetailsController.render(siteFooterElement, RenderPosition.AFTEREND);
     }
   };
 
