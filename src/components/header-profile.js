@@ -1,3 +1,5 @@
+import AbstractComponent from "./abstract-component.js";
+
 const RATING_TITLES = [
   {rating: 21, title: `movie buff`},
   {rating: 11, title: `fan`},
@@ -16,5 +18,15 @@ const createHeaderProfileTemplate = (filmsInHistory) => {
   );
 };
 
-export {createHeaderProfileTemplate};
+
+export default class HeaderProfile extends AbstractComponent {
+  constructor(filmsInHistory) {
+    super();
+    this._filmsInHistory = filmsInHistory;
+
+  }
+  getTemplate() {
+    return createHeaderProfileTemplate(this._filmsInHistory);
+  }
+}
 

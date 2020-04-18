@@ -1,9 +1,10 @@
-import {castTimeFormat} from "../utils.js";
+import {castTimeFormat} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
 
 const formatCommentDate = (date) =>
   `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
 
-export const createCommentTemplate = (comment) => {
+const createCommentTemplate = (comment) => {
   const {emoji, text, author, date} = comment;
   return (
     `<li class="film-details__comment">
@@ -21,3 +22,14 @@ export const createCommentTemplate = (comment) => {
     </li>`
   );
 };
+
+export default class Comment extends AbstractComponent {
+  constructor(comment) {
+    super();
+    this._comment = comment;
+  }
+  getTemplate() {
+    return createCommentTemplate(this._comment);
+  }
+}
+

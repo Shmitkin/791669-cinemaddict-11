@@ -1,4 +1,5 @@
-import {addProperty} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
+import {addProperty} from "../utils/common.js";
 
 const HIDDEN_CLASS = `visually-hidden`;
 const EXTRA_CLASS = `--extra`;
@@ -13,4 +14,14 @@ const createFilmsListTemplate = ({title, isExtra = false, isHidden = false}) => 
   );
 };
 
-export {createFilmsListTemplate};
+export default class FilmsList extends AbstractComponent {
+  constructor({title, isExtra = false, isHidden = false}) {
+    super();
+    this._title = title;
+    this._isExtra = isExtra;
+    this._isHidden = isHidden;
+  }
+  getTemplate() {
+    return createFilmsListTemplate({title: this._title, isExtra: this._isExtra, isHidden: this._isHidden});
+  }
+}

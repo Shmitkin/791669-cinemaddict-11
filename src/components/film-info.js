@@ -1,5 +1,6 @@
+import AbstractComponent from "./abstract-component.js";
 import {createGenresTemplate} from "./genre.js";
-import {formatDuration} from "../utils.js";
+import {formatDuration} from "../utils/common.js";
 import {MONTH_NAMES} from "../consts.js";
 
 const Title = {
@@ -12,6 +13,22 @@ const getGenreTitle = (genres) =>
 
 const formatReleaseDate = (date) =>
   `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+
+const createFilmDetailsRowTemplate = (term, cell) => {
+  return (
+    `<tr class="film-details__row">
+        <td class="film-details__term">${term}</td>
+        <td class="film-details__cell">${cell}</td>
+      </tr>`
+  );
+};
+
+const createFilmDetailsTemplate = (filmDetailsRows) => {
+  return (
+    filmDetailsRows.map(([term, cell]) => (
+      createFilmDetailsRowTemplate(term, cell)
+    )).join(``));
+};
 
 const createFilmInfoTemplate = (film) => {
   const {
@@ -28,6 +45,16 @@ const createFilmInfoTemplate = (film) => {
     description,
     genres
   } = film;
+
+  const filmDetailsRows = [
+    [`Director`, director],
+    [`Writers`, writers.join(`, `)],
+    [`Actors`, actors.join(`, `)],
+    [`Release Date`, formatReleaseDate(release)],
+    [`Runtime`, formatDuration(duration)],
+    [`Country`, country],
+    [getGenreTitle(genres), createGenresTemplate(genres)]
+  ];
 
   return (
     `<div class="film-details__info-wrap">
@@ -46,36 +73,7 @@ const createFilmInfoTemplate = (film) => {
            </div>
          </div>
          <table class="film-details__table">
-           <tr class="film-details__row">
-             <td class="film-details__term">Director</td>
-             <td class="film-details__cell">${director}</td>
-           </tr>
-           <tr class="film-details__row">
-             <td class="film-details__term">Writers</td>
-             <td class="film-details__cell">${writers.join(`, `)}</td>
-           </tr>
-           <tr class="film-details__row">
-             <td class="film-details__term">Actors</td>
-             <td class="film-details__cell">${actors.join(`, `)}</td>
-           </tr>
-           <tr class="film-details__row">
-             <td class="film-details__term">Release Date</td>
-             <td class="film-details__cell">${formatReleaseDate(release)}</td>
-           </tr>
-           <tr class="film-details__row">
-             <td class="film-details__term">Runtime</td>
-             <td class="film-details__cell">${formatDuration(duration)}</td>
-           </tr>
-           <tr class="film-details__row">
-             <td class="film-details__term">Country</td>
-             <td class="film-details__cell">${country}</td>
-           </tr>
-           <tr class="film-details__row">
-             <td class="film-details__term">${getGenreTitle(genres)}</td>
-             <td class="film-details__cell">
-               ${createGenresTemplate(genres)}
-              </td>
-           </tr>
+         ${createFilmDetailsTemplate(filmDetailsRows)}
          </table>
          <p class="film-details__film-description">${description}</p>
        </div>
@@ -83,4 +81,12 @@ const createFilmInfoTemplate = (film) => {
   );
 };
 
-export {createFilmInfoTemplate};
+export default class FilmInfo extends AbstractComponent {
+  constructor(film) {
+    super();
+    this._film = film;
+  }
+  getTemplate() {
+    return createFilmInfoTemplate(this._film);
+  }
+}

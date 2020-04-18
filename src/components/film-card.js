@@ -1,7 +1,5 @@
-import {
-  addProperty,
-  formatDuration
-} from "../utils.js";
+import {addProperty, formatDuration} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
 
 const GENRE_MAIN = 0;
 const MAX_DESCRIPTION_LENGTH = 140;
@@ -57,4 +55,13 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export {createFilmCardTemplate};
+
+export default class FilmCard extends AbstractComponent {
+  constructor(film) {
+    super();
+    this._film = film;
+  }
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+}

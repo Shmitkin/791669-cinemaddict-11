@@ -1,3 +1,5 @@
+import AbstractComponent from "./abstract-component.js";
+
 const COMMENT_EMOJI = [
   `smile`,
   `sleeping`,
@@ -28,4 +30,8 @@ const createNewCommentTemplate = () => {
   );
 };
 
-export {createNewCommentTemplate};
+export default class NewComment extends AbstractComponent {
+  getTemplate() {
+    return createNewCommentTemplate();
+  }
+}

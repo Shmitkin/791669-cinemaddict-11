@@ -1,4 +1,5 @@
-import {MINUTES_IN_HOUR} from "./consts.js";
+import {MINUTES_IN_HOUR} from "../consts.js";
+
 const addProperty = (statement, ifTrue, ifFalse = ``) =>
   statement ? ifTrue : ifFalse;
 
@@ -10,6 +11,5 @@ const formatDuration = (duration) => {
 
 const castTimeFormat = (value) =>
   String(value).padStart(2, `0`);
-
 
 export {addProperty, formatDuration, castTimeFormat};
