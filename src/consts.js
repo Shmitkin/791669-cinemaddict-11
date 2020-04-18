@@ -19,7 +19,13 @@ const HOURS_IN_DAY = 24;
 
 const DAYS_IN_MONTH = 30;
 
+const KeyboardKey = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`
+};
+
 export {
+  KeyboardKey,
   MONTH_NAMES,
   MINUTES_IN_HOUR,
   HOURS_IN_DAY,

@@ -13,8 +13,8 @@ import CommentComponent from "./components/comment.js";
 import NewCommentComponent from "./components/new-comment.js";
 
 import {generateFilms} from "./mock/film.js";
-
 import {render, remove, RenderPosition, removeElement} from "./utils/render.js";
+import {isEscKey} from "./utils/common.js";
 
 const CardCount = {
   SUMMARY: 15,
@@ -22,11 +22,6 @@ const CardCount = {
   SHOW_MORE: 5,
   TOP_RATED: 2,
   MOST_COMMENTED: 2
-};
-
-const Key = {
-  ESCAPE: `Escape`,
-  ESC: `Esc`
 };
 
 const getWatchStats = (films) => {
@@ -86,8 +81,6 @@ const getFilmDetailsComponent = (film) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
-  const isEscKey = (evt) => evt.key === Key.ESCAPE || evt.key === Key.ESC;
-
   const onEscKeyDown = (evt) => {
     if (isEscKey(evt)) {
       closeFilmDetails();
@@ -126,20 +119,20 @@ const getFilmCardComponent = (film) => {
     }
   };
 
-  const onFilmCardElementClick = () => {
+  const onFilmCardClick = () => {
     showFilmDetails();
   };
 
   const filmCardComponent = new FilmCardComponent(film);
 
   const filmCommentsLinkElement = filmCardComponent.getElement().querySelector(`.film-card__comments`);
-  filmCommentsLinkElement.addEventListener(`click`, onFilmCardElementClick);
+  filmCommentsLinkElement.addEventListener(`click`, onFilmCardClick);
 
   const filmTitleElement = filmCardComponent.getElement().querySelector(`.film-card__title`);
-  filmTitleElement.addEventListener(`click`, onFilmCardElementClick);
+  filmTitleElement.addEventListener(`click`, onFilmCardClick);
 
   const filmPosterElement = filmCardComponent.getElement().querySelector(`.film-card__poster`);
-  filmPosterElement.addEventListener(`click`, onFilmCardElementClick);
+  filmPosterElement.addEventListener(`click`, onFilmCardClick);
 
   return filmCardComponent;
 };
