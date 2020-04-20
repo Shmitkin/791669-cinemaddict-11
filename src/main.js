@@ -23,7 +23,7 @@ const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 const footerStaticticsElement = siteFooterElement.querySelector(`.footer__statistics`);
 
-const filmsController = new FilmsController(siteMainElement, films, CardCount);
+const filmsController = new FilmsController(siteMainElement, films, siteFooterElement, CardCount);
 const watchStats = filmsController.getWatchStats();
 
 render(siteHeaderElement, new HeaderProfileComponent(watchStats.history));

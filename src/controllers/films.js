@@ -1,11 +1,12 @@
-import {render, remove} from "../utils/render.js";
+import {render, remove, RenderPosition, removeElement} from "../utils/render.js";
 import FilmsListComponent from "../components/films-list.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
 import FilmsComponent from "../components/films.js";
-import FilmCardController from "./film-card.js";
+import FilmDetailsController from "./film-details.js";
+import FilmCardComponent from "../components/film-card.js";
 
 export default class FilmsController {
-  constructor(container, films, {DEFAULT_SHOW, SHOW_MORE, TOP_RATED, MOST_COMMENTED}) {
+  constructor(container, films, filmDetailsModalContainer, {DEFAULT_SHOW, SHOW_MORE, TOP_RATED, MOST_COMMENTED}) {
     this._container = container;
     this._films = films;
     this._defaultShowCount = DEFAULT_SHOW;
@@ -15,6 +16,8 @@ export default class FilmsController {
     this._filmsComponent = new FilmsComponent();
     this._filmsElement = this._filmsComponent.getElement();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._modalContainer = filmDetailsModalContainer;
+    this._modalPlace = RenderPosition.AFTEREND;
   }
 
   getMostCommentedFilms() {
@@ -63,7 +66,29 @@ export default class FilmsController {
     });
   }
 
+  getFilmCard(film) {
+    const filmDetailsController = new FilmDetailsController(film);
+    const filmCardComponent = new FilmCardComponent(film);
+
+    const showFilmDetails = () => {
+      const anotherFilmDetailsElement = document.querySelector(`.film-details`);
+      if (anotherFilmDetailsElement !== null) {
+        removeElement(anotherFilmDetailsElement);
+        filmDetailsController.render(this._modalContainer, this._modalPlace);
+      } else {
+        filmDetailsController.render(this._modalContainer, this._modalPlace);
+      }
+    };
+
+    filmCardComponent.setOnTitleClickHandler(showFilmDetails);
+    filmCardComponent.setOnPosterClickHandler(showFilmDetails);
+    filmCardComponent.setOnCommentsClickHandler(showFilmDetails);
+
+    return filmCardComponent;
+  }
+
   render() {
+
     if (this._films.length === 0) {
       render(this._filmsElement, new FilmsListComponent({title: `There are no movies in our database`}));
       return;
@@ -76,7 +101,7 @@ export default class FilmsController {
     let showingCardsCount = this._defaultShowCount;
 
     this._films.slice(0, showingCardsCount).forEach((film)=> {
-      new FilmCardController(film).render(filmsListContainerElement);
+      render(filmsListContainerElement, this.getFilmCard(film));
     });
 
     this._showMoreButtonComponent.setClickHandler(() => {
@@ -84,8 +109,9 @@ export default class FilmsController {
 
       showingCardsCount = showingCardsCount + this._showMoreCount;
 
-      this._films.slice(prevCardsCount, showingCardsCount).forEach((film) =>
-        new FilmCardController(film).render(filmsListContainerElement));
+      this._films.slice(prevCardsCount, showingCardsCount).forEach((film) => {
+        render(filmsListContainerElement, this.getFilmCard(film));
+      });
 
       if (showingCardsCount >= this._films.length) {
         remove(this._showMoreButtonComponent);
@@ -103,8 +129,8 @@ export default class FilmsController {
     const topRatedFilmsElement = this._filmsElement.querySelector(`.films-list--extra .films-list__container`);
     const mostCommentedFilmsElement = this._filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-    topRatedFilms.forEach((film) => new FilmCardController(film).render(topRatedFilmsElement));
-    mostCommentedFilms.forEach((film) => new FilmCardController(film).render(mostCommentedFilmsElement));
+    topRatedFilms.forEach((film) => render(topRatedFilmsElement, this.getFilmCard(film)));
+    mostCommentedFilms.forEach((film) => render(mostCommentedFilmsElement, this.getFilmCard(film)));
 
     render(this._container, this._filmsComponent);
   }
