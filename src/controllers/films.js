@@ -6,9 +6,8 @@ import FilmDetailsController from "./film-details.js";
 import FilmCardComponent from "../components/film-card.js";
 
 export default class FilmsController {
-  constructor(container, films, filmDetailsModalContainer, {DEFAULT_SHOW, SHOW_MORE, TOP_RATED, MOST_COMMENTED}) {
+  constructor(container, filmDetailsModalContainer, {DEFAULT_SHOW, SHOW_MORE, TOP_RATED, MOST_COMMENTED}) {
     this._container = container;
-    this._films = films;
     this._defaultShowCount = DEFAULT_SHOW;
     this._showMoreCount = SHOW_MORE;
     this._topRatedCount = TOP_RATED;
@@ -20,8 +19,8 @@ export default class FilmsController {
     this._modalPlace = RenderPosition.AFTEREND;
   }
 
-  getMostCommentedFilms() {
-    return this._films.slice().sort((a, b) => {
+  getMostCommentedFilms(films) {
+    return films.slice().sort((a, b) => {
       if (a.comments.length > b.comments.length) {
         return -1;
       }
@@ -33,8 +32,8 @@ export default class FilmsController {
     .slice(0, this._mostCommentedCount);
   }
 
-  getTopRatedFilms() {
-    return this._films.slice().sort((a, b) => {
+  getTopRatedFilms(films) {
+    return films.slice().sort((a, b) => {
       if (a.rating > b.rating) {
         return -1;
       }
@@ -46,7 +45,7 @@ export default class FilmsController {
   .slice(0, this._topRatedCount);
   }
 
-  getWatchStats() {
+  getWatchStats(films) {
     const reduceFilms = (stats, film) => {
       if (film.isAddedToWatchlist) {
         stats.watchlist += 1;
@@ -59,7 +58,7 @@ export default class FilmsController {
       }
       return stats;
     };
-    return this._films.reduce(reduceFilms, {
+    return films.reduce(reduceFilms, {
       watchlist: 0,
       history: 0,
       favorites: 0
@@ -87,9 +86,9 @@ export default class FilmsController {
     return filmCardComponent;
   }
 
-  render() {
+  render(films) {
 
-    if (this._films.length === 0) {
+    if (films.length === 0) {
       render(this._filmsElement, new FilmsListComponent({title: `There are no movies in our database`}));
       return;
     }
@@ -100,7 +99,7 @@ export default class FilmsController {
 
     let showingCardsCount = this._defaultShowCount;
 
-    this._films.slice(0, showingCardsCount).forEach((film)=> {
+    films.slice(0, showingCardsCount).forEach((film)=> {
       render(filmsListContainerElement, this.getFilmCard(film));
     });
 
@@ -109,19 +108,19 @@ export default class FilmsController {
 
       showingCardsCount = showingCardsCount + this._showMoreCount;
 
-      this._films.slice(prevCardsCount, showingCardsCount).forEach((film) => {
+      films.slice(prevCardsCount, showingCardsCount).forEach((film) => {
         render(filmsListContainerElement, this.getFilmCard(film));
       });
 
-      if (showingCardsCount >= this._films.length) {
+      if (showingCardsCount >= films.length) {
         remove(this._showMoreButtonComponent);
       }
     });
 
     render(filmsListElement, this._showMoreButtonComponent);
 
-    const mostCommentedFilms = this.getMostCommentedFilms();
-    const topRatedFilms = this.getTopRatedFilms();
+    const mostCommentedFilms = this.getMostCommentedFilms(films);
+    const topRatedFilms = this.getTopRatedFilms(films);
 
     render(this._filmsElement, new FilmsListComponent({title: `Top rated`, isExtra: true}));
     render(this._filmsElement, new FilmsListComponent({title: `Most commented`, isExtra: true}));

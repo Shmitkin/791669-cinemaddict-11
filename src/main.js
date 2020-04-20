@@ -23,14 +23,14 @@ const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 const footerStaticticsElement = siteFooterElement.querySelector(`.footer__statistics`);
 
-const filmsController = new FilmsController(siteMainElement, films, siteFooterElement, CardCount);
-const watchStats = filmsController.getWatchStats();
+const filmsController = new FilmsController(siteMainElement, siteFooterElement, CardCount);
+const watchStats = filmsController.getWatchStats(films);
 
 render(siteHeaderElement, new HeaderProfileComponent(watchStats.history));
 render(siteMainElement, new MainNavigationComponent(watchStats));
 render(siteMainElement, new SortComponent());
 
-filmsController.render();
+filmsController.render(films);
 
 render(footerStaticticsElement, new StatComponent(films.length));
 
