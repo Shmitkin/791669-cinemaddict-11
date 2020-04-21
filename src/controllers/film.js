@@ -1,5 +1,4 @@
 import FilmDetailsComponent from "../components/film-details.js";
-import FilmInfoComponent from "../components/film-info.js";
 import FilmControlsComponent from "../components/film-controls.js";
 import CommentComponent from "../components/comment.js";
 import NewCommentComponent from "../components/new-comment.js";
@@ -16,7 +15,6 @@ export default class FilmController {
     this._container = container;
     this._newCommentComponent = new NewCommentComponent();
     this._filmDetailsComponent = null;
-    this._filmInfoComponent = null;
     this._filmControlsComponent = null;
     this._modalContainer = modalContainer;
     this._modalPlace = modalPlace;
@@ -29,7 +27,6 @@ export default class FilmController {
 
   _renderFilmDetails(film) {
     this._filmDetailsComponent = new FilmDetailsComponent(film);
-    this._filmInfoComponent = new FilmInfoComponent(film);
     this._filmControlsComponent = new FilmControlsComponent(film);
     const onCloseButtonClick = () => {
       this._removeFilmDetails();
@@ -50,8 +47,7 @@ export default class FilmController {
     const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
     const filmDetailsCommentsListElement = filmDetailsCommentsElement.querySelector(`.film-details__comments-list`);
 
-    render(filmDetailsTopContainerElement, this._filmInfoComponent);
-    render(filmDetailsTopContainerElement, this._filmControlsComponent);
+    render(filmDetailsTopContainerElement, this._filmControlsComponent, RenderPosition.BEFOREEND);
     render(filmDetailsCommentsElement, this._newCommentComponent);
     film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
 
