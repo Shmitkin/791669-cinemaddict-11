@@ -1,7 +1,6 @@
 import StatComponent from "./components/stat.js";
 import HeaderProfileComponent from "./components/header-profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
-import SortComponent from "./components/sort.js";
 
 import FilmsController from "./controllers/films.js";
 
@@ -28,7 +27,6 @@ const watchStats = filmsController.getWatchStats(films);
 
 render(siteHeaderElement, new HeaderProfileComponent(watchStats.history));
 render(siteMainElement, new MainNavigationComponent(watchStats));
-render(siteMainElement, new SortComponent());
 
 filmsController.render(films);
 
