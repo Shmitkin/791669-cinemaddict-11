@@ -7,6 +7,8 @@ export const FilterType = {
   FAVORITES: `favorites`
 };
 
+const ACTIVE_CLASS = `main-navigation__item--active`;
+
 const createMainNavigationTemplate = (watchStats) => {
   const {watchlist, history, favorites} = watchStats;
   return (
@@ -26,6 +28,9 @@ export default class MainNavigation extends AbstractComponent {
   constructor(watchStats) {
     super();
     this._watchStats = watchStats;
+    this._currentFilterType = FilterType.ALL;
+    this._activeElement = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
+
   }
   getTemplate() {
     return createMainNavigationTemplate(this._watchStats);
@@ -45,6 +50,10 @@ export default class MainNavigation extends AbstractComponent {
       }
 
       this._currentFilterType = filterType;
+
+      this._activeElement.classList.remove(ACTIVE_CLASS);
+      this._activeElement = evt.target;
+      this._activeElement.classList.add(ACTIVE_CLASS);
 
       handler(this._currentFilterType);
     });
