@@ -94,14 +94,14 @@ export default class FilmsController {
     render(this._filmsListElement, this._showMoreButtonComponent);
   }
 
-  _renderSortComponent(films) {
+  _renderSortComponent() {
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
       this._showingCardsCount = this._defaultShowCount;
       this._prevCardsCount = this._showingCardsCount;
       this._filmsListContainerElement.innerHTML = ``;
       remove(this._showMoreButtonComponent);
 
-      const sortedFilms = this._getSortedFilms(films, sortType);
+      const sortedFilms = this._getSortedFilms(this._films, sortType);
 
       this._renderFilms(this._filmsListContainerElement, sortedFilms);
     });
@@ -120,18 +120,19 @@ export default class FilmsController {
 
       switch (filterType) {
         case FilterType.ALL:
+          this._films = films;
           this._renderFilms(this._filmsListContainerElement, films);
-
           break;
         case FilterType.WATCHLIST:
+          this._films = watchStatsFilms.watchlist;
           this._renderFilms(this._filmsListContainerElement, watchStatsFilms.watchlist);
-
           break;
         case FilterType.HISTORY:
+          this._films = watchStatsFilms.history;
           this._renderFilms(this._filmsListContainerElement, watchStatsFilms.history);
-
           break;
         case FilterType.FAVORITES:
+          this._films = watchStatsFilms.favorites;
           this._renderFilms(this._filmsListContainerElement, watchStatsFilms.favorites);
           break;
       }
@@ -175,7 +176,7 @@ export default class FilmsController {
     this._renderFilms(topRatedFilmsElement, topRatedFilms);
     this._renderFilms(mostCommentedFilmsElement, mostCommentedFilms);
     this._renderMainNavigationComponent(films);
-    this._renderSortComponent(films);
+    this._renderSortComponent(this._films);
     render(this._container, this._filmsComponent);
   }
 }
