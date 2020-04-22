@@ -84,7 +84,7 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-export default class FilmDetailsComponent extends AbstractComponent {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;

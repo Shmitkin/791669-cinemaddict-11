@@ -1,6 +1,5 @@
 import StatComponent from "./components/stat.js";
 import HeaderProfileComponent from "./components/header-profile.js";
-import MainNavigationComponent from "./components/main-navigation.js";
 
 import FilmsController from "./controllers/films.js";
 
@@ -25,8 +24,7 @@ const footerStaticticsElement = siteFooterElement.querySelector(`.footer__statis
 const filmsController = new FilmsController(siteMainElement, CardCount);
 const watchStats = filmsController.getWatchStats(films);
 
-render(siteHeaderElement, new HeaderProfileComponent(watchStats.history));
-render(siteMainElement, new MainNavigationComponent(watchStats));
+render(siteHeaderElement, new HeaderProfileComponent(watchStats.history.length));
 
 filmsController.render(films);
 
