@@ -1,28 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
-
-export const FilterType = {
-  ALL: `all`,
-  WATCHLIST: `watchlist`,
-  HISTORY: `history`,
-  FAVORITES: `favorites`
-};
+import {FilterType} from "../consts.js";
 
 const ACTIVE_CLASS = `main-navigation__item--active`;
-
-const createMainNavigationTemplate = (watchStats) => {
-  const {watchlist, history, favorites} = watchStats;
-  return (
-    `<nav class="main-navigation">
-      <div class="main-navigation__items">
-        <a href="#all" data-filter-type="${FilterType.ALL}" class="main-navigation__item main-navigation__item--active">All movies</a>
-        <a href="#watchlist" data-filter-type="${FilterType.WATCHLIST}" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${watchlist.length}</span></a>
-        <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item">History <span class="main-navigation__item-count">${history.length}</span></a>
-        <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${favorites.length}</span></a>
-      </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
-    </nav>`
-  );
-};
 
 export default class MainNavigation extends AbstractComponent {
   constructor(watchStats) {
@@ -30,12 +9,10 @@ export default class MainNavigation extends AbstractComponent {
     this._watchStats = watchStats;
     this._currentFilterType = FilterType.ALL;
     this._activeElement = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
-
   }
   getTemplate() {
-    return createMainNavigationTemplate(this._watchStats);
+    return this._createTemplate();
   }
-
   setFilerTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
@@ -57,5 +34,20 @@ export default class MainNavigation extends AbstractComponent {
 
       handler(this._currentFilterType);
     });
+  }
+
+  _createTemplate() {
+    const {watchlist, history, favorites} = this._watchStats;
+    return (
+      `<nav class="main-navigation">
+        <div class="main-navigation__items">
+          <a href="#all" data-filter-type="${FilterType.ALL}" class="main-navigation__item main-navigation__item--active">All movies</a>
+          <a href="#watchlist" data-filter-type="${FilterType.WATCHLIST}" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${watchlist.length}</span></a>
+          <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item">History <span class="main-navigation__item-count">${history.length}</span></a>
+          <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${favorites.length}</span></a>
+        </div>
+        <a href="#stats" class="main-navigation__additional">Stats</a>
+      </nav>`
+    );
   }
 }

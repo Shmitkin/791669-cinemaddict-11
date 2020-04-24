@@ -1,5 +1,4 @@
 import AbstractComponent from "./abstract-component.js";
-import {createGenresTemplate} from "./genre.js";
 import {formatDuration, addProperty} from "../utils/common.js";
 import {MONTH_NAMES} from "../consts.js";
 
@@ -15,6 +14,13 @@ const makeInputActive = (watchStat) =>
 
 const getGenreTitle = (genres) =>
   genres.length > 1 ? Title.GENRES : Title.GENRE;
+
+const createGenreTemplate = (genre) =>
+  `<span class="film-details__genre">${genre}</span>`;
+
+const createGenresTemplate = (genres) => {
+  return genres.map(createGenreTemplate).join(``);
+};
 
 const formatReleaseDate = (date) =>
   `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
