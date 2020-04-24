@@ -4,11 +4,11 @@ import {render} from "../utils/render.js";
 import {FilterType} from "../consts.js";
 
 export default class MainNavigationController {
-  constructor(container, films) {
+  constructor(container, modalContainer, films) {
     this._container = container;
     this._films = films;
     this._filmsToShow = this._films;
-    this._filmsController = new FilmsController(this._container, this._films);
+    this._filmsController = new FilmsController(this._container, modalContainer, this._films);
   }
 
   render() {

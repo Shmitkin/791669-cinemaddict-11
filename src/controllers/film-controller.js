@@ -8,17 +8,15 @@ import {ActionType} from "../consts.js";
 import {isEscKey} from "../utils/common.js";
 import {render, remove, RenderPosition, replace} from "../utils/render.js";
 
-const modalContainer = document.querySelector(`.footer`);
-
 export default class FilmController {
-  constructor(container, onChange) {
+  constructor(container, modalContainer, onChange) {
+    this._modalContainer = modalContainer;
     this.isFilmDetailsOpened = false;
     this._container = container;
     this._newCommentComponent = new NewCommentComponent();
     this._filmDetailsComponent = null;
     this._filmCardComponent = null;
     this._film = null;
-    this._modalContainer = modalContainer;
     this._onChange = onChange;
   }
 

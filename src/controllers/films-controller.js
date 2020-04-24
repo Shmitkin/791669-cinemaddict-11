@@ -7,8 +7,9 @@ import FilmController from "./film-controller.js";
 import {SortType, CardCount, ActionType} from "../consts.js";
 
 export default class FilmsController {
-  constructor(container, films) {
+  constructor(container, modalContainer, films) {
     this._films = films;
+    this._modalContainer = modalContainer;
     this._showedFilmsControllers = [];
     this._showedTopRatedFilmsControllers = [];
     this._showedMostCommentedFilmControllers = [];
@@ -147,7 +148,7 @@ export default class FilmsController {
   }
   _renderFilms(container, films, onChange) {
     const renderedFilms = films.map((film)=> {
-      const filmController = new FilmController(container, onChange);
+      const filmController = new FilmController(container, this._modalContainer, onChange);
 
       filmController.render(film);
 
