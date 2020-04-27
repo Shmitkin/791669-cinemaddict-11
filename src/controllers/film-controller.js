@@ -3,7 +3,7 @@ import CommentComponent from "../components/comment.js";
 import NewCommentComponent from "../components/new-comment.js";
 import FilmCardComponent from "../components/film-card.js";
 
-import {ActionType} from "../consts.js";
+import {ActionType, CardButtonType} from "../consts.js";
 
 import {isEscKey} from "../utils/common.js";
 import {render, remove, RenderPosition, replace} from "../utils/render.js";
@@ -34,38 +34,16 @@ export default class FilmController {
     this._filmCardComponent.setPosterClickHandler(onFilmCardElementClick);
     this._filmCardComponent.setCommentsClickHandler(onFilmCardElementClick);
 
-    this._filmCardComponent.setWatchlistButtonClickHandler(() => {
-      const changes = Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
+    this._filmCardComponent.setButtonsClickHandler((buttonType) => {
       this._onChange({
         type: ActionType.DATA_CHANGE,
         filmController: this,
         oldData: this._film,
-        newData: changes
-      });
-    });
-
-    this._filmCardComponent.setWatchedButtonClickHandler(() => {
-      const changes = Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
-      this._onChange({
-        type: ActionType.DATA_CHANGE,
-        filmController: this,
-        oldData: this._film,
-        newData: changes
-      });
-    });
-
-    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
-      const changes = Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
-      this._onChange({
-        type: ActionType.DATA_CHANGE,
-        filmController: this,
-        oldData: this._film,
-        newData: changes
+        newData: this._getFilmChanges(buttonType)
       });
     });
 
     render(this._container, this._filmCardComponent);
-
   }
 
   replace(film) {
@@ -81,7 +59,18 @@ export default class FilmController {
 
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
     }
+  }
 
+  _getFilmChanges(buttonType) {
+    switch (buttonType) {
+      case CardButtonType.WATCHLIST:
+        return Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
+      case CardButtonType.WATCHED:
+        return Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
+      case CardButtonType.FAVORITE:
+        return Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
+      default: throw new Error(`Unknown button type`);
+    }
   }
 
   _renderFilmDetails() {

@@ -50,7 +50,14 @@ const ActionType = {
   VIEW_CHANGE: `view-change`
 };
 
+const CardButtonType = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `watched`,
+  FAVORITE: `favorite`
+};
+
 export {
+  CardButtonType,
   ActionType,
   CardCount,
   FilterType,

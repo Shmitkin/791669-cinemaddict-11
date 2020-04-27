@@ -86,8 +86,6 @@ export default class FilmsController {
 
       case ActionType.VIEW_CHANGE:
         this._showedFilmsControllers.forEach((controller) => controller._removeFilmDetails());
-        this._showedTopRatedFilmsControllers.forEach((controller) => controller._removeFilmDetails());
-        this._showedMostCommentedFilmControllers.forEach((controller) => controller._removeFilmDetails());
         break;
     }
   }

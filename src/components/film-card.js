@@ -47,9 +47,9 @@ const createFilmCardTemplate = (film) => {
        <p class="film-card__description">${truncateDescription(description)}</p>
        <a class="film-card__comments">${comments.length} comments</a>
        <form class="film-card__controls">
-         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${makeButtonActive(isAddedToWatchlist)}">Add to watchlist</button>
-         <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${makeButtonActive(isMarkedAsWatched)}">Mark as watched</button>
-         <button class="film-card__controls-item button film-card__controls-item--favorite ${makeButtonActive(isFavorite)}">Mark as favorite</button>
+         <button data-type="watchlist" class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${makeButtonActive(isAddedToWatchlist)}">Add to watchlist</button>
+         <button data-type="watched" class="film-card__controls-item button film-card__controls-item--mark-as-watched ${makeButtonActive(isMarkedAsWatched)}">Mark as watched</button>
+         <button data-type="favorite" class="film-card__controls-item button film-card__controls-item--favorite ${makeButtonActive(isFavorite)}">Mark as favorite</button>
        </form>
      </article>`
   );
@@ -77,25 +77,17 @@ export default class FilmCard extends AbstractComponent {
       .addEventListener(`click`, handler);
   }
 
-  setWatchlistButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+  setButtonsClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls`)
     .addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      handler();
-    });
-  }
-  setWatchedButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-    .addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      handler();
-    });
-  }
-  setFavoriteButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--favorite`)
-    .addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      handler();
+
+      if (evt.target.tagName !== `BUTTON`) {
+        return;
+      }
+
+      const cardButtonType = evt.target.dataset.type;
+      handler(cardButtonType);
     });
   }
 }
