@@ -10,13 +10,15 @@ import {render, remove, RenderPosition, replace} from "../utils/render.js";
 
 export default class FilmController {
   constructor(container, modalContainer, onChange) {
-    this._modalContainer = modalContainer;
-    this._isFilmDetailsOpened = false;
     this._container = container;
-    this._newCommentComponent = new NewCommentComponent();
+    this._modalContainer = modalContainer;
+
+    this._isFilmDetailsOpened = false;
     this._filmDetailsComponent = null;
     this._filmCardComponent = null;
     this._film = null;
+
+    this._newCommentComponent = new NewCommentComponent();
     this._onChange = onChange;
   }
 
@@ -87,6 +89,7 @@ export default class FilmController {
 
     this._isFilmDetailsOpened = !this._isFilmDetailsOpened;
     this._filmDetailsComponent = new FilmDetailsComponent(this._film);
+
     const onCloseButtonClick = () => {
       this._removeFilmDetails();
       document.removeEventListener(`keydown`, onEscKeyDown);
@@ -101,9 +104,6 @@ export default class FilmController {
 
     this._filmDetailsComponent.setCloseButtonClickHandler(onCloseButtonClick);
     document.addEventListener(`keydown`, onEscKeyDown);
-
-    const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    const filmDetailsCommentsListElement = filmDetailsCommentsElement.querySelector(`.film-details__comments-list`);
 
     this._filmDetailsComponent.setWatchlistCheckBoxClickHandler(() => {
       const changes = Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
@@ -135,11 +135,23 @@ export default class FilmController {
       });
     });
 
-    render(filmDetailsCommentsElement, this._newCommentComponent);
-    this._film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
+    this._renderNewComment();
+
+    this._renderCommentsList();
 
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
   }
+
+  _renderNewComment() {
+    const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
+    render(filmDetailsCommentsElement, this._newCommentComponent);
+  }
+
+  _renderCommentsList() {
+    const filmDetailsCommentsListElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-list`);
+    this._film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
+  }
+
   _removeFilmDetails() {
     if (this._isFilmDetailsOpened) {
       this._isFilmDetailsOpened = !this._isFilmDetailsOpened;
