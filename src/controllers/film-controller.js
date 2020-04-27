@@ -35,12 +35,7 @@ export default class FilmController {
     this._filmCardComponent.setCommentsClickHandler(onFilmCardElementClick);
 
     this._filmCardComponent.setButtonsClickHandler((buttonType) => {
-      this._onChange({
-        type: ActionType.DATA_CHANGE,
-        filmController: this,
-        oldData: this._film,
-        newData: this._getFilmChanges(buttonType)
-      });
+      this._onDataChange(buttonType);
     });
 
     render(this._container, this._filmCardComponent);
@@ -73,6 +68,15 @@ export default class FilmController {
     }
   }
 
+  _onDataChange(buttonType) {
+    this._onChange({
+      type: ActionType.DATA_CHANGE,
+      filmController: this,
+      oldData: this._film,
+      newData: this._getFilmChanges(buttonType)
+    });
+  }
+
   _renderFilmDetails() {
     this._onChange({type: ActionType.VIEW_CHANGE});
 
@@ -94,38 +98,12 @@ export default class FilmController {
     this._filmDetailsComponent.setCloseButtonClickHandler(onCloseButtonClick);
     document.addEventListener(`keydown`, onEscKeyDown);
 
-    this._filmDetailsComponent.setWatchlistCheckBoxClickHandler(() => {
-      const changes = Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
-      this._onChange({
-        type: ActionType.DATA_CHANGE,
-        filmController: this,
-        oldData: this._film,
-        newData: changes
-      });
-    });
 
-    this._filmDetailsComponent.setWatchedCheckBoxClickHandler(() => {
-      const changes = Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
-      this._onChange({
-        type: ActionType.DATA_CHANGE,
-        filmController: this,
-        oldData: this._film,
-        newData: changes
-      });
-    });
-
-    this._filmDetailsComponent.setFavoriteCheckBoxClickHandler(() => {
-      const changes = Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
-      this._onChange({
-        type: ActionType.DATA_CHANGE,
-        filmController: this,
-        oldData: this._film,
-        newData: changes
-      });
+    this._filmDetailsComponent.setCheckBoxesClickHandler((buttonType) => {
+      this._onDataChange(buttonType);
     });
 
     this._renderNewComment();
-
     this._renderCommentsList();
 
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
