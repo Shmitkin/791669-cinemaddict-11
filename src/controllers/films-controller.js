@@ -81,7 +81,7 @@ export default class FilmsController {
           return;
         }
         this._films = [].concat(this._films.slice(0, index), action.newData, this._films.slice(index + 1));
-        action.filmController.replace(this._films[index]);
+        action.filmController.update(this._films[index]);
         break;
 
       case ActionType.VIEW_CHANGE:

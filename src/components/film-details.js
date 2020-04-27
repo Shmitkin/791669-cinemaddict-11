@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import {formatDuration, addProperty} from "../utils/common.js";
 import {MONTH_NAMES} from "../consts.js";
 
@@ -109,14 +109,20 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
     this._closeButtonHandler = null;
+    this._checkBoxesClickHandler = null;
   }
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
+  }
+
+  rerender(film) {
+    this._film = film;
+    super.rerender();
   }
 
   setCloseButtonClickHandler(handler) {
@@ -129,9 +135,15 @@ export default class FilmDetails extends AbstractComponent {
     this.getElement().querySelector(`.film-details__controls`)
     .addEventListener(`change`, (evt) => {
       evt.preventDefault();
+      this._checkBoxesClickHandler = handler;
 
       const buttonId = evt.target.id;
       handler(buttonId);
     });
+  }
+
+  recoveryListeners() {
+    this.setCloseButtonClickHandler(this._closeButtonHandler);
+    this.setCheckBoxesClickHandler(this._checkBoxesClickHandler);
   }
 }

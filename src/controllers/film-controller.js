@@ -6,7 +6,7 @@ import FilmCardComponent from "../components/film-card.js";
 import {ActionType, CardButtonType} from "../consts.js";
 
 import {isEscKey} from "../utils/common.js";
-import {render, remove, RenderPosition, replace} from "../utils/render.js";
+import {render, remove, RenderPosition} from "../utils/render.js";
 
 export default class FilmController {
   constructor(container, modalContainer, onChange) {
@@ -41,18 +41,15 @@ export default class FilmController {
     render(this._container, this._filmCardComponent);
   }
 
-  replace(film) {
+  update(film) {
     this._film = film;
-    const oldFilmComponent = this._filmCardComponent;
-    this._filmCardComponent = new FilmCardComponent(film);
 
-    replace(this._filmCardComponent, oldFilmComponent);
+    this._filmCardComponent.rerender(this._film);
 
     if (this._isFilmDetailsOpened) {
-      const oldFilmDetailsComponent = this._filmDetailsComponent;
-      this._filmDetailsComponent = new FilmDetailsComponent(film);
-
-      replace(this._filmDetailsComponent, oldFilmDetailsComponent);
+      this._filmDetailsComponent.rerender(this._film);
+      this._renderNewComment();
+      this._renderCommentsList();
     }
   }
 

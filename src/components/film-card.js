@@ -1,5 +1,5 @@
 import {addProperty, formatDuration} from "../utils/common.js";
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const GENRE_MAIN = 0;
 const MAX_DESCRIPTION_LENGTH = 140;
@@ -56,31 +56,48 @@ const createFilmCardTemplate = (film) => {
 };
 
 
-export default class FilmCard extends AbstractComponent {
+export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._posterClickHandler = null;
+    this._commentsClickHandler = null;
+    this._titleClickHandler = null;
+    this._buttonsClickHandler = null;
   }
+
   getTemplate() {
     return createFilmCardTemplate(this._film);
   }
+
+  rerender(film) {
+    this._film = film;
+    super.rerender();
+  }
+
   setCommentsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__comments`)
       .addEventListener(`click`, handler);
+    this._commentsClickHandler = handler;
   }
+
   setTitleClickHandler(handler) {
     this.getElement().querySelector(`.film-card__title`)
       .addEventListener(`click`, handler);
+    this._titleClickHandler = handler;
   }
+
   setPosterClickHandler(handler) {
     this.getElement().querySelector(`.film-card__poster`)
       .addEventListener(`click`, handler);
+    this._posterClickHandler = handler;
   }
 
   setButtonsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls`)
     .addEventListener(`click`, (evt) => {
       evt.preventDefault();
+      this._buttonsClickHandler = handler;
 
       if (evt.target.tagName !== `BUTTON`) {
         return;
@@ -89,5 +106,12 @@ export default class FilmCard extends AbstractComponent {
       const cardButtonType = evt.target.dataset.type;
       handler(cardButtonType);
     });
+  }
+
+  recoveryListeners() {
+    this.setCommentsClickHandler(this._commentsClickHandler);
+    this.setTitleClickHandler(this._titleClickHandler);
+    this.setPosterClickHandler(this._posterClickHandler);
+    this.setButtonsClickHandler(this._buttonsClickHandler);
   }
 }
