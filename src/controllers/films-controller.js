@@ -67,7 +67,7 @@ export default class FilmsController {
   _onChange(action) {
     switch (action.type) {
       case ActionType.DATA_CHANGE:
-        const index = this._films.findIndex((it) => it === action.oldData);
+        const index = this._films.findIndex((film) => film === action.oldData);
         if (index === -1) {
           return;
         }
@@ -76,9 +76,9 @@ export default class FilmsController {
         break;
 
       case ActionType.VIEW_CHANGE:
-        this._showedFilmsControllers.forEach((it) => it._removeFilmDetails());
-        this._showedTopRatedFilmsControllers.forEach((it) => it._removeFilmDetails());
-        this._showedMostCommentedFilmControllers.forEach((it) => it._removeFilmDetails());
+        this._showedFilmsControllers.forEach((controller) => controller._removeFilmDetails());
+        this._showedTopRatedFilmsControllers.forEach((controller) => controller._removeFilmDetails());
+        this._showedMostCommentedFilmControllers.forEach((controller) => controller._removeFilmDetails());
         break;
     }
   }

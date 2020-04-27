@@ -1,5 +1,5 @@
 import MainNavigationComponent from "../components/main-navigation.js";
-import FilmsController from "./films-controller";
+import FilmsController from "./films-controller.js";
 import {render} from "../utils/render.js";
 import {FilterType} from "../consts.js";
 

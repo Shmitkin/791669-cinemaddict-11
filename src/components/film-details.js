@@ -119,26 +119,26 @@ export default class FilmDetails extends AbstractComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
-  setOnCloseButtonClickHandler(handler) {
+  setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
     this._closeButtonHandler = handler;
   }
-  setOnWatchlistCheckBoxClick(handler) {
+  setWatchlistCheckBoxClickHandler(handler) {
     this.getElement().querySelector(`#watchlist`)
     .addEventListener(`click`, (evt) => {
       evt.preventDefault();
       handler();
     });
   }
-  setOnWatchedCheckBoxClick(handler) {
+  setWatchedCheckBoxClickHandler(handler) {
     this.getElement().querySelector(`#watched`)
     .addEventListener(`click`, (evt) => {
       evt.preventDefault();
       handler();
     });
   }
-  setOnFavoriteCheckBoxClick(handler) {
+  setFavoriteCheckBoxClickHandler(handler) {
     this.getElement().querySelector(`#favorite`)
     .addEventListener(`click`, (evt) => {
       evt.preventDefault();

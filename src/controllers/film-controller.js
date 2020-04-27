@@ -11,7 +11,7 @@ import {render, remove, RenderPosition, replace} from "../utils/render.js";
 export default class FilmController {
   constructor(container, modalContainer, onChange) {
     this._modalContainer = modalContainer;
-    this.isFilmDetailsOpened = false;
+    this._isFilmDetailsOpened = false;
     this._container = container;
     this._newCommentComponent = new NewCommentComponent();
     this._filmDetailsComponent = null;
@@ -24,15 +24,15 @@ export default class FilmController {
     this._film = film;
     this._filmCardComponent = new FilmCardComponent(film);
 
-    const showFilmDetails = () => {
+    const onFilmCardElementClick = () => {
       this._renderFilmDetails(this._film);
     };
 
-    this._filmCardComponent.setOnTitleClickHandler(showFilmDetails);
-    this._filmCardComponent.setOnPosterClickHandler(showFilmDetails);
-    this._filmCardComponent.setOnCommentsClickHandler(showFilmDetails);
+    this._filmCardComponent.setTitleClickHandler(onFilmCardElementClick);
+    this._filmCardComponent.setPosterClickHandler(onFilmCardElementClick);
+    this._filmCardComponent.setCommentsClickHandler(onFilmCardElementClick);
 
-    this._filmCardComponent.setOnWatchlistButtonClick(() => {
+    this._filmCardComponent.setWatchlistButtonClickHandler(() => {
       const changes = Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
       this._onChange({
         type: ActionType.DATA_CHANGE,
@@ -42,7 +42,7 @@ export default class FilmController {
       });
     });
 
-    this._filmCardComponent.setOnWatchedButtonClick(() => {
+    this._filmCardComponent.setWatchedButtonClickHandler(() => {
       const changes = Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
       this._onChange({
         type: ActionType.DATA_CHANGE,
@@ -52,7 +52,7 @@ export default class FilmController {
       });
     });
 
-    this._filmCardComponent.setOnFavoriteButtonClick(() => {
+    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
       const changes = Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
       this._onChange({
         type: ActionType.DATA_CHANGE,
@@ -73,7 +73,7 @@ export default class FilmController {
 
     replace(this._filmCardComponent, oldFilmComponent);
 
-    if (this.isFilmDetailsOpened) {
+    if (this._isFilmDetailsOpened) {
       const oldFilmDetailsComponent = this._filmDetailsComponent;
       this._filmDetailsComponent = new FilmDetailsComponent(film);
 
@@ -85,7 +85,7 @@ export default class FilmController {
   _renderFilmDetails() {
     this._onChange({type: ActionType.VIEW_CHANGE});
 
-    this.isFilmDetailsOpened = !this.isFilmDetailsOpened;
+    this._isFilmDetailsOpened = !this._isFilmDetailsOpened;
     this._filmDetailsComponent = new FilmDetailsComponent(this._film);
     const onCloseButtonClick = () => {
       this._removeFilmDetails();
@@ -99,13 +99,13 @@ export default class FilmController {
       }
     };
 
-    this._filmDetailsComponent.setOnCloseButtonClickHandler(onCloseButtonClick);
+    this._filmDetailsComponent.setCloseButtonClickHandler(onCloseButtonClick);
     document.addEventListener(`keydown`, onEscKeyDown);
 
     const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
     const filmDetailsCommentsListElement = filmDetailsCommentsElement.querySelector(`.film-details__comments-list`);
 
-    this._filmDetailsComponent.setOnWatchlistCheckBoxClick(() => {
+    this._filmDetailsComponent.setWatchlistCheckBoxClickHandler(() => {
       const changes = Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
       this._onChange({
         type: ActionType.DATA_CHANGE,
@@ -115,7 +115,7 @@ export default class FilmController {
       });
     });
 
-    this._filmDetailsComponent.setOnWatchedCheckBoxClick(() => {
+    this._filmDetailsComponent.setWatchedCheckBoxClickHandler(() => {
       const changes = Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
       this._onChange({
         type: ActionType.DATA_CHANGE,
@@ -125,7 +125,7 @@ export default class FilmController {
       });
     });
 
-    this._filmDetailsComponent.setOnFavoriteCheckBoxClick(() => {
+    this._filmDetailsComponent.setFavoriteCheckBoxClickHandler(() => {
       const changes = Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
       this._onChange({
         type: ActionType.DATA_CHANGE,
@@ -141,8 +141,8 @@ export default class FilmController {
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
   }
   _removeFilmDetails() {
-    if (this.isFilmDetailsOpened) {
-      this.isFilmDetailsOpened = !this.isFilmDetailsOpened;
+    if (this._isFilmDetailsOpened) {
+      this._isFilmDetailsOpened = !this._isFilmDetailsOpened;
       remove(this._filmDetailsComponent);
     }
   }

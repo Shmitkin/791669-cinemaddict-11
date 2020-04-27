@@ -48,7 +48,7 @@ const CardCount = {
 const ActionType = {
   DATA_CHANGE: `data-change`,
   VIEW_CHANGE: `view-change`
-}
+};
 
 export {
   ActionType,
