@@ -4,7 +4,12 @@ import ShowMoreButtonComponent from "../components/show-more-button.js";
 import FilmsComponent from "../components/films.js";
 import SortComponent from "../components/sort.js";
 import FilmController from "./film-controller.js";
-import {SortType, CardCount, ActionType} from "../consts.js";
+import {CardCount, ActionType} from "../consts.js";
+import {getSortedFilms, getSortedArrayByKey} from "../utils/common.js";
+
+const getMostCommentedFilms = (films) => {
+  return films.slice().sort((a, b) => b.comments.length - a.comments.length).slice(0, CardCount.MOST_COMMENTED);
+};
 
 export default class FilmsController {
   constructor(container, modalContainer, films) {
@@ -16,8 +21,6 @@ export default class FilmsController {
     this._prevCardsCount = this._showingCardsCount;
 
     this._showedFilmsControllers = [];
-    // this._showedTopRatedFilmsControllers = [];
-    // this._showedMostCommentedFilmControllers = [];
 
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
@@ -89,24 +92,11 @@ export default class FilmsController {
     }
   }
 
-  _getSortedFilms([...films], sortType) {
-    switch (sortType) {
-      case SortType.DATE_DOWN:
-        return films.sort((a, b) => b.release - a.release);
-      case SortType.RATING_DOWN:
-        return films.sort((a, b) => b.rating - a.rating);
-      case SortType.DEFAULT:
-        return films;
-      default: throw new Error(`Unknown sort type: ${sortType}`);
-    }
-  }
-
   _renderTopRatedFilms(container) {
     render(container, new FilmsListComponent({title: `Top rated`, isExtra: true}));
     const topRatedFilmsElement = container.querySelector(`.films-list--extra .films-list__container`);
 
-    const topRatedFilms = this._films.slice().sort((a, b) =>
-      b.rating - a.rating).slice(0, CardCount.TOP_RATED);
+    const topRatedFilms = getSortedArrayByKey(this._films, `rating`).slice(0, CardCount.TOP_RATED);
 
     this._renderFilms(topRatedFilmsElement, topRatedFilms);
   }
@@ -115,8 +105,7 @@ export default class FilmsController {
     render(container, new FilmsListComponent({title: `Most commented`, isExtra: true}));
     const mostCommentedFilmsElement = container.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-    const mostCommentedFilms = this._films.slice().sort((a, b) =>
-      b.comments.length - a.comments.length).slice(0, CardCount.MOST_COMMENTED);
+    const mostCommentedFilms = getMostCommentedFilms(this._films);
 
     this._renderFilms(mostCommentedFilmsElement, mostCommentedFilms);
   }
@@ -144,7 +133,7 @@ export default class FilmsController {
       this._showedFilmsControllers = [];
       remove(this._showMoreButtonComponent);
 
-      const sortedFilms = this._getSortedFilms(this._films, sortType);
+      const sortedFilms = getSortedFilms(this._films, sortType);
 
       if (sortedFilms.length > CardCount.DEFAULT_SHOW) {
         this._showingCardsCount = CardCount.DEFAULT_SHOW;
