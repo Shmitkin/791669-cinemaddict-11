@@ -12,12 +12,8 @@ export default class HeaderProfileController {
     render(this._container, headerProfileComponent);
 
   }
-  _getProfileRating() {
-    return this._films.reduce((rating, film) => {
-      if (film.isMarkedAsWatched) {
-        rating++;
-      } return rating;
-    }, 0);
-  }
 
+  _getProfileRating() {
+    return this._films.reduce((rating, {isMarkedAsWatched}) => isMarkedAsWatched ? rating + 1 : rating, 0);
+  }
 }

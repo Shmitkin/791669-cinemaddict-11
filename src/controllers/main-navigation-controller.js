@@ -7,7 +7,6 @@ export default class MainNavigationController {
   constructor(container, modalContainer, films) {
     this._container = container;
     this._films = films;
-    this._filmsToShow = this._films;
     this._filmsController = new FilmsController(this._container, modalContainer, this._films);
   }
 
@@ -15,23 +14,23 @@ export default class MainNavigationController {
     const watchStatsFilms = this._getWatchStats();
     const mainNavigationComponent = new MainNavigationComponent(watchStatsFilms);
 
+    const showFilteredFilms = (films) => {
+      this._filmsController.rerenderMainContainer(films);
+    };
+
     mainNavigationComponent.setFilerTypeChangeHandler((filterType) => {
       switch (filterType) {
         case FilterType.ALL:
-          this._filmsToShow = this._films;
-          this._filmsController.rerenderMainContainer(this._filmsToShow);
+          showFilteredFilms(this._films);
           break;
         case FilterType.WATCHLIST:
-          this._filmsToShow = watchStatsFilms.watchlist;
-          this._filmsController.rerenderMainContainer(this._filmsToShow);
+          showFilteredFilms(watchStatsFilms.watchlist);
           break;
         case FilterType.HISTORY:
-          this._filmsToShow = watchStatsFilms.history;
-          this._filmsController.rerenderMainContainer(this._filmsToShow);
+          showFilteredFilms(watchStatsFilms.history);
           break;
         case FilterType.FAVORITES:
-          this._filmsToShow = watchStatsFilms.favorites;
-          this._filmsController.rerenderMainContainer(this._filmsToShow);
+          showFilteredFilms(watchStatsFilms.favorites);
           break;
       }
     });

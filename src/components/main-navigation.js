@@ -8,12 +8,15 @@ export default class MainNavigation extends AbstractComponent {
     super();
     this._watchStats = watchStats;
     this._currentFilterType = FilterType.ALL;
-    this._activeElement = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
   }
+
   getTemplate() {
     return this._createTemplate();
   }
+
   setFilerTypeChangeHandler(handler) {
+    let activeElement = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
+
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
@@ -28,9 +31,9 @@ export default class MainNavigation extends AbstractComponent {
 
       this._currentFilterType = filterType;
 
-      this._activeElement.classList.remove(ACTIVE_CLASS);
-      this._activeElement = evt.target;
-      this._activeElement.classList.add(ACTIVE_CLASS);
+      activeElement.classList.remove(ACTIVE_CLASS);
+      activeElement = evt.target;
+      activeElement.classList.add(ACTIVE_CLASS);
 
       handler(this._currentFilterType);
     });

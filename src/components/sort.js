@@ -7,12 +7,15 @@ export default class Sort extends AbstractComponent {
   constructor() {
     super();
     this._currentSortType = SortType.DEFAULT;
-    this._activeButton = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
   }
+
   getTemplate() {
     return this._createTemplate();
   }
+
   setSortTypeChangeHandler(handler) {
+    let activeButton = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
+
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
@@ -27,9 +30,9 @@ export default class Sort extends AbstractComponent {
 
       this._currenSortType = sortType;
 
-      this._activeButton.classList.remove(ACTIVE_CLASS);
-      this._activeButton = evt.target;
-      this._activeButton.classList.add(ACTIVE_CLASS);
+      activeButton.classList.remove(ACTIVE_CLASS);
+      activeButton = evt.target;
+      activeButton.classList.add(ACTIVE_CLASS);
 
       handler(this._currenSortType);
     });
