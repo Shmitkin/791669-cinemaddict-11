@@ -1,62 +1,38 @@
 import MainNavigationComponent from "../components/main-navigation.js";
-import FilmsController from "./films-controller.js";
 import {render} from "../utils/render.js";
 import {FilterType} from "../consts.js";
+import {getFilteredFilms} from "../utils/filter.js";
 
 export default class MainNavigationController {
-  constructor(container, modalContainer, filmsModel) {
+  constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;
-    this._filmsController = new FilmsController(this._container, modalContainer, this._filmsModel);
+
+    this._activeFilterType = FilterType.ALL;
+    this._mainNavigationComponent = null;
+
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._filmsModel.setDataChangeHandler(this._onDataChange);
   }
 
   render() {
-    const watchStatsFilms = this._getWatchStats();
-    const mainNavigationComponent = new MainNavigationComponent(watchStatsFilms);
+    const watchStats = getFilteredFilms(this._filmsModel.getFilmsAll());
+    const mainNavigationComponent = new MainNavigationComponent(watchStats);
 
-    const showFilteredFilms = (films) => {
-      this._filmsController.rerenderMainContainer(films);
-    };
-
-    mainNavigationComponent.setFilerTypeChangeHandler((filterType) => {
-      switch (filterType) {
-        case FilterType.ALL:
-          showFilteredFilms(this._filmsModel.getFilmsAll());
-          break;
-        case FilterType.WATCHLIST:
-          showFilteredFilms(watchStatsFilms.watchlist);
-          break;
-        case FilterType.HISTORY:
-          showFilteredFilms(watchStatsFilms.history);
-          break;
-        case FilterType.FAVORITES:
-          showFilteredFilms(watchStatsFilms.favorites);
-          break;
-      }
-    });
+    mainNavigationComponent.setFilerTypeChangeHandler(this._onFilterChange);
 
     render(this._container, mainNavigationComponent);
-    this._filmsController.render();
   }
 
-  _getWatchStats() {
-    const reduceFilms = (stats, film) => {
-      if (film.isAddedToWatchlist) {
-        stats.watchlist.push(film);
-      }
-      if (film.isMarkedAsWatched) {
-        stats.history.push(film);
-      }
-      if (film.isFavorite) {
-        stats.favorites.push(film);
-      }
-      return stats;
-    };
-    return this._filmsModel.getFilmsAll().reduce(reduceFilms, {
-      watchlist: [],
-      history: [],
-      favorites: []
-    });
+  _onFilterChange(filterType) {
+    this._filmsModel.setFilter(filterType);
+    this._activeFilterType = filterType;
+  }
+
+  _onDataChange() {
+    this.render();
   }
 }
 
