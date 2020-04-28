@@ -2,9 +2,9 @@ import HeaderProfileComponent from "../components/header-profile.js";
 import {render} from "../utils/render.js";
 
 export default class HeaderProfileController {
-  constructor(container, films) {
+  constructor(container, filmsModel) {
     this._container = container;
-    this._films = films;
+    this._filmsModel = filmsModel;
   }
 
   render() {
@@ -14,6 +14,6 @@ export default class HeaderProfileController {
   }
 
   _getProfileRating() {
-    return this._films.reduce((rating, {isMarkedAsWatched}) => isMarkedAsWatched ? rating + 1 : rating, 0);
+    return this._filmsModel.getFilmsAll().reduce((rating, {isMarkedAsWatched}) => isMarkedAsWatched ? rating + 1 : rating, 0);
   }
 }

@@ -12,8 +12,8 @@ const getMostCommentedFilms = (films) => {
 };
 
 export default class FilmsController {
-  constructor(container, modalContainer, films) {
-    this._films = films;
+  constructor(container, modalContainer, filmsModel) {
+    this._filmsModel = filmsModel;
     this._container = container;
     this._modalContainer = modalContainer;
 
@@ -31,8 +31,9 @@ export default class FilmsController {
 
   render() {
     const filmsElement = this._filmsComponent.getElement();
+    const films = this._filmsModel.getFilms();
 
-    if (this._films.length === 0) {
+    if (films.length === 0) {
       render(filmsElement, new FilmsListComponent({title: `There are no movies in our database`}));
       return;
     }
@@ -40,10 +41,10 @@ export default class FilmsController {
 
     const filmsListContainerElement = filmsElement.querySelector(`.films-list__container`);
 
-    this._renderFilms(filmsListContainerElement, this._films.slice(0, CardCount.DEFAULT_SHOW));
+    this._renderFilms(filmsListContainerElement, films.slice(0, CardCount.DEFAULT_SHOW));
 
-    if (this._films.length > CardCount.DEFAULT_SHOW) {
-      this._renderShowMoreButton(filmsListContainerElement, this._films);
+    if (films.length > CardCount.DEFAULT_SHOW) {
+      this._renderShowMoreButton(filmsListContainerElement, films);
     }
 
     this._renderSortComponent(filmsListContainerElement);
@@ -76,12 +77,11 @@ export default class FilmsController {
   _onChange(action) {
     switch (action.type) {
       case ActionType.DATA_CHANGE:
-        const index = this._films.findIndex((film) => film === action.oldData);
-        if (index === -1) {
-          return;
+        const isSuccess = this._filmsModel.updateFilm(action.oldData.id, action.newData);
+
+        if (isSuccess) {
+          action.filmController.update(action.newData);
         }
-        this._films = [].concat(this._films.slice(0, index), action.newData, this._films.slice(index + 1));
-        action.filmController.update(this._films[index]);
         break;
 
       case ActionType.VIEW_CHANGE:
@@ -94,7 +94,7 @@ export default class FilmsController {
     render(container, new FilmsListComponent({title: `Top rated`, isExtra: true}));
     const topRatedFilmsElement = container.querySelector(`.films-list--extra .films-list__container`);
 
-    const topRatedFilms = getSortedArrayByKey(this._films, `rating`).slice(0, CardCount.TOP_RATED);
+    const topRatedFilms = getSortedArrayByKey(this._filmsModel.getFilmsAll(), `rating`).slice(0, CardCount.TOP_RATED);
 
     this._renderFilms(topRatedFilmsElement, topRatedFilms);
   }
@@ -103,7 +103,7 @@ export default class FilmsController {
     render(container, new FilmsListComponent({title: `Most commented`, isExtra: true}));
     const mostCommentedFilmsElement = container.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-    const mostCommentedFilms = getMostCommentedFilms(this._films);
+    const mostCommentedFilms = getMostCommentedFilms(this._filmsModel.getFilmsAll());
 
     this._renderFilms(mostCommentedFilmsElement, mostCommentedFilms);
   }

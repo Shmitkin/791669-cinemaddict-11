@@ -4,10 +4,10 @@ import {render} from "../utils/render.js";
 import {FilterType} from "../consts.js";
 
 export default class MainNavigationController {
-  constructor(container, modalContainer, films) {
+  constructor(container, modalContainer, filmsModel) {
     this._container = container;
-    this._films = films;
-    this._filmsController = new FilmsController(this._container, modalContainer, this._films);
+    this._filmsModel = filmsModel;
+    this._filmsController = new FilmsController(this._container, modalContainer, this._filmsModel);
   }
 
   render() {
@@ -21,7 +21,7 @@ export default class MainNavigationController {
     mainNavigationComponent.setFilerTypeChangeHandler((filterType) => {
       switch (filterType) {
         case FilterType.ALL:
-          showFilteredFilms(this._films);
+          showFilteredFilms(this._filmsModel.getFilmsAll());
           break;
         case FilterType.WATCHLIST:
           showFilteredFilms(watchStatsFilms.watchlist);
@@ -52,7 +52,7 @@ export default class MainNavigationController {
       }
       return stats;
     };
-    return this._films.reduce(reduceFilms, {
+    return this._filmsModel.getFilmsAll().reduce(reduceFilms, {
       watchlist: [],
       history: [],
       favorites: []

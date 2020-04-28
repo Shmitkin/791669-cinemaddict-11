@@ -25,6 +25,7 @@ export default class NewComment extends AbstractComponent {
       </div>`
     );
   }
+
   _createEmojiTemplate(emoji) {
     return (
       `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
