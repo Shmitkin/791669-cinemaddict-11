@@ -53,6 +53,14 @@ export default class FilmController {
     }
   }
 
+  destroy() {
+    remove(this._filmCardComponent);
+
+    if (this._isFilmDetailsOpened) {
+      remove(this._filmDetailsComponent);
+    }
+  }
+
   _getFilmChanges(buttonType) {
     switch (buttonType) {
       case CardButtonType.WATCHLIST:
