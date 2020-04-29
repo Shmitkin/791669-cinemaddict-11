@@ -1,5 +1,5 @@
 import MainNavigationComponent from "../components/main-navigation.js";
-import {render} from "../utils/render.js";
+import {render, replace} from "../utils/render.js";
 import {FilterType} from "../consts.js";
 import {getFilteredFilms} from "../utils/filter.js";
 
@@ -19,11 +19,15 @@ export default class MainNavigationController {
 
   render() {
     const watchStats = getFilteredFilms(this._filmsModel.getFilmsAll());
-    const mainNavigationComponent = new MainNavigationComponent(watchStats);
+    const oldMainNavigationComponent = this._mainNavigationComponent;
+    this._mainNavigationComponent = new MainNavigationComponent(watchStats);
+    this._mainNavigationComponent.setFilerTypeChangeHandler(this._onFilterChange);
 
-    mainNavigationComponent.setFilerTypeChangeHandler(this._onFilterChange);
-
-    render(this._container, mainNavigationComponent);
+    if (oldMainNavigationComponent) {
+      replace(this._mainNavigationComponent, oldMainNavigationComponent);
+    } else {
+      render(this._container, this._mainNavigationComponent);
+    }
   }
 
   _onFilterChange(filterType) {
