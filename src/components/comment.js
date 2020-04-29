@@ -28,6 +28,7 @@ export default class Comment extends AbstractComponent {
     super();
     this._comment = comment;
   }
+
   getTemplate() {
     return createCommentTemplate(this._comment);
   }

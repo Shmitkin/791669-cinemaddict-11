@@ -13,6 +13,16 @@ export default class Sort extends AbstractComponent {
     return this._createTemplate();
   }
 
+  _createTemplate() {
+    return (
+      `<ul class="sort">
+        <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
+        <li><a href="#" data-sort-type="${SortType.DATE_DOWN}" class="sort__button">Sort by date</a></li>
+        <li><a href="#" data-sort-type="${SortType.RATING_DOWN}" class="sort__button">Sort by rating</a></li>
+      </ul>`
+    );
+  }
+
   setSortTypeChangeHandler(handler) {
     let activeButtonElement = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
 
@@ -36,15 +46,5 @@ export default class Sort extends AbstractComponent {
 
       handler(this._currenSortType);
     });
-  }
-
-  _createTemplate() {
-    return (
-      `<ul class="sort">
-        <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
-        <li><a href="#" data-sort-type="${SortType.DATE_DOWN}" class="sort__button">Sort by date</a></li>
-        <li><a href="#" data-sort-type="${SortType.RATING_DOWN}" class="sort__button">Sort by rating</a></li>
-      </ul>`
-    );
   }
 }

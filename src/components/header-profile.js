@@ -24,6 +24,7 @@ export default class HeaderProfile extends AbstractComponent {
       </section>`
     );
   }
+
   _getProfileRatingTitle() {
     return RATING_TITLES.find(({rating}) => this._filmsInHistory >= rating).title;
   }

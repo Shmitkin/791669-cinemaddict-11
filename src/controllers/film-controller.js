@@ -48,6 +48,36 @@ export default class FilmController {
     this.removeFilmDetails();
   }
 
+  removeFilmDetails() {
+    if (this._filmDetailsComponent) {
+      remove(this._filmDetailsComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    }
+  }
+
+  _renderFilmDetails() {
+    this._onChange({type: FilmCardActionType.VIEW_CHANGE});
+
+    this._filmDetailsComponent = new FilmDetailsComponent(this._film);
+    this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
+    this._filmDetailsComponent.setPopUpControlsClickHandler(this._onDataChange);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._renderNewComment();
+    this._renderCommentsList();
+
+    render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
+  }
+
+  _renderNewComment() {
+    const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
+    render(filmDetailsCommentsElement, this._newCommentComponent);
+  }
+
+  _renderCommentsList() {
+    const filmDetailsCommentsListElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-list`);
+    this._film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
+  }
+
   _onDataChange(buttonType) {
     const getFilmChanges = () => {
       switch (buttonType) {
@@ -81,36 +111,6 @@ export default class FilmController {
   _onEscKeyDown(evt) {
     if (isEscKey(evt)) {
       this.removeFilmDetails();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    }
-  }
-
-  _renderFilmDetails() {
-    this._onChange({type: FilmCardActionType.VIEW_CHANGE});
-
-    this._filmDetailsComponent = new FilmDetailsComponent(this._film);
-    this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
-    this._filmDetailsComponent.setPopUpControlsClickHandler(this._onDataChange);
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._renderNewComment();
-    this._renderCommentsList();
-
-    render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
-  }
-
-  _renderNewComment() {
-    const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    render(filmDetailsCommentsElement, this._newCommentComponent);
-  }
-
-  _renderCommentsList() {
-    const filmDetailsCommentsListElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-list`);
-    this._film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
-  }
-
-  removeFilmDetails() {
-    if (this._filmDetailsComponent) {
-      remove(this._filmDetailsComponent);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }

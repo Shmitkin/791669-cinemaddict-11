@@ -46,22 +46,6 @@ export default class FilmsController {
     this._renderShowMoreButton(films);
   }
 
-  _onChange(action) {
-    switch (action.type) {
-      case FilmCardActionType.DATA_CHANGE:
-        const isSuccess = this._filmsModel.updateFilm(action.oldData.id, action.newData);
-
-        if (isSuccess) {
-          action.filmController.render(action.newData);
-        }
-        break;
-
-      case FilmCardActionType.VIEW_CHANGE:
-        this._showedFilmsControllers.forEach((controller) => controller.removeFilmDetails());
-        break;
-    }
-  }
-
   _renderTopRatedFilms(container) {
     render(container, new FilmsListComponent({title: `Top rated`, isExtra: true}));
     const topRatedFilmsElement = container.querySelector(`.films-list--extra .films-list__container`);
@@ -123,6 +107,22 @@ export default class FilmsController {
     this._showedFilmsControllers.forEach((controller) => controller.destroy());
     this._showedFilmsControllers = [];
     this._showingCardsCount = CardCount.DEFAULT_SHOW;
+  }
+
+  _onChange(action) {
+    switch (action.type) {
+      case FilmCardActionType.DATA_CHANGE:
+        const isSuccess = this._filmsModel.updateFilm(action.oldData.id, action.newData);
+
+        if (isSuccess) {
+          action.filmController.render(action.newData);
+        }
+        break;
+
+      case FilmCardActionType.VIEW_CHANGE:
+        this._showedFilmsControllers.forEach((controller) => controller.removeFilmDetails());
+        break;
+    }
   }
 
   _onSortChange(sortType) {

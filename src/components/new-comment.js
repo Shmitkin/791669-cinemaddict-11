@@ -22,6 +22,10 @@ export default class NewComment extends AbstractSmartComponent {
     super.rerender();
   }
 
+  _recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
   _createTemplate() {
     return (
       `<div class="film-details__new-comment">
@@ -58,9 +62,5 @@ export default class NewComment extends AbstractSmartComponent {
       this._userEmojiElement = this._createEmojiPictureTemplate(evt.target.value);
       this._rerender();
     });
-  }
-
-  _recoveryListeners() {
-    this._subscribeOnEvents();
   }
 }
