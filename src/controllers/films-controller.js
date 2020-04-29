@@ -3,7 +3,7 @@ import FilmsListComponent from "../components/films-list.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
 import SortComponent from "../components/sort.js";
 import FilmController from "./film-controller.js";
-import {CardCount, ActionType} from "../consts.js";
+import {CardCount, ActionType, SortType} from "../consts.js";
 import {getSortedFilms, getSortedArrayByKey} from "../utils/common.js";
 
 const getMostCommentedFilms = (films) => {
@@ -20,12 +20,16 @@ export default class FilmsController {
     this._prevCardsCount = this._showingCardsCount;
 
     this._showedFilmsControllers = [];
+    this._sortType = SortType.DEFAULT;
 
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._sortComponent = new SortComponent();
 
+    this._onSortChange = this._onSortChange.bind(this);
     this._onChange = this._onChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._sortComponent.setSortTypeChangeHandler(this._onSortChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
@@ -37,14 +41,9 @@ export default class FilmsController {
       return;
     }
     render(this._container, new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true}));
-
+    render(this._container, this._sortComponent, RenderPosition.BEFOREBEGIN);
     this._renderFilms(films.slice(0, CardCount.DEFAULT_SHOW));
-
-    if (films.length > CardCount.DEFAULT_SHOW) {
-      this._renderShowMoreButton(films);
-    }
-
-    this._renderSortComponent();
+    this._renderShowMoreButton(films);
   }
 
   _onChange(action) {
@@ -83,8 +82,9 @@ export default class FilmsController {
 
   _renderShowMoreButton() {
     remove(this._showMoreButtonComponent);
+    const sortedFilms = getSortedFilms(this._filmsModel.getFilms(), this._sortType);
 
-    if (this._showingCardsCount >= this._filmsModel.getFilms().length) {
+    if (this._showingCardsCount >= sortedFilms.length) {
       return;
     }
 
@@ -95,29 +95,11 @@ export default class FilmsController {
       this._prevCardsCount = this._showingCardsCount;
       this._showingCardsCount += CardCount.SHOW_MORE;
 
-      this._renderFilms(this._filmsModel.getFilms().slice(this._prevCardsCount, this._showingCardsCount));
-
-      if (this._showingCardsCount >= this._filmsModel.getFilms().length) {
+      this._renderFilms(sortedFilms.slice(this._prevCardsCount, this._showingCardsCount));
+      if (this._showingCardsCount >= sortedFilms.length) {
         remove(this._showMoreButtonComponent);
       }
     });
-  }
-
-  _renderSortComponent() {
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      this._removeFilms();
-
-      const sortedFilms = getSortedFilms(this._filmsModel.getFilms(), sortType);
-
-      if (sortedFilms.length > CardCount.DEFAULT_SHOW) {
-        this._showingCardsCount = CardCount.DEFAULT_SHOW;
-        this._renderFilms(sortedFilms.slice(0, CardCount.DEFAULT_SHOW));
-        this._renderShowMoreButton(sortedFilms);
-        return;
-      }
-      this._renderFilms(sortedFilms);
-    });
-    render(this._container, this._sortComponent, RenderPosition.BEFOREBEGIN);
   }
 
   _renderFilms(films) {
@@ -125,27 +107,30 @@ export default class FilmsController {
     const renderedFilms = films.map((film)=> {
       const filmController = new FilmController(filmsListContainerElement, this._modalContainer, this._onChange);
       filmController.render(film);
-
       return filmController;
     });
     this._showedFilmsControllers = this._showedFilmsControllers.concat(renderedFilms);
   }
 
-  _onFilterChange() {
-    this._updateFilms();
-  }
-
   _updateFilms() {
+    const sortedFilms = getSortedFilms(this._filmsModel.getFilms(), this._sortType);
     this._removeFilms();
-
-    this._renderFilms(this._filmsModel.getFilms().slice(0, CardCount.DEFAULT_SHOW));
+    this._renderFilms(sortedFilms.slice(0, CardCount.DEFAULT_SHOW));
     this._renderShowMoreButton();
-
   }
 
   _removeFilms() {
     this._showedFilmsControllers.forEach((controller) => controller.destroy());
     this._showedFilmsControllers = [];
     this._showingCardsCount = CardCount.DEFAULT_SHOW;
+  }
+
+  _onSortChange(sortType) {
+    this._sortType = sortType;
+    this._updateFilms();
+  }
+
+  _onFilterChange() {
+    this._updateFilms();
   }
 }
