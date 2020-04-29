@@ -143,7 +143,7 @@ export default class FilmsController {
     const films = this._filmsModel.getFilms();
 
     this._renderFilms(films.slice(0, CardCount.DEFAULT_SHOW));
-    
+
     if (films.length > CardCount.DEFAULT_SHOW) {
       this._renderShowMoreButton(films);
     }
