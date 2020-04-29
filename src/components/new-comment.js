@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const COMMENT_EMOJI = [
   `smile`,
@@ -7,7 +7,7 @@ const COMMENT_EMOJI = [
   `angry`
 ];
 
-export default class NewComment extends AbstractComponent {
+export default class NewComment extends AbstractSmartComponent {
   getTemplate() {
     return this._createTemplate();
   }
@@ -34,4 +34,6 @@ export default class NewComment extends AbstractComponent {
       </label>`
     );
   }
+
+
 }

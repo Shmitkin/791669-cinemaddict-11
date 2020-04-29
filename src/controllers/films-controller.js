@@ -3,7 +3,7 @@ import FilmsListComponent from "../components/films-list.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
 import SortComponent from "../components/sort.js";
 import FilmController from "./film-controller.js";
-import {CardCount, ActionType, SortType} from "../consts.js";
+import {CardCount, FilmCardActionType, SortType} from "../consts.js";
 import {getSortedFilms, getSortedArrayByKey} from "../utils/common.js";
 
 const getMostCommentedFilms = (films) => {
@@ -48,16 +48,16 @@ export default class FilmsController {
 
   _onChange(action) {
     switch (action.type) {
-      case ActionType.DATA_CHANGE:
+      case FilmCardActionType.DATA_CHANGE:
         const isSuccess = this._filmsModel.updateFilm(action.oldData.id, action.newData);
 
         if (isSuccess) {
-          action.filmController.update(action.newData);
+          action.filmController.render(action.newData);
         }
         break;
 
-      case ActionType.VIEW_CHANGE:
-        this._showedFilmsControllers.forEach((controller) => controller._removeFilmDetails());
+      case FilmCardActionType.VIEW_CHANGE:
+        this._showedFilmsControllers.forEach((controller) => controller.removeFilmDetails());
         break;
     }
   }

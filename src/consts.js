@@ -1,4 +1,4 @@
-const MONTH_NAMES = [
+export const MONTH_NAMES = [
   `January`,
   `February`,
   `March`,
@@ -13,31 +13,31 @@ const MONTH_NAMES = [
   `December`,
 ];
 
-const MINUTES_IN_HOUR = 60;
+export const MINUTES_IN_HOUR = 60;
 
-const HOURS_IN_DAY = 24;
+export const HOURS_IN_DAY = 24;
 
-const DAYS_IN_MONTH = 30;
+export const DAYS_IN_MONTH = 30;
 
-const KeyboardKey = {
+export const KeyboardKey = {
   ESCAPE: `Escape`,
   ESC: `Esc`
 };
 
-const SortType = {
+export const SortType = {
   DATE_DOWN: `date-down`,
   RATING_DOWN: `rating-down`,
   DEFAULT: `default`,
 };
 
-const FilterType = {
+export const FilterType = {
   ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`
 };
 
-const CardCount = {
+export const CardCount = {
   SUMMARY: 15,
   DEFAULT_SHOW: 5,
   SHOW_MORE: 5,
@@ -45,26 +45,13 @@ const CardCount = {
   MOST_COMMENTED: 2
 };
 
-const ActionType = {
+export const FilmCardActionType = {
   DATA_CHANGE: `data-change`,
   VIEW_CHANGE: `view-change`
 };
 
-const CardButtonType = {
+export const CardButtonType = {
   WATCHLIST: `watchlist`,
   WATCHED: `watched`,
   FAVORITE: `favorite`
-};
-
-export {
-  CardButtonType,
-  ActionType,
-  CardCount,
-  FilterType,
-  SortType,
-  KeyboardKey,
-  MONTH_NAMES,
-  MINUTES_IN_HOUR,
-  HOURS_IN_DAY,
-  DAYS_IN_MONTH
 };

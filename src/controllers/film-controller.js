@@ -3,111 +3,95 @@ import CommentComponent from "../components/comment.js";
 import NewCommentComponent from "../components/new-comment.js";
 import FilmCardComponent from "../components/film-card.js";
 
-import {ActionType, CardButtonType} from "../consts.js";
+import {FilmCardActionType, CardButtonType} from "../consts.js";
 
 import {isEscKey} from "../utils/common.js";
-import {render, remove, RenderPosition} from "../utils/render.js";
+import {render, remove, replace, RenderPosition} from "../utils/render.js";
 
 export default class FilmController {
   constructor(container, modalContainer, onChange) {
     this._container = container;
     this._modalContainer = modalContainer;
 
-    this._isFilmDetailsOpened = false;
     this._filmDetailsComponent = null;
     this._filmCardComponent = null;
     this._film = null;
 
     this._newCommentComponent = new NewCommentComponent();
     this._onChange = onChange;
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onFilmCardClick = this._onFilmCardClick.bind(this);
+    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   render(film) {
     this._film = film;
+
+    const oldfilmCardComponent = this._filmCardComponent;
     this._filmCardComponent = new FilmCardComponent(film);
 
-    const onFilmCardElementClick = () => {
-      this._renderFilmDetails(this._film);
-    };
+    this._filmCardComponent.setTitleClickHandler(this._onFilmCardClick);
+    this._filmCardComponent.setPosterClickHandler(this._onFilmCardClick);
+    this._filmCardComponent.setCommentsClickHandler(this._onFilmCardClick);
+    this._filmCardComponent.setCardControlsClickHandler(this._onDataChange);
 
-    this._filmCardComponent.setTitleClickHandler(onFilmCardElementClick);
-    this._filmCardComponent.setPosterClickHandler(onFilmCardElementClick);
-    this._filmCardComponent.setCommentsClickHandler(onFilmCardElementClick);
-
-    this._filmCardComponent.setButtonsClickHandler((buttonType) => {
-      this._onDataChange(buttonType);
-    });
-
-    render(this._container, this._filmCardComponent);
-  }
-
-  update(film) {
-    this._film = film;
-
-    this._filmCardComponent.rerender(this._film);
-
-    if (this._isFilmDetailsOpened) {
-      this._filmDetailsComponent.rerender(this._film);
-      this._renderNewComment();
-      this._renderCommentsList();
+    if (oldfilmCardComponent) {
+      replace(this._filmCardComponent, oldfilmCardComponent);
+    } else {
+      render(this._container, this._filmCardComponent);
     }
   }
 
   destroy() {
     remove(this._filmCardComponent);
-
-    if (this._isFilmDetailsOpened) {
-      remove(this._filmDetailsComponent);
-    }
-  }
-
-  _getFilmChanges(buttonType) {
-    switch (buttonType) {
-      case CardButtonType.WATCHLIST:
-        return Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
-      case CardButtonType.WATCHED:
-        return Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
-      case CardButtonType.FAVORITE:
-        return Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
-      default: throw new Error(`Unknown button type`);
-    }
+    this.removeFilmDetails();
   }
 
   _onDataChange(buttonType) {
-    this._onChange({
-      type: ActionType.DATA_CHANGE,
-      filmController: this,
-      oldData: this._film,
-      newData: this._getFilmChanges(buttonType)
-    });
-  }
-
-  _renderFilmDetails() {
-    this._onChange({type: ActionType.VIEW_CHANGE});
-
-    this._isFilmDetailsOpened = !this._isFilmDetailsOpened;
-    this._filmDetailsComponent = new FilmDetailsComponent(this._film);
-
-    const onCloseButtonClick = () => {
-      this._removeFilmDetails();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (isEscKey(evt)) {
-        this._removeFilmDetails();
-        document.removeEventListener(`keydown`, onEscKeyDown);
+    const getFilmChanges = () => {
+      switch (buttonType) {
+        case CardButtonType.WATCHLIST:
+          return Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
+        case CardButtonType.WATCHED:
+          return Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
+        case CardButtonType.FAVORITE:
+          return Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
+        default: throw new Error(`Unknown button type`);
       }
     };
 
-    this._filmDetailsComponent.setCloseButtonClickHandler(onCloseButtonClick);
-    document.addEventListener(`keydown`, onEscKeyDown);
-
-
-    this._filmDetailsComponent.setCheckBoxesClickHandler((buttonType) => {
-      this._onDataChange(buttonType);
+    this._onChange({
+      type: FilmCardActionType.DATA_CHANGE,
+      filmController: this,
+      oldData: this._film,
+      newData: getFilmChanges()
     });
+  }
 
+  _onFilmCardClick() {
+    this._renderFilmDetails();
+  }
+
+  _onCloseButtonClick() {
+    this.removeFilmDetails();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _onEscKeyDown(evt) {
+    if (isEscKey(evt)) {
+      this.removeFilmDetails();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    }
+  }
+
+  _renderFilmDetails() {
+    this._onChange({type: FilmCardActionType.VIEW_CHANGE});
+
+    this._filmDetailsComponent = new FilmDetailsComponent(this._film);
+    this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
+    this._filmDetailsComponent.setPopUpControlsClickHandler(this._onDataChange);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
     this._renderNewComment();
     this._renderCommentsList();
 
@@ -124,10 +108,10 @@ export default class FilmController {
     this._film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
   }
 
-  _removeFilmDetails() {
-    if (this._isFilmDetailsOpened) {
-      this._isFilmDetailsOpened = !this._isFilmDetailsOpened;
+  removeFilmDetails() {
+    if (this._filmDetailsComponent) {
       remove(this._filmDetailsComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
 }

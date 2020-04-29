@@ -13,7 +13,7 @@ const reduceFilms = (stats, film) => {
   return stats;
 };
 
-const getFilteredFilms = (films, filterType) => {
+export const getFilteredFilms = (films, filterType) => {
   const filteredFilms = films.reduce(reduceFilms, {
     watchlist: [],
     history: [],
@@ -33,5 +33,3 @@ const getFilteredFilms = (films, filterType) => {
   }
 };
 
-
-export {getFilteredFilms};
