@@ -10,6 +10,7 @@ export default class MostCommentedController extends AbstractFilmsController {
   }
 
   render() {
+    super.render();
     this._renderFilms(this._getMostCommentedFilms());
   }
 

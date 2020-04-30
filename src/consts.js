@@ -45,11 +45,6 @@ export const CardCount = {
   MOST_COMMENTED: 2
 };
 
-export const FilmCardActionType = {
-  DATA_CHANGE: `data-change`,
-  VIEW_CHANGE: `view-change`
-};
-
 export const CardButtonType = {
   WATCHLIST: `watchlist`,
   WATCHED: `watched`,

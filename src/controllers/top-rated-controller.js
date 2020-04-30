@@ -11,6 +11,7 @@ export default class TopRatedController extends AbstractFilmsController {
   }
 
   render() {
+    super.render();
     this._renderFilms(this._getTopRatedFilms());
   }
 

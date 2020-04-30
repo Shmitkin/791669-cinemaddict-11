@@ -92,6 +92,6 @@ export default class PageController {
 
   _onSortChange(sortType) {
     this._sortType = sortType;
-    this._filmsController.updateFilms(sortType);
+    this._filmsController.updateFilmsContainer(sortType);
   }
 }

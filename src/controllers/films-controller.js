@@ -11,18 +11,21 @@ export default class FilmsListController extends AbstractFilmsController {
     this._container = container;
     this._modalContainer = modalContainer;
 
+
     this._showingCardsCount = CardCount.DEFAULT_SHOW;
     this._prevCardsCount = this._showingCardsCount;
 
     this._sortType = SortType.DEFAULT;
 
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+
   }
 
   render() {
-    const films = this._filmsModel.getFilms();
-    this._renderFilms(films.slice(0, CardCount.DEFAULT_SHOW));
-    this._renderShowMoreButton(films);
+    super.render();
+
+    this._renderFilms(this._films.slice(0, CardCount.DEFAULT_SHOW));
+    this._renderShowMoreButton(this._films);
   }
 
   _renderShowMoreButton() {
@@ -45,7 +48,7 @@ export default class FilmsListController extends AbstractFilmsController {
     });
   }
 
-  updateFilms(sortType) {
+  updateFilmsContainer(sortType) {
     this._sortType = sortType;
     const sortedFilms = getSortedFilms(this._filmsModel.getFilms(), this._sortType);
     this._removeFilms();
