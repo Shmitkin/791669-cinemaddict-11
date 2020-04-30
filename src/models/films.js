@@ -39,11 +39,11 @@ export default class FilmsModel {
     return true;
   }
 
-  setDataChangeHandler(handler) {
+  addDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
 
-  setFilterChangeHandler(handler) {
+  addFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
 

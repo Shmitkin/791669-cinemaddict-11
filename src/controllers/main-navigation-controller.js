@@ -14,13 +14,13 @@ export default class MainNavigationController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
-    this._filmsModel.setDataChangeHandler(this._onDataChange);
+    this._filmsModel.addDataChangeHandler(this._onDataChange);
   }
 
   render() {
     const watchStats = getFilteredFilms(this._filmsModel.getFilmsAll());
     const oldMainNavigationComponent = this._mainNavigationComponent;
-    this._mainNavigationComponent = new MainNavigationComponent(watchStats);
+    this._mainNavigationComponent = new MainNavigationComponent(watchStats, this._activeFilterType);
     this._mainNavigationComponent.setFilerTypeChangeHandler(this._onFilterChange);
 
     if (oldMainNavigationComponent) {
