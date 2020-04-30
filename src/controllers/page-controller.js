@@ -6,7 +6,9 @@ import FilmsController from "./films-controller";
 import {render, replace} from "../utils/render.js";
 import FilmsComponent from "../components/films.js";
 import SortComponent from "../components/sort.js";
+import TopRatedController from "./top-rated-controller.js";
 import {SortType} from "../consts.js";
+import MostCommentedController from "./most-commented-controller.js";
 
 export default class PageController {
   constructor(filmsModel, siteHeaderElement, siteMainElement, siteFooterElement) {
@@ -48,9 +50,19 @@ export default class PageController {
     }
     render(filmsElement, new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true}));
 
-    const filmsListContainerElement = filmsElement.querySelector(`.films-list__container`);
-    this._filmsController = new FilmsController(filmsListContainerElement, this._siteFooterElement, this._filmsModel);
+    const filmsListElement = filmsElement.querySelector(`.films-list__container`);
+    this._filmsController = new FilmsController(filmsListElement, this._siteFooterElement, this._filmsModel);
     this._filmsController.render();
+
+    render(filmsElement, new FilmsListComponent({title: `Top rated`, isExtra: true}));
+    const topRatedFilmsElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
+    const topRatedFilmsController = new TopRatedController(topRatedFilmsElement, this._siteFooterElement, this._filmsModel);
+    topRatedFilmsController.render();
+
+    render(filmsElement, new FilmsListComponent({title: `Most commented`, isExtra: true}));
+    const mostCommentedFilmsElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
+    const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsElement, this._siteFooterElement, this._filmsModel);
+    mostCommentedFilmsController.render();
 
 
     this._renderFooterStatistic();

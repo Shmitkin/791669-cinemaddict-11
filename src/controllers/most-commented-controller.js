@@ -1,8 +1,7 @@
 import AbstractFilmsController from "./abstract-films-controller.js";
 import {CardCount} from "../consts.js";
-import {getSortedArrayByKey} from "../utils/common.js";
 
-export default class TopRatedController extends AbstractFilmsController {
+export default class MostCommentedController extends AbstractFilmsController {
   constructor(container, modalContainer, filmsModel) {
     super();
     this._filmsModel = filmsModel;
@@ -11,10 +10,10 @@ export default class TopRatedController extends AbstractFilmsController {
   }
 
   render() {
-    this._renderFilms(this._getTopRatedFilms());
+    this._renderFilms(this._getMostCommentedFilms());
   }
 
-  _getTopRatedFilms() {
-    return getSortedArrayByKey(this._filmsModel.getFilmsAll(), `rating`).slice(0, CardCount.TOP_RATED);
+  _getMostCommentedFilms() {
+    return this._filmsModel.getFilmsAll().slice().sort((a, b) => b.comments.length - a.comments.length).slice(0, CardCount.MOST_COMMENTED);
   }
 }
