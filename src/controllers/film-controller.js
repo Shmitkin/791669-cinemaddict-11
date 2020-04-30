@@ -9,16 +9,18 @@ import {isEscKey} from "../utils/common.js";
 import {render, remove, replace, RenderPosition} from "../utils/render.js";
 
 export default class FilmController {
-  constructor(container, modalContainer, onDataChange) {
+  constructor(container, modalContainer, onDataChange, onViewChange) {
     this._container = container;
     this._modalContainer = modalContainer;
 
     this._filmDetailsComponent = null;
     this._filmCardComponent = null;
-    this.film = null;
+    this._film = null;
 
     this._newCommentComponent = new NewCommentComponent();
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+
     this._onControlClick = this._onControlClick.bind(this);
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
@@ -26,7 +28,7 @@ export default class FilmController {
   }
 
   render(film) {
-    this.film = film;
+    this._film = film;
 
     const oldfilmCardComponent = this._filmCardComponent;
     this._filmCardComponent = new FilmCardComponent(film);
@@ -56,7 +58,7 @@ export default class FilmController {
   }
 
   _renderFilmDetails() {
-
+    this._onViewChange();
     this._filmDetailsComponent = new FilmDetailsComponent(this._film);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
     this._filmDetailsComponent.setPopUpControlsClickHandler(this._onControlClick);
@@ -81,16 +83,16 @@ export default class FilmController {
     const getFilmChanges = () => {
       switch (buttonType) {
         case CardButtonType.WATCHLIST:
-          return Object.assign({}, this.film, {isAddedToWatchlist: !this.film.isAddedToWatchlist});
+          return Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
         case CardButtonType.WATCHED:
-          return Object.assign({}, this.film, {isMarkedAsWatched: !this.film.isMarkedAsWatched});
+          return Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
         case CardButtonType.FAVORITE:
-          return Object.assign({}, this.film, {isFavorite: !this.film.isFavorite});
+          return Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
         default: throw new Error(`Unknown button type`);
       }
     };
 
-    this._onDataChange(this.film, getFilmChanges());
+    this._onDataChange(this._film, getFilmChanges());
   }
 
   _onFilmCardClick() {

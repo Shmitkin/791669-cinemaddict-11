@@ -10,6 +10,7 @@ export default class FilmsModel {
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+    this._viewChangeHandlers = [];
   }
 
   getFilms() {
@@ -23,6 +24,15 @@ export default class FilmsModel {
   setFilms(films) {
     this._films = Array.from(films);
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
+  }
+
+  closeOpenedFilmDetails() {
+    this._callHandlers(this._viewChangeHandlers);
   }
 
   updateFilm(id, film) {
@@ -45,9 +55,8 @@ export default class FilmsModel {
     this._filterChangeHandlers.push(handler);
   }
 
-  setFilter(filterType) {
-    this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
+  addViewChangeHandler(handler) {
+    this._viewChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
