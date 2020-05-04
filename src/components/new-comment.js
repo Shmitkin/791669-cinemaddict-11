@@ -43,7 +43,7 @@ export default class NewComment extends AbstractComponent {
 
     emojiList.addEventListener(`change`, (evt) => {
       this._userEmoji = evt.target.value;
-      userEmojiContainer.innerHTML = (NewComment._createEmojiPictureTemplate(this._userEmoji))
+      userEmojiContainer.innerHTML = (NewComment._createEmojiPictureTemplate(this._userEmoji));
     });
   }
 
