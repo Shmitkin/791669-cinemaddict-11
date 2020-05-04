@@ -1,4 +1,4 @@
-import AbstractSmartComponent from "./abstract-smart-component.js";
+import AbstractComponent from "./abstract-component.js";
 
 const COMMENT_EMOJI = [
   `smile`,
@@ -7,19 +7,15 @@ const COMMENT_EMOJI = [
   `angry`
 ];
 
-export default class NewComment extends AbstractSmartComponent {
+export default class NewComment extends AbstractComponent {
   constructor() {
     super();
-    this._userEmojiElement = ``;
+    this._userEmoji = ``;
     this._subscribeOnEvents();
   }
 
   getTemplate() {
     return this._createTemplate();
-  }
-
-  _rerender() {
-    super.rerender();
   }
 
   _recoveryListeners() {
@@ -30,19 +26,32 @@ export default class NewComment extends AbstractSmartComponent {
     return (
       `<div class="film-details__new-comment">
          <div for="add-emoji" class="film-details__add-emoji-label">
-         ${this._userEmojiElement}
          </div>
          <label class="film-details__comment-label">
            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
          </label>
          <div class="film-details__emoji-list">
-         ${COMMENT_EMOJI.map(this._createEmojiTemplate).join(``)}
+         ${COMMENT_EMOJI.map(NewComment._createEmojiTemplate).join(``)}
          </div>
       </div>`
     );
   }
 
-  _createEmojiTemplate(emoji) {
+  _onEmojiChange() {
+    const emojiList = this.getElement().querySelector(`.film-details__emoji-list`);
+    const userEmojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
+
+    emojiList.addEventListener(`change`, (evt) => {
+      this._userEmoji = evt.target.value;
+      userEmojiContainer.innerHTML = (NewComment._createEmojiPictureTemplate(this._userEmoji))
+    });
+  }
+
+  _subscribeOnEvents() {
+    this._onEmojiChange();
+  }
+
+  static _createEmojiTemplate(emoji) {
     return (
       `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
         <label class="film-details__emoji-label" for="emoji-${emoji}">
@@ -51,16 +60,7 @@ export default class NewComment extends AbstractSmartComponent {
     );
   }
 
-  _createEmojiPictureTemplate(emoji) {
+  static _createEmojiPictureTemplate(emoji) {
     return (`<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">`);
-  }
-
-  _subscribeOnEvents() {
-    const emojiListElement = this.getElement().querySelector(`.film-details__emoji-list`);
-
-    emojiListElement.addEventListener(`change`, (evt) => {
-      this._userEmojiElement = this._createEmojiPictureTemplate(evt.target.value);
-      this._rerender();
-    });
   }
 }
