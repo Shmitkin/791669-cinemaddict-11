@@ -1,29 +1,29 @@
 import {MINUTES_IN_HOUR, KeyboardKey, SortType} from "../consts.js";
 
-const addProperty = (statement, ifTrue, ifFalse = ``) =>
+export const addProperty = (statement, ifTrue, ifFalse = ``) =>
   statement ? ifTrue : ifFalse;
 
-const formatDuration = (duration) => {
+export const formatDuration = (duration) => {
   const hours = parseInt(duration / MINUTES_IN_HOUR, 10);
   const minutes = duration % MINUTES_IN_HOUR;
   return `${hours}h ${minutes}m`;
 };
 
-const castTimeFormat = (value) =>
+export const castTimeFormat = (value) =>
   String(value).padStart(2, `0`);
 
-const isEscKey = ({key}) => key === KeyboardKey.ESCAPE || key === KeyboardKey.ESC;
+export const isEscKey = ({key}) => key === KeyboardKey.ESCAPE || key === KeyboardKey.ESC;
 
-const addKey = (key) => {
+export const addKey = (key) => {
   return (a, b) => b[key] - a[key];
 };
 
-const getSortedArrayByKey = (array, key) => {
+export const getSortedArrayByKey = (array, key) => {
   const newArray = array.slice();
   return newArray.sort(addKey(key));
 };
 
-const getSortedFilms = ([...films], sortType) => {
+export const getSortedFilms = ([...films], sortType) => {
   switch (sortType) {
     case SortType.DATE_DOWN:
       return getSortedArrayByKey(films, `release`);
@@ -34,5 +34,3 @@ const getSortedFilms = ([...films], sortType) => {
     default: throw new Error(`Unknown sort type: ${sortType}`);
   }
 };
-
-export {addProperty, formatDuration, castTimeFormat, isEscKey, getSortedFilms, getSortedArrayByKey};

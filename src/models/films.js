@@ -10,6 +10,7 @@ export default class FilmsModel {
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+    this._viewChangeHandlers = [];
   }
 
   getFilms() {
@@ -22,37 +23,43 @@ export default class FilmsModel {
 
   setFilms(films) {
     this._films = Array.from(films);
-    this._callHandlers(this._dataChangeHandlers);
+    FilmsModel._callHandlers(this._dataChangeHandlers);
+  }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    FilmsModel._callHandlers(this._filterChangeHandlers);
+  }
+
+  closeOpenedFilmDetails() {
+    FilmsModel._callHandlers(this._viewChangeHandlers);
   }
 
   updateFilm(id, film) {
     const index = this._films.findIndex((it) => it.id === id);
 
     if (index === -1) {
-      return false;
+      return;
     }
 
     this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
 
-    this._callHandlers(this._dataChangeHandlers);
-
-    return true;
+    FilmsModel._callHandlers(this._dataChangeHandlers);
   }
 
-  setDataChangeHandler(handler) {
+  addDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
 
-  setFilterChangeHandler(handler) {
+  addFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
 
-  setFilter(filterType) {
-    this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
+  addViewChangeHandler(handler) {
+    this._viewChangeHandlers.push(handler);
   }
 
-  _callHandlers(handlers) {
+  static _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
   }
 }

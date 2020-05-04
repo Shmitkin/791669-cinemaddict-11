@@ -1,4 +1,4 @@
-import AbstractSmartComponent from "./abstract-smart-component.js";
+import AbstractComponent from "./abstract-component.js";
 import {formatDuration, addProperty} from "../utils/common.js";
 import {MONTH_NAMES} from "../consts.js";
 
@@ -25,20 +25,13 @@ const createGenresTemplate = (genres) => {
 const formatReleaseDate = (date) =>
   `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
 
-const createFilmDetailsRowTemplate = (term, cell) => {
+const createFilmDetailsRowTemplate = ([term, cell]) => {
   return (
     `<tr class="film-details__row">
-        <td class="film-details__term">${term}</td>
-        <td class="film-details__cell">${cell}</td>
-      </tr>`
+      <td class="film-details__term">${term}</td>
+      <td class="film-details__cell">${cell}</td>
+    </tr>`
   );
-};
-
-const createFilmDetailRowsTemplate = (filmDetailsRows) => {
-  return (
-    filmDetailsRows.map(([term, cell]) => (
-      createFilmDetailsRowTemplate(term, cell)
-    )).join(``));
 };
 
 const createFilmDetailsTemplate = (film) => {
@@ -81,7 +74,7 @@ const createFilmDetailsTemplate = (film) => {
                </div>
              </div>
              <table class="film-details__table">
-             ${createFilmDetailRowsTemplate(filmDetailsRows)}
+             ${filmDetailsRows.map(createFilmDetailsRowTemplate).join(``)}
              </table>
              <p class="film-details__film-description">${description}</p>
            </div>
@@ -109,20 +102,14 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-export default class FilmDetails extends AbstractSmartComponent {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
-    this._closeButtonHandler = null;
-    this._checkBoxesClickHandler = null;
-  }
-  getTemplate() {
-    return createFilmDetailsTemplate(this._film);
   }
 
-  rerender(film) {
-    this._film = film;
-    super.rerender();
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
   }
 
   setCloseButtonClickHandler(handler) {
@@ -131,19 +118,13 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._closeButtonHandler = handler;
   }
 
-  setCheckBoxesClickHandler(handler) {
+  setPopUpControlsClickHandler(handler) {
     this.getElement().querySelector(`.film-details__controls`)
     .addEventListener(`change`, (evt) => {
       evt.preventDefault();
-      this._checkBoxesClickHandler = handler;
 
       const buttonId = evt.target.id;
       handler(buttonId);
     });
-  }
-
-  recoveryListeners() {
-    this.setCloseButtonClickHandler(this._closeButtonHandler);
-    this.setCheckBoxesClickHandler(this._checkBoxesClickHandler);
   }
 }
