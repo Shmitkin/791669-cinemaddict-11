@@ -1,6 +1,5 @@
 import FilmDetailsComponent from "../components/film-details.js";
-import CommentComponent from "../components/comment.js";
-import NewCommentComponent from "../components/new-comment.js";
+import CommentsComponent from "../components/comments.js";
 import FilmCardComponent from "../components/film-card.js";
 
 import {CardButtonType} from "../consts.js";
@@ -17,7 +16,6 @@ export default class FilmController {
     this._filmCardComponent = null;
     this._film = null;
 
-    this._newCommentComponent = new NewCommentComponent();
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
 
@@ -63,20 +61,13 @@ export default class FilmController {
     this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
     this._filmDetailsComponent.setPopUpControlsClickHandler(this._onControlClick);
     document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._renderNewComment();
-    this._renderCommentsList();
+    this._renderComments();
 
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
   }
 
-  _renderNewComment() {
-    const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    render(filmDetailsCommentsElement, this._newCommentComponent);
-  }
-
-  _renderCommentsList() {
-    const filmDetailsCommentsListElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-list`);
-    this._film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
+  _renderComments() {
+    render(this._filmDetailsComponent.getElement(), new CommentsComponent(this._film.comments));
   }
 
   _onControlClick(buttonType) {
