@@ -2,11 +2,8 @@ import AbstractFilmsController from "./abstract-films-controller.js";
 import {CardCount} from "../consts.js";
 
 export default class MostCommentedController extends AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel) {
-    super();
-    this._filmsModel = filmsModel;
-    this._container = container;
-    this._modalContainer = modalContainer;
+  constructor(container, modalContainer, filmsModel, commentsModel) {
+    super(container, modalContainer, filmsModel, commentsModel);
   }
 
   render() {

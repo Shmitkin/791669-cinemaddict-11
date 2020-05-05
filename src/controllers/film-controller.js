@@ -9,9 +9,10 @@ import {isEscKey} from "../utils/common.js";
 import {render, remove, replace, RenderPosition} from "../utils/render.js";
 
 export default class FilmController {
-  constructor(container, modalContainer, onDataChange, onViewChange) {
+  constructor(container, modalContainer, onDataChange, onViewChange, commentsModel) {
     this._container = container;
     this._modalContainer = modalContainer;
+    this._commentsModel = commentsModel;
 
     this._filmDetailsComponent = null;
     this._filmDetailsInfoComponent = null;
@@ -65,7 +66,7 @@ export default class FilmController {
     this._filmDetailsInfoComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
     document.addEventListener(`keydown`, this._onEscKeyDown);
 
-    const commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement());
+    const commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), this._commentsModel);
 
     render(this._filmDetailsComponent.getElement(), this._filmDetailsInfoComponent);
 

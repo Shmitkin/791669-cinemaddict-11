@@ -1,7 +1,8 @@
 import FilmController from "./film-controller.js";
 
 export default class AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel) {
+  constructor(container, modalContainer, filmsModel, commentsModel) {
+    this._commentsModel = commentsModel;
     this._filmsModel = filmsModel;
     this._container = container;
     this._modalContainer = modalContainer;
@@ -23,7 +24,7 @@ export default class AbstractFilmsController {
 
   _renderFilms(films) {
     const renderedFilms = films.map((film)=> {
-      const filmController = new FilmController(this._container, this._modalContainer, this._onDataChange, this._onViewChange);
+      const filmController = new FilmController(this._container, this._modalContainer, this._onDataChange, this._onViewChange, this._commentsModel);
       filmController.render(film);
       return filmController;
     });

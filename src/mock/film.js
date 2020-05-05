@@ -17,7 +17,7 @@ import {
   getRandomDate
 } from "./utils.js";
 
-import {generateComments} from "./comment.js";
+import {generateCommentsId} from "./comment.js";
 
 const Film = {
   RELEASE_YEAR_MIN: 1945,
@@ -73,7 +73,7 @@ const generateFilm = () => {
     genres: getRandomArray(GENRES, Film.GENRES_MIN, Film.GENRES_MAX),
     poster: `./images/posters/${getRandomArrayItem(POSTERS)}`,
     description: getRandomDescription(DUMMY_TEXTS),
-    comments: generateComments(getCommentsCount()),
+    comments: generateCommentsId(getCommentsCount()),
     watchlist: getRandomBoolean(),
     watched: getRandomBoolean(),
     favorite: getRandomBoolean()
@@ -85,6 +85,5 @@ const generateFilms = (count) => {
     .fill(``)
     .map(generateFilm);
 };
-
 
 export {generateFilms};

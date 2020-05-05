@@ -14,6 +14,20 @@ export default class CommentsList extends AbstractComponent {
     return CommentsList._createTemplate(this._comments);
   }
 
+  setOnCommentClickHandler(handler) {
+    const commentsList = this.getElement();
+    commentsList.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      if (evt.target.tagName !== `BUTTON`) {
+        return;
+      }
+
+      handler(evt.target.id);
+    });
+
+  }
+
   static _createTemplate(comments) {
     return (
       `<ul class="film-details__comments-list">
@@ -23,7 +37,7 @@ export default class CommentsList extends AbstractComponent {
   }
 
   static _createCommentTemplate(comment) {
-    const {emoji, text, author, date} = comment;
+    const {emoji, text, author, date, id} = comment;
     return (
       `<li class="film-details__comment">
          <span class="film-details__comment-emoji">
@@ -34,7 +48,7 @@ export default class CommentsList extends AbstractComponent {
            <p class="film-details__comment-info">
              <span class="film-details__comment-author">${author}</span>
              <span class="film-details__comment-day">${formatCommentDate(date)}</span>
-             <button class="film-details__comment-delete">Delete</button>
+             <button id="${id}" class="film-details__comment-delete">Delete</button>
            </p>
          </div>
       </li>`

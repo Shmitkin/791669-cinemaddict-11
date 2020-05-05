@@ -11,8 +11,9 @@ import {SortType} from "../consts.js";
 import MostCommentedController from "./most-commented-controller.js";
 
 export default class PageController {
-  constructor(filmsModel, siteHeaderElement, siteMainElement, siteFooterElement) {
+  constructor(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement) {
     this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
     this._siteHeaderElement = siteHeaderElement;
     this._siteMainElement = siteMainElement;
     this._siteFooterElement = siteFooterElement;
@@ -51,17 +52,17 @@ export default class PageController {
     render(filmsElement, new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true}));
 
     const filmsListElement = filmsElement.querySelector(`.films-list__container`);
-    this._filmsController = new FilmsController(filmsListElement, this._siteFooterElement, this._filmsModel);
+    this._filmsController = new FilmsController(filmsListElement, this._siteFooterElement, this._filmsModel, this._commentsModel);
     this._filmsController.render();
 
     render(filmsElement, new FilmsListComponent({title: `Top rated`, isExtra: true}));
     const topRatedFilmsElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
-    const topRatedFilmsController = new TopRatedController(topRatedFilmsElement, this._siteFooterElement, this._filmsModel);
+    const topRatedFilmsController = new TopRatedController(topRatedFilmsElement, this._siteFooterElement, this._filmsModel, this._commentsModel);
     topRatedFilmsController.render();
 
     render(filmsElement, new FilmsListComponent({title: `Most commented`, isExtra: true}));
     const mostCommentedFilmsElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
-    const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsElement, this._siteFooterElement, this._filmsModel);
+    const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsElement, this._siteFooterElement, this._filmsModel, this._commentsModel);
     mostCommentedFilmsController.render();
 
 
