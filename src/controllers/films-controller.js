@@ -6,11 +6,7 @@ import {getSortedFilms} from "../utils/common.js";
 
 export default class FilmsListController extends AbstractFilmsController {
   constructor(container, modalContainer, filmsModel) {
-    super();
-    this._filmsModel = filmsModel;
-    this._container = container;
-    this._modalContainer = modalContainer;
-
+    super(container, modalContainer, filmsModel);
 
     this._showingCardsCount = CardCount.DEFAULT_SHOW;
     this._prevCardsCount = this._showingCardsCount;

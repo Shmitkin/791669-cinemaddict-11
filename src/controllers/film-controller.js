@@ -1,6 +1,7 @@
+import FilmDetailsInfoComponent from "../components/film-details-info.js";
 import FilmDetailsComponent from "../components/film-details.js";
-import CommentsComponent from "../components/comments.js";
 import FilmCardComponent from "../components/film-card.js";
+import CommentsController from "./comments-controller.js";
 
 import {CardButtonType} from "../consts.js";
 
@@ -13,6 +14,7 @@ export default class FilmController {
     this._modalContainer = modalContainer;
 
     this._filmDetailsComponent = null;
+    this._filmDetailsInfoComponent = null;
     this._filmCardComponent = null;
     this._film = null;
 
@@ -57,18 +59,23 @@ export default class FilmController {
 
   _renderFilmDetails() {
     this._onViewChange();
-    this._filmDetailsComponent = new FilmDetailsComponent(this._film);
-    this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
-    this._filmDetailsComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
+    this._filmDetailsComponent = new FilmDetailsComponent();
+    this._filmDetailsInfoComponent = new FilmDetailsInfoComponent(this._film);
+    this._filmDetailsInfoComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
+    this._filmDetailsInfoComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
     document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._renderComments();
 
+    const commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement());
+
+    render(this._filmDetailsComponent.getElement(), this._filmDetailsInfoComponent);
+
+    commentsController.render(this._film.comments);
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
   }
 
-  _renderComments() {
-    render(this._filmDetailsComponent.getElement(), new CommentsComponent(this._film.comments));
-  }
+  //  _renderComments() {
+  //    render(this._filmDetailsInfoComponent.getElement(), new CommentsComponent(this._film.comments));
+  //  }
 
   _onControlClick(buttonType) {
     const getFilmChanges = () => {
