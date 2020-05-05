@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 import {formatDuration, addProperty} from "../utils/common.js";
-import {MONTH_NAMES} from "../consts.js";
+import {MONTH_NAMES, CardButtonType} from "../consts.js";
 
 const Title = {
   GENRE: `Genre`,
@@ -34,11 +34,18 @@ const createFilmDetailsRowTemplate = ([term, cell]) => {
   );
 };
 
+const createFilmDetailsControlsTemplate = ([type, label, isActive]) => {
+  return (
+    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${type}" name="${type}" ${makeInputActive(isActive)}>
+    <label for="${type}" class="film-details__control-label film-details__control-label--${type}">${label}</label>`
+  );
+};
+
 const createFilmDetailsTemplate = (film) => {
   const {poster, ageLimit, title, rating, director,
     writers, actors, release, duration, country,
     description, genres,
-    isAddedToWatchlist, isMarkedAsWatched, isFavorite
+    watchlist, watched, favorite
   } = film;
 
   const filmDetailsRows = [
@@ -49,6 +56,12 @@ const createFilmDetailsTemplate = (film) => {
     [`Runtime`, formatDuration(duration)],
     [`Country`, country],
     [getGenreTitle(genres), createGenresTemplate(genres)]
+  ];
+
+  const filmDetailsControls = [
+    [CardButtonType.WATCHLIST, `Add to watchlist`, watchlist],
+    [CardButtonType.WATCHED, `Already watched`, watched],
+    [CardButtonType.FAVORITE, `Add to favorites`, favorite],
   ];
 
   return (
@@ -80,14 +93,7 @@ const createFilmDetailsTemplate = (film) => {
            </div>
          </div>
          <section class="film-details__controls">
-           <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${makeInputActive(isAddedToWatchlist)}>
-           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-     
-           <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${makeInputActive(isMarkedAsWatched)}>
-           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-     
-           <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${makeInputActive(isFavorite)}>
-           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+         ${filmDetailsControls.map(createFilmDetailsControlsTemplate).join(``)}
          </section>
        </div>
      </form>
@@ -111,13 +117,13 @@ export default class FilmDetails extends AbstractComponent {
     this._closeButtonHandler = handler;
   }
 
-  setPopUpControlsClickHandler(handler) {
+  setFilmDetailsControlsClickHandler(handler) {
     this.getElement().querySelector(`.film-details__controls`)
     .addEventListener(`change`, (evt) => {
       evt.preventDefault();
 
-      const buttonId = evt.target.id;
-      handler(buttonId);
+      const controlId = evt.target.id;
+      handler(controlId);
     });
   }
 }

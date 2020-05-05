@@ -74,9 +74,9 @@ const generateFilm = () => {
     poster: `./images/posters/${getRandomArrayItem(POSTERS)}`,
     description: getRandomDescription(DUMMY_TEXTS),
     comments: generateComments(getCommentsCount()),
-    isAddedToWatchlist: getRandomBoolean(),
-    isMarkedAsWatched: getRandomBoolean(),
-    isFavorite: getRandomBoolean()
+    watchlist: getRandomBoolean(),
+    watched: getRandomBoolean(),
+    favorite: getRandomBoolean()
   };
 };
 

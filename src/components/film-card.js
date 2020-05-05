@@ -30,9 +30,9 @@ const createFilmCardTemplate = (film) => {
     poster,
     description,
     comments,
-    isAddedToWatchlist,
-    isMarkedAsWatched,
-    isFavorite,
+    watchlist,
+    watched,
+    favorite,
   } = film;
 
   return (
@@ -48,9 +48,9 @@ const createFilmCardTemplate = (film) => {
        <p class="film-card__description">${truncateDescription(description)}</p>
        <a class="film-card__comments">${comments.length} comments</a>
        <form class="film-card__controls">
-         <button data-type="${CardButtonType.WATCHLIST}" class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${makeButtonActive(isAddedToWatchlist)}">Add to watchlist</button>
-         <button data-type="${CardButtonType.WATCHED}" class="film-card__controls-item button film-card__controls-item--mark-as-watched ${makeButtonActive(isMarkedAsWatched)}">Mark as watched</button>
-         <button data-type="${CardButtonType.FAVORITE}" class="film-card__controls-item button film-card__controls-item--favorite ${makeButtonActive(isFavorite)}">Mark as favorite</button>
+         <button data-type="${CardButtonType.WATCHLIST}" class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${makeButtonActive(watchlist)}">Add to watchlist</button>
+         <button data-type="${CardButtonType.WATCHED}" class="film-card__controls-item button film-card__controls-item--mark-as-watched ${makeButtonActive(watched)}">Mark as watched</button>
+         <button data-type="${CardButtonType.FAVORITE}" class="film-card__controls-item button film-card__controls-item--favorite ${makeButtonActive(favorite)}">Mark as favorite</button>
        </form>
      </article>`
   );

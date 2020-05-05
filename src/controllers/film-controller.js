@@ -59,7 +59,7 @@ export default class FilmController {
     this._onViewChange();
     this._filmDetailsComponent = new FilmDetailsComponent(this._film);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
-    this._filmDetailsComponent.setPopUpControlsClickHandler(this._onControlClick);
+    this._filmDetailsComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._renderComments();
 
@@ -74,11 +74,11 @@ export default class FilmController {
     const getFilmChanges = () => {
       switch (buttonType) {
         case CardButtonType.WATCHLIST:
-          return Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
+          return Object.assign({}, this._film, {watchlist: !this._film.watchlist});
         case CardButtonType.WATCHED:
-          return Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
+          return Object.assign({}, this._film, {watched: !this._film.watched});
         case CardButtonType.FAVORITE:
-          return Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
+          return Object.assign({}, this._film, {favorite: !this._film.favorite});
         default: throw new Error(`Unknown button type`);
       }
     };

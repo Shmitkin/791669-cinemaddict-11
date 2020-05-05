@@ -1,13 +1,13 @@
 import {FilterType} from "../consts.js";
 
 const reduceFilms = (stats, film) => {
-  if (film.isAddedToWatchlist) {
+  if (film.watchlist) {
     stats.watchlist.push(film);
   }
-  if (film.isMarkedAsWatched) {
+  if (film.watched) {
     stats.history.push(film);
   }
-  if (film.isFavorite) {
+  if (film.favorite) {
     stats.favorites.push(film);
   }
   return stats;
