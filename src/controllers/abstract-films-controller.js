@@ -20,6 +20,7 @@ export default class AbstractFilmsController {
     this._films = this._filmsModel.getFilms();
     this._filmsModel.addDataChangeHandler(this._updateFilms);
     this._filmsModel.addViewChangeHandler(this._closeFilmDetails);
+    this._commentsModel.addDataChangeHandler(this._updateFilms);
   }
 
   _renderFilms(films) {

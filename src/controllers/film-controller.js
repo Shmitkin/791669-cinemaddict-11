@@ -18,6 +18,7 @@ export default class FilmController {
     this._filmDetailsInfoComponent = null;
     this._filmCardComponent = null;
     this._film = null;
+    this._commentsController = null;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -26,6 +27,7 @@ export default class FilmController {
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
   }
 
   render(film) {
@@ -33,6 +35,10 @@ export default class FilmController {
 
     const oldfilmCardComponent = this._filmCardComponent;
     this._filmCardComponent = new FilmCardComponent(film);
+
+    if (this._commentsController) {
+      this._commentsController.updateComments(this._film.comments);
+    }
 
     this._filmCardComponent.setTitleClickHandler(this._onFilmCardClick);
     this._filmCardComponent.setPosterClickHandler(this._onFilmCardClick);
@@ -66,17 +72,13 @@ export default class FilmController {
     this._filmDetailsInfoComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
     document.addEventListener(`keydown`, this._onEscKeyDown);
 
-    const commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), this._commentsModel);
+    this._commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), this._commentsModel, this._onCommentsDataChange);
 
     render(this._filmDetailsComponent.getElement(), this._filmDetailsInfoComponent);
 
-    commentsController.render(this._film.comments);
+    this._commentsController.render(this._film.comments);
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
   }
-
-  //  _renderComments() {
-  //    render(this._filmDetailsInfoComponent.getElement(), new CommentsComponent(this._film.comments));
-  //  }
 
   _onControlClick(buttonType) {
     const getFilmChanges = () => {
@@ -108,5 +110,10 @@ export default class FilmController {
       this.removeFilmDetails();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
+  }
+
+  _onCommentsDataChange(newComments) {
+    const newData = Object.assign({}, this._film, {comments: newComments});
+    this._onDataChange(this._film, newData);
   }
 }

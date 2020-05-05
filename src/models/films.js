@@ -23,7 +23,6 @@ export default class FilmsModel {
 
   setFilms(films) {
     this._films = Array.from(films);
-    FilmsModel._callHandlers(this._dataChangeHandlers);
   }
 
   setFilter(filterType) {
