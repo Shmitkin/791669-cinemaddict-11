@@ -61,6 +61,7 @@ export default class FilmController {
     if (this._filmDetailsComponent) {
       remove(this._filmDetailsComponent);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._commentsController.removeListeners();
     }
   }
 
@@ -103,12 +104,14 @@ export default class FilmController {
   _onCloseButtonClick() {
     this.removeFilmDetails();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._commentsController.removeListeners();
   }
 
   _onEscKeyDown(evt) {
     if (isEscKey(evt)) {
       this.removeFilmDetails();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._commentsController.removeListeners();
     }
   }
 

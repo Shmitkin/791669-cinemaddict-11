@@ -57,7 +57,7 @@ const generateFilm = () => {
   const title = getRandomArrayItem(FILM_TITLES);
 
   return {
-    id: String(new Date() + Math.random()),
+    id: String(`f` + Math.random()),
     title: {
       main: title.main,
       original: title.original

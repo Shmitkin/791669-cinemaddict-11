@@ -27,7 +27,7 @@ export default class CommentsModel {
     const index = this._comments.findIndex((comment) => comment.id === id);
 
     this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
-
+    CommentsModel._callHandlers(this._dataChangeHandlers);
   }
 
   addComment(comment) {
@@ -36,7 +36,9 @@ export default class CommentsModel {
     comment.author = getRandomArrayItem(COMMENT_AUTHORS);
     // /mock
     this._comments.push(comment);
+    CommentsModel._callHandlers(this._dataChangeHandlers);
     return comment.id;
+
   }
 
   addDataChangeHandler(handler) {

@@ -6,6 +6,8 @@ import CommentsWrapperComponent from "../components/comments-wrapper.js";
 import CommentsTitleComponent from "../components/comments-title.js";
 import CommentsListComponent from "../components/comments-list.js";
 
+const KEY_CODES = [91, 13];
+
 export default class CommentsController {
   constructor(container, commentsModel, onDataChange) {
     this._container = container;
@@ -22,9 +24,10 @@ export default class CommentsController {
 
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onNewCommentSubmit = this._onNewCommentSubmit.bind(this);
+    this._onKeyDown = this._onKeyDown.bind(this);
+    this._onKeyUp = this._onKeyUp.bind(this);
 
-
-    this._setSubmitNewCommentHandler(this._onNewCommentSubmit, 91, 13);
+    this._pressedKeys = new Set();
   }
 
   render(comments) {
@@ -43,29 +46,31 @@ export default class CommentsController {
     render(commentsWrapperElemenr, this._commentsTitleComponent);
     render(commentsWrapperElemenr, this._commentsListComponent);
     render(commentsWrapperElemenr, this._newCommentComponent);
+
+    document.addEventListener(`keydown`, this._onKeyDown);
+    document.addEventListener(`keyup`, this._onKeyUp);
   }
 
+  removeListeners() {
+    document.removeEventListener(`keydown`, this._onKeyDown);
+    document.removeEventListener(`keyup`, this._onKeyUp);
+  }
 
-  _setSubmitNewCommentHandler(handler, ...keyCodes) {
-    let pressed = new Set();
+  _onKeyDown(evt) {
+    this._pressedKeys.add(evt.keyCode);
 
-    document.addEventListener(`keydown`, function (evt) {
-      pressed.add(evt.keyCode);
-
-      for (let keyCode of keyCodes) {
-        if (!pressed.has(keyCode)) {
-          return;
-        }
+    for (let keyCode of KEY_CODES) {
+      if (!this._pressedKeys.has(keyCode)) {
+        return;
       }
+    }
 
-      pressed.clear();
+    this._pressedKeys.clear();
+    this._onNewCommentSubmit();
+  }
 
-      handler();
-    });
-
-    document.addEventListener(`keyup`, function (evt) {
-      pressed.delete(evt.keyCode);
-    });
+  _onKeyUp(evt) {
+    this._pressedKeys.delete(evt.keyCode);
   }
 
   _onNewCommentSubmit() {
