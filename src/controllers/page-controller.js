@@ -61,20 +61,39 @@ export default class PageController {
     this._filmsController.render();
 
 
-    const topRatedFilmsComponent = new FilmsListComponent({title: `Top rated`, isExtra: true});
-    render(filmsElement, topRatedFilmsComponent);
-    const topRatedFilmsController = new TopRatedController(topRatedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
-    topRatedFilmsController.render();
+    if (this._haveFilmsRating()) {
+      const topRatedFilmsComponent = new FilmsListComponent({title: `Top rated`, isExtra: true});
+      render(filmsElement, topRatedFilmsComponent);
+      const topRatedFilmsController = new TopRatedController(topRatedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+      topRatedFilmsController.render();
+    }
 
 
-    const mostCommentedFilmsComponent = new FilmsListComponent({title: `Most commented`, isExtra: true});
-    render(filmsElement, mostCommentedFilmsComponent);
-    const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
-    mostCommentedFilmsController.render();
+    if (this._haveFilmsComments()) {
+      const mostCommentedFilmsComponent = new FilmsListComponent({title: `Most commented`, isExtra: true});
+      render(filmsElement, mostCommentedFilmsComponent);
+      const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+      mostCommentedFilmsController.render();
+    }
 
 
     this._renderFooterStatistic();
+  }
 
+  _haveFilmsComments() {
+    const filmsCountWithComments = this._filmsModel.getFilmsAll().reduce((count, film) => film.comments.length > 0 ? count + 1 : count, 0);
+    if (filmsCountWithComments > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  _haveFilmsRating() {
+    const filmsCountWithRating = this._filmsModel.getFilmsAll().reduce((count, film) => film.rating > 0 ? count + 1 : count, 0);
+    if (filmsCountWithRating > 0) {
+      return true;
+    }
+    return false;
   }
 
   _renderSortComponent() {
