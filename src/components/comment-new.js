@@ -13,12 +13,21 @@ export default class NewComment extends AbstractComponent {
   constructor() {
     super();
     this._userEmoji = null;
-
     this._onEmojiControlsClick();
   }
 
   getTemplate() {
     return NewComment._createTemplate();
+  }
+
+  getNewCommentData() {
+    const userCommentElement = this.getElement().querySelector(`.film-details__comment-input`);
+    const userComment = userCommentElement.value;
+    return {
+      emoji: this._userEmoji,
+      text: userComment,
+      date: new Date()
+    };
   }
 
   _onEmojiControlsClick() {

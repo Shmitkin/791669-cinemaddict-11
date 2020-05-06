@@ -24,18 +24,17 @@ const generateComment = (id) => {
   };
 };
 
-const generateCommentId = () => {
+export const generateCommentId = () => {
   return String(`i` + Math.random());
 };
 
-const generateCommentsId = (count) => {
+export const generateCommentsId = (count) => {
   return new Array(count)
   .fill(``)
   .map(generateCommentId);
 };
 
-const generateComments = (commentsIds) => {
+export const generateComments = (commentsIds) => {
   return commentsIds.map((id) => generateComment(id));
 };
 
-export {generateComments, generateCommentsId};

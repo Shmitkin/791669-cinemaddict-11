@@ -8,16 +8,23 @@ import CommentsListComponent from "../components/comments-list.js";
 
 export default class CommentsController {
   constructor(container, commentsModel, onDataChange) {
-    this._onDataChange = onDataChange;
-    this._comments = null;
-    this._commentsModel = commentsModel;
     this._container = container;
+    this._onDataChange = onDataChange;
+    this._commentsModel = commentsModel;
+
     this._commentsContainerComponent = new CommentsContainerComponent();
     this._commentsWrapperComponent = new CommentsWrapperComponent();
     this._newCommentComponent = new NewComment();
+
+    this._comments = null;
     this._commentsListComponent = null;
     this._commentsTitleComponent = null;
+
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onNewCommentSubmit = this._onNewCommentSubmit.bind(this);
+
+
+    this._setSubmitNewCommentHandler(this._onNewCommentSubmit, 91, 13);
   }
 
   render(comments) {
@@ -38,6 +45,42 @@ export default class CommentsController {
     render(commentsWrapperElemenr, this._newCommentComponent);
   }
 
+
+  _setSubmitNewCommentHandler(handler, ...keyCodes) {
+    let pressed = new Set();
+
+    document.addEventListener(`keydown`, function (evt) {
+      pressed.add(evt.keyCode);
+
+      for (let keyCode of keyCodes) {
+        if (!pressed.has(keyCode)) {
+          return;
+        }
+      }
+
+      pressed.clear();
+
+      handler();
+    });
+
+    document.addEventListener(`keyup`, function (evt) {
+      pressed.delete(evt.keyCode);
+    });
+  }
+
+  _onNewCommentSubmit() {
+    const newComment = this._newCommentComponent.getNewCommentData();
+    const newCommentId = this._commentsModel.addComment(newComment);
+    const newData = this._comments.map((comment) => comment.id);
+    newData.push(newCommentId);
+
+    this._onDataChange(newData);
+
+    const oldNewCommentComponent = this._newCommentComponent;
+    this._newCommentComponent = new NewComment();
+    replace(this._newCommentComponent, oldNewCommentComponent);
+  }
+
   updateComments(comments) {
     this._comments = comments.map((id) => this._commentsModel.getCommentById(id));
 
@@ -52,10 +95,6 @@ export default class CommentsController {
     replace(this._commentsListComponent, oldCommentsListComponent);
     replace(this._commentsTitleComponent, oldCommentsTitleComponent);
   }
-
-  deleteComment() {}
-
-  addComment() {}
 
   _onDeleteButtonClick(commentId) {
     const index = this._comments.findIndex((comment) => comment.id === commentId);

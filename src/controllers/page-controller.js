@@ -63,16 +63,16 @@ export default class PageController {
 
     if (this._haveFilmsRating()) {
       const topRatedFilmsComponent = new FilmsListComponent({title: `Top rated`, isExtra: true});
-      render(filmsElement, topRatedFilmsComponent);
       const topRatedFilmsController = new TopRatedController(topRatedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+      render(filmsElement, topRatedFilmsComponent);
       topRatedFilmsController.render();
     }
 
 
     if (this._haveFilmsComments()) {
       const mostCommentedFilmsComponent = new FilmsListComponent({title: `Most commented`, isExtra: true});
-      render(filmsElement, mostCommentedFilmsComponent);
       const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+      render(filmsElement, mostCommentedFilmsComponent);
       mostCommentedFilmsController.render();
     }
 
