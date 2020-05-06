@@ -1,4 +1,4 @@
-import NewComment from "../components/new-comments.js";
+import NewComment from "../components/comment-new.js";
 import {render, replace} from "../utils/render.js";
 
 import CommentsContainerComponent from "../components/comments-container.js";

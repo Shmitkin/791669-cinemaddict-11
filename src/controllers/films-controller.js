@@ -31,7 +31,7 @@ export default class FilmsListController extends AbstractFilmsController {
     if (this._showingCardsCount >= sortedFilms.length) {
       return;
     }
-    render(this._container, this._showMoreButtonComponent, RenderPosition.AFTEREND);
+    render(this._filmsListContainerComponent.getElement(), this._showMoreButtonComponent, RenderPosition.AFTEREND);
 
     this._showMoreButtonComponent.setClickHandler(() => {
       this._prevCardsCount = this._showingCardsCount;

@@ -1,4 +1,6 @@
 import FilmController from "./film-controller.js";
+import FilmsListContainerComponent from "../components/films-list-container.js";
+import {render} from "../utils/render.js";
 
 export default class AbstractFilmsController {
   constructor(container, modalContainer, filmsModel, commentsModel) {
@@ -6,6 +8,8 @@ export default class AbstractFilmsController {
     this._filmsModel = filmsModel;
     this._container = container;
     this._modalContainer = modalContainer;
+
+    this._filmsListContainerComponent = new FilmsListContainerComponent();
 
     this._showedFilmsControllers = [];
     this._films = null;
@@ -21,11 +25,13 @@ export default class AbstractFilmsController {
     this._filmsModel.addDataChangeHandler(this._updateFilm);
     this._filmsModel.addViewChangeHandler(this._closeFilmDetails);
     this._commentsModel.addDataChangeHandler(this._updateFilm);
+
+    render(this._container, this._filmsListContainerComponent);
   }
 
   _renderFilms(films) {
     const renderedFilms = films.map((film)=> {
-      const filmController = new FilmController(this._container, this._modalContainer, this._onDataChange, this._onViewChange, this._commentsModel);
+      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._onViewChange, this._commentsModel);
       filmController.render(film);
       return filmController;
     });

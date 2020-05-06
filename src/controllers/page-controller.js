@@ -28,6 +28,7 @@ export default class PageController {
 
     this._sortComponent = null;
     this._filmsController = null;
+    this._filmsListComponent = null;
 
     this._onSortChange = this._onSortChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
@@ -43,27 +44,32 @@ export default class PageController {
     render(this._siteMainElement, this._filmsComponent);
 
     const films = this._filmsModel.getFilms();
-
     const filmsElement = this._filmsComponent.getElement();
 
+
     if (films.length === 0) {
-      render(filmsElement, new FilmsListComponent({title: `There are no movies in our database`}));
+      this._filmsListComponent = new FilmsListComponent({title: `There are no movies in our database`});
+      render(filmsElement, this._filmsListComponent);
+      this._renderFooterStatistic();
       return;
     }
-    render(filmsElement, new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true}));
 
-    const filmsListElement = filmsElement.querySelector(`.films-list__container`);
-    this._filmsController = new FilmsController(filmsListElement, this._siteFooterElement, this._filmsModel, this._commentsModel);
+
+    this._filmsListComponent = new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true});
+    this._filmsController = new FilmsController(this._filmsListComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+    render(filmsElement, this._filmsListComponent);
     this._filmsController.render();
 
-    render(filmsElement, new FilmsListComponent({title: `Top rated`, isExtra: true}));
-    const topRatedFilmsElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
-    const topRatedFilmsController = new TopRatedController(topRatedFilmsElement, this._siteFooterElement, this._filmsModel, this._commentsModel);
+
+    const topRatedFilmsComponent = new FilmsListComponent({title: `Top rated`, isExtra: true});
+    render(filmsElement, topRatedFilmsComponent);
+    const topRatedFilmsController = new TopRatedController(topRatedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
     topRatedFilmsController.render();
 
-    render(filmsElement, new FilmsListComponent({title: `Most commented`, isExtra: true}));
-    const mostCommentedFilmsElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
-    const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsElement, this._siteFooterElement, this._filmsModel, this._commentsModel);
+
+    const mostCommentedFilmsComponent = new FilmsListComponent({title: `Most commented`, isExtra: true});
+    render(filmsElement, mostCommentedFilmsComponent);
+    const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
     mostCommentedFilmsController.render();
 
 

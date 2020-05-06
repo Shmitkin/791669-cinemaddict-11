@@ -19,8 +19,6 @@ export default class FilmsList extends AbstractComponent {
     return (
       `<section class="films-list${addProperty(this._isExtra, EXTRA_CLASS)}">
         <h2 class="films-list__title ${addProperty(this._isHidden, HIDDEN_CLASS)}">${this._title}</h2>
-        <div class="films-list__container">
-        </div>
       </section>`
     );
   }
