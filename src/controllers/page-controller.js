@@ -14,6 +14,7 @@ export default class PageController {
   constructor(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement) {
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
+
     this._siteHeaderElement = siteHeaderElement;
     this._siteMainElement = siteMainElement;
     this._siteFooterElement = siteFooterElement;
@@ -24,13 +25,13 @@ export default class PageController {
     this._filmsComponent = new FilmsComponent();
     this._headerProfileController = new HeaderProfileController(this._siteHeaderElement, this._filmsModel);
     this._mainNavigationController = new MainNavigationController(this._siteMainElement, this._filmsModel);
-    this._sortComponent = null;
 
+    this._sortComponent = null;
     this._filmsController = null;
 
     this._onSortChange = this._onSortChange.bind(this);
-
     this._onFilterChange = this._onFilterChange.bind(this);
+
     this._filmsModel.addFilterChangeHandler(this._onFilterChange);
 
   }

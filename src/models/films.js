@@ -21,6 +21,10 @@ export default class FilmsModel {
     return this._films;
   }
 
+  getFilmById(id) {
+    return this._films.find((film) => film.id === id);
+  }
+
   setFilms(films) {
     this._films = Array.from(films);
   }
@@ -43,7 +47,7 @@ export default class FilmsModel {
 
     this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
 
-    FilmsModel._callHandlers(this._dataChangeHandlers);
+    FilmsModel._callHandlers(this._dataChangeHandlers, id);
   }
 
   addDataChangeHandler(handler) {
@@ -58,7 +62,7 @@ export default class FilmsModel {
     this._viewChangeHandlers.push(handler);
   }
 
-  static _callHandlers(handlers) {
-    handlers.forEach((handler) => handler());
+  static _callHandlers(handlers, id) {
+    handlers.forEach((handler) => handler(id));
   }
 }
