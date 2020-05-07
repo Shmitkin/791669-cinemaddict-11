@@ -52,7 +52,7 @@ const createFilmDetailsTemplate = (film) => {
     [`Director`, director],
     [`Writers`, writers.join(`, `)],
     [`Actors`, actors.join(`, `)],
-    [`Release Date`, formatReleaseDate(release)],
+    [`Release Date`, release],
     [`Runtime`, formatDuration(duration)],
     [`Country`, country],
     [getGenreTitle(genres), createGenresTemplate(genres)]
