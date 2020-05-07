@@ -1,7 +1,11 @@
 import API from "./api.js";
-import PageController from "./controllers/page-controller.js";
+import FilmsController from "./controllers/films.js";
 import FilmsModel from "./models/films.js";
-import CommentsModel from "./models/comments.js";
+import HeaderProfileController from "./controllers/header-profile-controller.js";
+import MainNavigationController from "./controllers/main-navigation-controller.js";
+import FilmsComponent from "./components/films.js";
+import {render} from "./utils/render.js";
+import StatComponent from "./components/stat.js";
 
 const AUTHORIZATION = `Basic dwef=f4echiudfn9`;
 
@@ -12,11 +16,19 @@ const siteFooterElement = document.querySelector(`.footer`);
 
 const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
-const commentsModel = new CommentsModel();
-const pageController = new PageController(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement, api);
+const filmsComponent = new FilmsComponent();
+
+const filmsController = new FilmsController(filmsComponent.getElement(), filmsModel, siteFooterElement, api);
+const headerProfileController = new HeaderProfileController(siteHeaderElement, filmsModel);
+const mainNavigationController = new MainNavigationController(siteMainElement, filmsModel);
+
+headerProfileController.render();
+mainNavigationController.render();
+render(siteMainElement, filmsComponent);
 
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
-    pageController.render();
+    filmsController.render();
+    render(siteFooterElement, new StatComponent(filmsModel.getFilmsAll().length));
   });

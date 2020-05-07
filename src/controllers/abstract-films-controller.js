@@ -4,8 +4,7 @@ import {render} from "../utils/render.js";
 
 
 export default class AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel, commentsModel, api) {
-    this._commentsModel = commentsModel;
+  constructor(container, modalContainer, filmsModel, api) {
     this._filmsModel = filmsModel;
     this._container = container;
     this._modalContainer = modalContainer;
@@ -26,25 +25,30 @@ export default class AbstractFilmsController {
     this._films = this._filmsModel.getFilms();
     this._filmsModel.addDataChangeHandler(this._updateFilm);
     this._filmsModel.addViewChangeHandler(this._closeFilmDetails);
-    this._commentsModel.addDataChangeHandler(this._updateFilm);
 
     render(this._container, this._filmsListContainerComponent);
   }
 
   _renderFilms(films) {
     const renderedFilms = films.map((film)=> {
-      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._onViewChange, this._commentsModel, this._api);
+      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._onViewChange, this._api);
       filmController.render(film);
       return filmController;
     });
     this._showedFilmsControllers = this._showedFilmsControllers.concat(renderedFilms);
   }
 
-  _onDataChange(oldFilmData, newFilmData) {
-    this._api.updateFilm(oldFilmData.id, newFilmData)
-    .then((filmModel) => {
-      this._filmsModel.updateFilm(oldFilmData.id, filmModel);
-    });
+  _onDataChange({type, id, newData}) {
+    switch (type) {
+      case `controls-change`:
+        this._api.updateFilm(id, newData)
+        .then((filmModel) => {
+          this._filmsModel.updateFilm(id, filmModel);
+        });
+        break;
+      case `delete-comment`:
+        this._filmsModel.updateFilm(id, newData);
+    }
   }
 
   _updateFilm(id) {

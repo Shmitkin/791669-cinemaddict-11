@@ -2,6 +2,8 @@ import FilmDetailsInfoComponent from "../components/film-details-info.js";
 import FilmDetailsComponent from "../components/film-details.js";
 import FilmCardComponent from "../components/film-card.js";
 import CommentsController from "./comments-controller.js";
+import CommentsModel from "../models/comments.js";
+import CommentModel from "../models/comment.js";
 
 import FilmModel from "../models/film.js";
 
@@ -11,10 +13,9 @@ import {isEscKey} from "../utils/common.js";
 import {render, remove, replace, RenderPosition} from "../utils/render.js";
 
 export default class FilmController {
-  constructor(container, modalContainer, onDataChange, onViewChange, commentsModel, api) {
+  constructor(container, modalContainer, onDataChange, onViewChange, api) {
     this._container = container;
     this._modalContainer = modalContainer;
-    this._commentsModel = commentsModel;
     this._api = api;
 
     this._filmDetailsComponent = null;
@@ -38,10 +39,6 @@ export default class FilmController {
 
     const oldfilmCardComponent = this._filmCardComponent;
     this._filmCardComponent = new FilmCardComponent(film);
-
-    if (this._commentsController) {
-      this._commentsController.updateComments(this._film.comments);
-    }
 
     this._filmCardComponent.setTitleClickHandler(this._onFilmCardClick);
     this._filmCardComponent.setPosterClickHandler(this._onFilmCardClick);
@@ -71,10 +68,11 @@ export default class FilmController {
 
   _renderFilmDetails() {
     this._onViewChange();
+    const commentsModel = new CommentsModel();
 
     this._filmDetailsComponent = new FilmDetailsComponent();
     this._filmDetailsInfoComponent = new FilmDetailsInfoComponent(this._film);
-    this._commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), this._commentsModel, this._onCommentsDataChange);
+    this._commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), commentsModel, this._onCommentsDataChange);
 
     this._filmDetailsInfoComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
     this._filmDetailsInfoComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
@@ -85,7 +83,7 @@ export default class FilmController {
 
     this._api.getComments(this._film.id)
     .then((comments) => {
-      this._commentsModel.setComments(comments);
+      commentsModel.setComments(comments);
       this._commentsController.render(comments);
     });
   }
@@ -107,7 +105,7 @@ export default class FilmController {
       }
     };
 
-    this._onDataChange(this._film, getFilmChanges());
+    this._onDataChange({type: `controls-change`, filmId: this._film.id, newData: getFilmChanges()});
   }
 
   _onFilmCardClick() {
@@ -128,8 +126,24 @@ export default class FilmController {
     }
   }
 
-  _onCommentsDataChange(newComments) {
-    const newData = Object.assign({}, this._film, {comments: newComments});
-    this._onDataChange(this._film, newData);
+  _onCommentsDataChange(commentId) {
+    this._api.deleteComment(commentId)
+    .then((response) => {
+      if (response.ok) {
+        this._api.getComments(this._film.id)
+        .then((comments) => {
+          console.log(this._film.comments);
+          this._commentsController.updateComments(comments);
+          const newData = comments.map((comment) => comment.id);
+          this._film.comments = newData;
+          console.log(this._film.comments);
+          this._onDataChange({
+            type: `delete-comment`,
+            id: this._film.id,
+            newData: this._film
+          });
+        });
+      }
+    });
   }
 }

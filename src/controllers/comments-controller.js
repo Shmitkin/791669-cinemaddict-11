@@ -9,9 +9,9 @@ import CommentsListComponent from "../components/comments-list.js";
 const KEY_CODES = [91, 13];
 
 export default class CommentsController {
-  constructor(container, commentsModel, onDataChange) {
+  constructor(container, commentsModel, onCommentsDataChange) {
     this._container = container;
-    this._onDataChange = onDataChange;
+    this._onCommentsDataChange = onCommentsDataChange;
     this._commentsModel = commentsModel;
 
     this._commentsContainerComponent = new CommentsContainerComponent();
@@ -79,7 +79,7 @@ export default class CommentsController {
     const newData = this._comments.map((comment) => comment.id);
     newData.push(newCommentId);
 
-    this._onDataChange(newData);
+    this._onCommentsDataChange(newData);
 
     const oldNewCommentComponent = this._newCommentComponent;
     this._newCommentComponent = new NewComment();
@@ -102,12 +102,6 @@ export default class CommentsController {
   }
 
   _onDeleteButtonClick(commentId) {
-    const index = this._comments.findIndex((comment) => comment.id === commentId);
-
-    const newComments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
-    const newData = newComments.map((comment) => comment.id);
-
-    this._onDataChange(newData);
-    this._commentsModel.deleteComment(commentId);
+    this._onCommentsDataChange(commentId);
   }
 }

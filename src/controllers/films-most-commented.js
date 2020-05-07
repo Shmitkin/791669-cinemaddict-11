@@ -2,12 +2,11 @@ import AbstractFilmsController from "./abstract-films-controller.js";
 import {CardCount} from "../consts.js";
 
 export default class MostCommentedController extends AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel, commentsModel) {
-    super(container, modalContainer, filmsModel, commentsModel);
+  constructor(container, modalContainer, filmsModel, api) {
+    super(container, modalContainer, filmsModel, api);
 
     this._updateMostCommentedFilms = this._updateMostCommentedFilms.bind(this);
 
-    this._commentsModel.addDataChangeHandler(this._updateMostCommentedFilms);
   }
 
   render() {

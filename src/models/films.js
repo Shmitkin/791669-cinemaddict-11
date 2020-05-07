@@ -27,6 +27,7 @@ export default class FilmsModel {
 
   setFilms(films) {
     this._films = Array.from(films);
+    FilmsModel._callHandlers(this._dataChangeHandlers);
   }
 
   setFilter(filterType) {
@@ -38,14 +39,14 @@ export default class FilmsModel {
     FilmsModel._callHandlers(this._viewChangeHandlers);
   }
 
-  updateFilm(id, film) {
-    const index = this._films.findIndex((it) => it.id === id);
+  updateFilm(id, newData) {
+    const index = this._films.findIndex((film) => film.id === id);
 
     if (index === -1) {
       return;
     }
 
-    this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
+    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
 
     FilmsModel._callHandlers(this._dataChangeHandlers, id);
   }
