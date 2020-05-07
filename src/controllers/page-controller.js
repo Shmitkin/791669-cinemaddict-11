@@ -62,20 +62,20 @@ export default class PageController {
     this._filmsController.render();
 
 
-    if (this._haveFilmsRating()) {
-      const topRatedFilmsComponent = new FilmsListComponent({title: `Top rated`, isExtra: true});
-      const topRatedFilmsController = new TopRatedController(topRatedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
-      render(filmsElement, topRatedFilmsComponent);
-      topRatedFilmsController.render();
-    }
-
-
-    if (this._haveFilmsComments()) {
-      const mostCommentedFilmsComponent = new FilmsListComponent({title: `Most commented`, isExtra: true});
-      const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
-      render(filmsElement, mostCommentedFilmsComponent);
-      mostCommentedFilmsController.render();
-    }
+    //    if (this._haveFilmsRating()) {
+    //      const topRatedFilmsComponent = new FilmsListComponent({title: `Top rated`, isExtra: true});
+    //      const topRatedFilmsController = new TopRatedController(topRatedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel, this._api);
+    //      render(filmsElement, topRatedFilmsComponent);
+    //      topRatedFilmsController.render();
+    //    }
+    //
+    //
+    //    if (this._haveFilmsComments()) {
+    //      const mostCommentedFilmsComponent = new FilmsListComponent({title: `Most commented`, isExtra: true});
+    //      const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel, this._api);
+    //      render(filmsElement, mostCommentedFilmsComponent);
+    //      mostCommentedFilmsController.render();
+    //    }
 
 
     this._renderFooterStatistic();
