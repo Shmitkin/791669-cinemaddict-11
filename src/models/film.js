@@ -1,26 +1,26 @@
 export default class FilmModel {
-  constructor(data) {
-    this.id = data[`id`];
+  constructor(film) {
+    this.id = film[`id`];
     this.title = {
-      main: data[`film_info`][`title`],
-      original: data[`film_info`][`alternative_title`]
+      main: film[`film_info`][`title`],
+      original: film[`film_info`][`alternative_title`]
     };
-    this.director = data[`film_info`][`director`];
-    this.writers = data[`film_info`][`writers`];
-    this.actors = data[`film_info`][`actors`];
-    this.release = data[`film_info`][`release`][`date`];
-    this.rating = data[`film_info`][`total_rating`];
-    this.duration = data[`film_info`][`runtime`];
-    this.country = data[`film_info`][`release`][`release_country`];
-    this.ageLimit = data[`film_info`][`age_rating`];
-    this.genres = data[`film_info`][`genre`];
-    this.poster = data[`film_info`][`poster`];
-    this.description = data[`film_info`][`description`];
-    this.comments = data[`comments`];
-    this.watchlist = data[`user_details`][`watchlist`];
-    this.watched = data[`user_details`][`already_watched`];
-    this.favorite = data[`user_details`][`favorite`];
-    this.watchingDate = data[`user_details`][`watching_date`];
+    this.director = film[`film_info`][`director`];
+    this.writers = film[`film_info`][`writers`];
+    this.actors = film[`film_info`][`actors`];
+    this.release = film[`film_info`][`release`][`date`];
+    this.rating = film[`film_info`][`total_rating`];
+    this.duration = film[`film_info`][`runtime`];
+    this.country = film[`film_info`][`release`][`release_country`];
+    this.ageLimit = film[`film_info`][`age_rating`];
+    this.genres = film[`film_info`][`genre`];
+    this.poster = film[`film_info`][`poster`];
+    this.description = film[`film_info`][`description`];
+    this.comments = film[`comments`];
+    this.watchlist = film[`user_details`][`watchlist`];
+    this.watched = film[`user_details`][`already_watched`];
+    this.favorite = film[`user_details`][`favorite`];
+    this.watchingDate = film[`user_details`][`watching_date`];
   }
 
   toRAW() {
@@ -53,15 +53,15 @@ export default class FilmModel {
     };
   }
 
-  static parseFilm(data) {
-    return new FilmModel(data);
+  static parseFilm(film) {
+    return new FilmModel(film);
   }
 
-  static parseFilms(data) {
-    return data.map(FilmModel.parseFilm);
+  static parseFilms(films) {
+    return films.map(FilmModel.parseFilm);
   }
 
-  static clone(data) {
-    return new FilmModel(data.toRAW());
+  static clone(film) {
+    return new FilmModel(film.toRAW());
   }
 }

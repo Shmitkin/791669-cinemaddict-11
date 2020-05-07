@@ -31,7 +31,7 @@ export default class CommentsController {
   }
 
   render(comments) {
-    this._comments = comments.map((id) => this._commentsModel.getCommentById(id));
+    this._comments = comments;
 
     this._commentsListComponent = new CommentsListComponent(this._comments);
     this._commentsTitleComponent = new CommentsTitleComponent(this._comments);
@@ -87,7 +87,7 @@ export default class CommentsController {
   }
 
   updateComments(comments) {
-    this._comments = comments.map((id) => this._commentsModel.getCommentById(id));
+    this._comments = comments;
 
     const oldCommentsTitleComponent = this._commentsTitleComponent;
     const oldCommentsListComponent = this._commentsListComponent;

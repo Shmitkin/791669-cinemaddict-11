@@ -33,7 +33,7 @@ export default class AbstractFilmsController {
 
   _renderFilms(films) {
     const renderedFilms = films.map((film)=> {
-      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._onViewChange, this._commentsModel);
+      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._onViewChange, this._commentsModel, this._api);
       filmController.render(film);
       return filmController;
     });

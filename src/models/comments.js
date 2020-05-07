@@ -1,9 +1,3 @@
-//  mock
-import {generateCommentId} from "../mock/comment";
-import {getRandomArrayItem} from "../mock/utils.js";
-import {COMMENT_AUTHORS} from "../mock/comment-data.js";
-// /mock
-
 export default class CommentsModel {
   constructor() {
     this._comments = [];
@@ -31,10 +25,6 @@ export default class CommentsModel {
   }
 
   addComment(comment) {
-    // mock
-    comment.id = generateCommentId();
-    comment.author = getRandomArrayItem(COMMENT_AUTHORS);
-    // /mock
     this._comments.push(comment);
     CommentsModel._callHandlers(this._dataChangeHandlers);
     return comment.id;
