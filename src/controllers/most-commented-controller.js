@@ -34,7 +34,6 @@ export default class MostCommentedController extends AbstractFilmsController {
       return;
     }
 
-    console.log(`newfilm`);
     this._removeFilms();
     this._renderFilms(newMostCommentedFilms);
   }
