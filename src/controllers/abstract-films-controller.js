@@ -2,12 +2,14 @@ import FilmController from "./film-controller.js";
 import FilmsListContainerComponent from "../components/films-list-container.js";
 import {render} from "../utils/render.js";
 
+
 export default class AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel, commentsModel) {
+  constructor(container, modalContainer, filmsModel, commentsModel, api) {
     this._commentsModel = commentsModel;
     this._filmsModel = filmsModel;
     this._container = container;
     this._modalContainer = modalContainer;
+    this._api = api;
 
     this._filmsListContainerComponent = new FilmsListContainerComponent();
 
@@ -39,7 +41,10 @@ export default class AbstractFilmsController {
   }
 
   _onDataChange(oldFilmData, newFilmData) {
-    this._filmsModel.updateFilm(oldFilmData.id, newFilmData);
+    this._api.updateFilm(oldFilmData.id, newFilmData)
+    .then((filmModel) => {
+      this._filmsModel.updateFilm(oldFilmData.id, filmModel);
+    });
   }
 
   _updateFilm(id) {

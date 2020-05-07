@@ -1,4 +1,4 @@
-export default class Film {
+export default class FilmModel {
   constructor(data) {
     this.id = data[`id`];
     this.title = {
@@ -20,16 +20,48 @@ export default class Film {
     this.watchlist = data[`user_details`][`watchlist`];
     this.watched = data[`user_details`][`already_watched`];
     this.favorite = data[`user_details`][`favorite`];
-    this.watchingDdate = data[`user_details`][`watching_date`];
+    this.watchingDate = data[`user_details`][`watching_date`];
+  }
 
+  toRAW() {
+    return {
+      "id": this.id,
+      "comments": this.comments,
+      "film_info": {
+        "title": this.title.main,
+        "alternative_title": this.title.original,
+        "total_rating": this.rating,
+        "poster": this.poster,
+        "age_rating": this.ageLimit,
+        "director": this.director,
+        "writers": this.writers,
+        "actors": this.actors,
+        "release": {
+          "date": this.release,
+          "release_country": this.country
+        },
+        "runtime": this.duration,
+        "genre": this.genres,
+        "description": this.description
+      },
+      "user_details": {
+        "watchlist": this.watchlist,
+        "already_watched": this.watched,
+        "watching_date": this.watchingDate,
+        "favorite": this.favorite
+      }
+    };
   }
 
   static parseFilm(data) {
-    return new Film(data);
-
+    return new FilmModel(data);
   }
 
   static parseFilms(data) {
-    return data.map(Film.parseFilm);
+    return data.map(FilmModel.parseFilm);
+  }
+
+  static clone(data) {
+    return new FilmModel(data.toRAW());
   }
 }

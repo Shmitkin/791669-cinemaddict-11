@@ -11,9 +11,10 @@ import {SortType} from "../consts.js";
 import MostCommentedController from "./most-commented-controller.js";
 
 export default class PageController {
-  constructor(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement) {
+  constructor(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement, api) {
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
+    this._api = api;
 
     this._siteHeaderElement = siteHeaderElement;
     this._siteMainElement = siteMainElement;
@@ -56,7 +57,7 @@ export default class PageController {
 
 
     this._filmsListComponent = new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true});
-    this._filmsController = new FilmsController(this._filmsListComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+    this._filmsController = new FilmsController(this._filmsListComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel, this._api);
     render(filmsElement, this._filmsListComponent);
     this._filmsController.render();
 

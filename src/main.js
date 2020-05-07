@@ -18,7 +18,7 @@ const siteFooterElement = document.querySelector(`.footer`);
 const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
-const pageController = new PageController(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement);
+const pageController = new PageController(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement, api);
 
 // const films = generateFilms(CardCount.SUMMARY);
 // const commentsCount = films.reduce((commentsId, film) => commentsId.concat(film.comments), []);

@@ -3,6 +3,8 @@ import FilmDetailsComponent from "../components/film-details.js";
 import FilmCardComponent from "../components/film-card.js";
 import CommentsController from "./comments-controller.js";
 
+import FilmModel from "../models/film.js";
+
 import {CardButtonType} from "../consts.js";
 
 import {isEscKey} from "../utils/common.js";
@@ -83,13 +85,17 @@ export default class FilmController {
 
   _onControlClick(buttonType) {
     const getFilmChanges = () => {
+      const newFilm = FilmModel.clone(this._film);
       switch (buttonType) {
         case CardButtonType.WATCHLIST:
-          return Object.assign({}, this._film, {watchlist: !this._film.watchlist});
+          newFilm.watchlist = !newFilm.watchlist;
+          return newFilm;
         case CardButtonType.WATCHED:
-          return Object.assign({}, this._film, {watched: !this._film.watched});
+          newFilm.watched = !newFilm.watched;
+          return newFilm;
         case CardButtonType.FAVORITE:
-          return Object.assign({}, this._film, {favorite: !this._film.favorite});
+          newFilm.favorite = !newFilm.favorite;
+          return newFilm;
         default: throw new Error(`Unknown button type`);
       }
     };
