@@ -5,12 +5,8 @@ import {CardCount, SortType} from "../consts.js";
 import {getSortedFilms} from "../utils/common.js";
 
 export default class FilmsListController extends AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel) {
-    super();
-    this._filmsModel = filmsModel;
-    this._container = container;
-    this._modalContainer = modalContainer;
-
+  constructor(container, modalContainer, filmsModel, commentsModel) {
+    super(container, modalContainer, filmsModel, commentsModel);
 
     this._showingCardsCount = CardCount.DEFAULT_SHOW;
     this._prevCardsCount = this._showingCardsCount;
@@ -35,7 +31,7 @@ export default class FilmsListController extends AbstractFilmsController {
     if (this._showingCardsCount >= sortedFilms.length) {
       return;
     }
-    render(this._container, this._showMoreButtonComponent, RenderPosition.AFTEREND);
+    render(this._filmsListContainerComponent.getElement(), this._showMoreButtonComponent, RenderPosition.AFTEREND);
 
     this._showMoreButtonComponent.setClickHandler(() => {
       this._prevCardsCount = this._showingCardsCount;

@@ -3,11 +3,8 @@ import {CardCount} from "../consts.js";
 import {getSortedArrayByKey} from "../utils/common.js";
 
 export default class TopRatedController extends AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel) {
-    super();
-    this._filmsModel = filmsModel;
-    this._container = container;
-    this._modalContainer = modalContainer;
+  constructor(container, modalContainer, filmsModel, commentsModel) {
+    super(container, modalContainer, filmsModel, commentsModel);
   }
 
   render() {

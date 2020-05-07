@@ -11,8 +11,10 @@ import {SortType} from "../consts.js";
 import MostCommentedController from "./most-commented-controller.js";
 
 export default class PageController {
-  constructor(filmsModel, siteHeaderElement, siteMainElement, siteFooterElement) {
+  constructor(filmsModel, commentsModel, siteHeaderElement, siteMainElement, siteFooterElement) {
     this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
+
     this._siteHeaderElement = siteHeaderElement;
     this._siteMainElement = siteMainElement;
     this._siteFooterElement = siteFooterElement;
@@ -23,13 +25,14 @@ export default class PageController {
     this._filmsComponent = new FilmsComponent();
     this._headerProfileController = new HeaderProfileController(this._siteHeaderElement, this._filmsModel);
     this._mainNavigationController = new MainNavigationController(this._siteMainElement, this._filmsModel);
-    this._sortComponent = null;
 
+    this._sortComponent = null;
     this._filmsController = null;
+    this._filmsListComponent = null;
 
     this._onSortChange = this._onSortChange.bind(this);
-
     this._onFilterChange = this._onFilterChange.bind(this);
+
     this._filmsModel.addFilterChangeHandler(this._onFilterChange);
 
   }
@@ -41,32 +44,56 @@ export default class PageController {
     render(this._siteMainElement, this._filmsComponent);
 
     const films = this._filmsModel.getFilms();
-
     const filmsElement = this._filmsComponent.getElement();
 
+
     if (films.length === 0) {
-      render(filmsElement, new FilmsListComponent({title: `There are no movies in our database`}));
+      this._filmsListComponent = new FilmsListComponent({title: `There are no movies in our database`});
+      render(filmsElement, this._filmsListComponent);
+      this._renderFooterStatistic();
       return;
     }
-    render(filmsElement, new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true}));
 
-    const filmsListElement = filmsElement.querySelector(`.films-list__container`);
-    this._filmsController = new FilmsController(filmsListElement, this._siteFooterElement, this._filmsModel);
+
+    this._filmsListComponent = new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true});
+    this._filmsController = new FilmsController(this._filmsListComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+    render(filmsElement, this._filmsListComponent);
     this._filmsController.render();
 
-    render(filmsElement, new FilmsListComponent({title: `Top rated`, isExtra: true}));
-    const topRatedFilmsElement = filmsElement.querySelector(`.films-list--extra .films-list__container`);
-    const topRatedFilmsController = new TopRatedController(topRatedFilmsElement, this._siteFooterElement, this._filmsModel);
-    topRatedFilmsController.render();
 
-    render(filmsElement, new FilmsListComponent({title: `Most commented`, isExtra: true}));
-    const mostCommentedFilmsElement = filmsElement.querySelector(`.films-list--extra:last-child .films-list__container`);
-    const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsElement, this._siteFooterElement, this._filmsModel);
-    mostCommentedFilmsController.render();
+    if (this._haveFilmsRating()) {
+      const topRatedFilmsComponent = new FilmsListComponent({title: `Top rated`, isExtra: true});
+      const topRatedFilmsController = new TopRatedController(topRatedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+      render(filmsElement, topRatedFilmsComponent);
+      topRatedFilmsController.render();
+    }
+
+
+    if (this._haveFilmsComments()) {
+      const mostCommentedFilmsComponent = new FilmsListComponent({title: `Most commented`, isExtra: true});
+      const mostCommentedFilmsController = new MostCommentedController(mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._commentsModel);
+      render(filmsElement, mostCommentedFilmsComponent);
+      mostCommentedFilmsController.render();
+    }
 
 
     this._renderFooterStatistic();
+  }
 
+  _haveFilmsComments() {
+    const filmsCountWithComments = this._filmsModel.getFilmsAll().reduce((count, film) => film.comments.length > 0 ? count + 1 : count, 0);
+    if (filmsCountWithComments > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  _haveFilmsRating() {
+    const filmsCountWithRating = this._filmsModel.getFilmsAll().reduce((count, film) => film.rating > 0 ? count + 1 : count, 0);
+    if (filmsCountWithRating > 0) {
+      return true;
+    }
+    return false;
   }
 
   _renderSortComponent() {

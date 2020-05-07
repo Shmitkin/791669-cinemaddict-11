@@ -1,29 +1,37 @@
 import FilmController from "./film-controller.js";
+import FilmsListContainerComponent from "../components/films-list-container.js";
+import {render} from "../utils/render.js";
 
 export default class AbstractFilmsController {
-  constructor(container, modalContainer, filmsModel) {
+  constructor(container, modalContainer, filmsModel, commentsModel) {
+    this._commentsModel = commentsModel;
     this._filmsModel = filmsModel;
     this._container = container;
     this._modalContainer = modalContainer;
+
+    this._filmsListContainerComponent = new FilmsListContainerComponent();
 
     this._showedFilmsControllers = [];
     this._films = null;
 
     this._onDataChange = this._onDataChange.bind(this);
-    this._updateFilms = this._updateFilms.bind(this);
+    this._updateFilm = this._updateFilm.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._closeFilmDetails = this._closeFilmDetails.bind(this);
   }
 
   render() {
     this._films = this._filmsModel.getFilms();
-    this._filmsModel.addDataChangeHandler(this._updateFilms);
+    this._filmsModel.addDataChangeHandler(this._updateFilm);
     this._filmsModel.addViewChangeHandler(this._closeFilmDetails);
+    this._commentsModel.addDataChangeHandler(this._updateFilm);
+
+    render(this._container, this._filmsListContainerComponent);
   }
 
   _renderFilms(films) {
     const renderedFilms = films.map((film)=> {
-      const filmController = new FilmController(this._container, this._modalContainer, this._onDataChange, this._onViewChange);
+      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._onViewChange, this._commentsModel);
       filmController.render(film);
       return filmController;
     });
@@ -34,20 +42,15 @@ export default class AbstractFilmsController {
     this._filmsModel.updateFilm(oldFilmData.id, newFilmData);
   }
 
-  _updateFilms() {
-    const oldfilms = this._films;
-    this._films = this._filmsModel.getFilms();
-
-    const updatedFilms = this._films.filter((film) => oldfilms.indexOf(film) === -1);
-    const updatedFilm = updatedFilms.pop();
-
-    const index = this._showedFilmsControllers.findIndex((controller) => controller._film.id === updatedFilm.id);
+  _updateFilm(id) {
+    const index = this._showedFilmsControllers.findIndex((controller) => controller._film.id === id);
     if (index === -1) {
       return;
     }
 
-    this._showedFilmsControllers[index].render(updatedFilm);
+    const updatedFilm = this._filmsModel.getFilmById(id);
 
+    this._showedFilmsControllers[index].render(updatedFilm);
   }
 
   _onViewChange() {

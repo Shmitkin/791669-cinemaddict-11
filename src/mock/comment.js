@@ -14,8 +14,9 @@ const Comment = {
   YEAR_MAX: 2020
 };
 
-const generateComment = () => {
+const generateComment = (id) => {
   return {
+    id,
     emoji: getRandomArrayItem(EMOJIS),
     text: getRandomArrayItem(DUMMY_TEXTS),
     author: getRandomArrayItem(COMMENT_AUTHORS),
@@ -23,10 +24,17 @@ const generateComment = () => {
   };
 };
 
-const generateComments = (count) => {
-  return new Array(count)
-    .fill(``)
-    .map(generateComment);
+export const generateCommentId = () => {
+  return String(`i` + Math.random());
 };
 
-export {generateComments};
+export const generateCommentsId = (count) => {
+  return new Array(count)
+  .fill(``)
+  .map(generateCommentId);
+};
+
+export const generateComments = (commentsIds) => {
+  return commentsIds.map((id) => generateComment(id));
+};
+

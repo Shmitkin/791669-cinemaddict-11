@@ -1,7 +1,7 @@
+import FilmDetailsInfoComponent from "../components/film-details-info.js";
 import FilmDetailsComponent from "../components/film-details.js";
-import CommentComponent from "../components/comment.js";
-import NewCommentComponent from "../components/new-comment.js";
 import FilmCardComponent from "../components/film-card.js";
+import CommentsController from "./comments-controller.js";
 
 import {CardButtonType} from "../consts.js";
 
@@ -9,15 +9,17 @@ import {isEscKey} from "../utils/common.js";
 import {render, remove, replace, RenderPosition} from "../utils/render.js";
 
 export default class FilmController {
-  constructor(container, modalContainer, onDataChange, onViewChange) {
+  constructor(container, modalContainer, onDataChange, onViewChange, commentsModel) {
     this._container = container;
     this._modalContainer = modalContainer;
+    this._commentsModel = commentsModel;
 
     this._filmDetailsComponent = null;
+    this._filmDetailsInfoComponent = null;
     this._filmCardComponent = null;
     this._film = null;
+    this._commentsController = null;
 
-    this._newCommentComponent = new NewCommentComponent();
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
 
@@ -25,6 +27,7 @@ export default class FilmController {
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
   }
 
   render(film) {
@@ -32,6 +35,10 @@ export default class FilmController {
 
     const oldfilmCardComponent = this._filmCardComponent;
     this._filmCardComponent = new FilmCardComponent(film);
+
+    if (this._commentsController) {
+      this._commentsController.updateComments(this._film.comments);
+    }
 
     this._filmCardComponent.setTitleClickHandler(this._onFilmCardClick);
     this._filmCardComponent.setPosterClickHandler(this._onFilmCardClick);
@@ -54,40 +61,35 @@ export default class FilmController {
     if (this._filmDetailsComponent) {
       remove(this._filmDetailsComponent);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._commentsController.removeListeners();
     }
   }
 
   _renderFilmDetails() {
     this._onViewChange();
-    this._filmDetailsComponent = new FilmDetailsComponent(this._film);
-    this._filmDetailsComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
-    this._filmDetailsComponent.setPopUpControlsClickHandler(this._onControlClick);
+    this._filmDetailsComponent = new FilmDetailsComponent();
+    this._filmDetailsInfoComponent = new FilmDetailsInfoComponent(this._film);
+    this._filmDetailsInfoComponent.setCloseButtonClickHandler(this._onCloseButtonClick);
+    this._filmDetailsInfoComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
     document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._renderNewComment();
-    this._renderCommentsList();
 
+    this._commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), this._commentsModel, this._onCommentsDataChange);
+
+    render(this._filmDetailsComponent.getElement(), this._filmDetailsInfoComponent);
+
+    this._commentsController.render(this._film.comments);
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
-  }
-
-  _renderNewComment() {
-    const filmDetailsCommentsElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    render(filmDetailsCommentsElement, this._newCommentComponent);
-  }
-
-  _renderCommentsList() {
-    const filmDetailsCommentsListElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__comments-list`);
-    this._film.comments.forEach((comment) => render(filmDetailsCommentsListElement, new CommentComponent(comment)));
   }
 
   _onControlClick(buttonType) {
     const getFilmChanges = () => {
       switch (buttonType) {
         case CardButtonType.WATCHLIST:
-          return Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist});
+          return Object.assign({}, this._film, {watchlist: !this._film.watchlist});
         case CardButtonType.WATCHED:
-          return Object.assign({}, this._film, {isMarkedAsWatched: !this._film.isMarkedAsWatched});
+          return Object.assign({}, this._film, {watched: !this._film.watched});
         case CardButtonType.FAVORITE:
-          return Object.assign({}, this._film, {isFavorite: !this._film.isFavorite});
+          return Object.assign({}, this._film, {favorite: !this._film.favorite});
         default: throw new Error(`Unknown button type`);
       }
     };
@@ -102,12 +104,19 @@ export default class FilmController {
   _onCloseButtonClick() {
     this.removeFilmDetails();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._commentsController.removeListeners();
   }
 
   _onEscKeyDown(evt) {
     if (isEscKey(evt)) {
       this.removeFilmDetails();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._commentsController.removeListeners();
     }
+  }
+
+  _onCommentsDataChange(newComments) {
+    const newData = Object.assign({}, this._film, {comments: newComments});
+    this._onDataChange(this._film, newData);
   }
 }
