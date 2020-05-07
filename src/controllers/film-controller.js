@@ -61,7 +61,7 @@ export default class FilmController {
     if (this._filmDetailsComponent) {
       remove(this._filmDetailsComponent);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
-      this._commentsController.removeListeners();
+      // this._commentsController.removeListeners();
     }
   }
 
@@ -73,11 +73,11 @@ export default class FilmController {
     this._filmDetailsInfoComponent.setFilmDetailsControlsClickHandler(this._onControlClick);
     document.addEventListener(`keydown`, this._onEscKeyDown);
 
-    this._commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), this._commentsModel, this._onCommentsDataChange);
+    // this._commentsController = new CommentsController(this._filmDetailsInfoComponent.getElement(), this._commentsModel, this._onCommentsDataChange);
 
     render(this._filmDetailsComponent.getElement(), this._filmDetailsInfoComponent);
 
-    this._commentsController.render(this._film.comments);
+    // this._commentsController.render(this._film.comments);
     render(this._modalContainer, this._filmDetailsComponent, RenderPosition.AFTEREND);
   }
 
@@ -104,14 +104,14 @@ export default class FilmController {
   _onCloseButtonClick() {
     this.removeFilmDetails();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._commentsController.removeListeners();
+    // this._commentsController.removeListeners();
   }
 
   _onEscKeyDown(evt) {
     if (isEscKey(evt)) {
       this.removeFilmDetails();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
-      this._commentsController.removeListeners();
+      // this._commentsController.removeListeners();
     }
   }
 

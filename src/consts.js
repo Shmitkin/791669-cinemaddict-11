@@ -38,7 +38,7 @@ export const FilterType = {
 };
 
 export const CardCount = {
-  SUMMARY: 30,
+  SUMMARY: 10,
   DEFAULT_SHOW: 5,
   SHOW_MORE: 5,
   TOP_RATED: 2,
