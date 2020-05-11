@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 import {formatDuration, addProperty} from "../utils/common.js";
-import {MONTH_NAMES, CardButtonType} from "../consts.js";
+import {CardButtonType} from "../consts.js";
 
 const Title = {
   GENRE: `Genre`,
@@ -21,9 +21,6 @@ const createGenreTemplate = (genre) =>
 const createGenresTemplate = (genres) => {
   return genres.map(createGenreTemplate).join(``);
 };
-
-const formatReleaseDate = (date) =>
-  `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
 
 const createFilmDetailsRowTemplate = ([term, cell]) => {
   return (

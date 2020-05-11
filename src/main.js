@@ -7,7 +7,7 @@ import FilmsComponent from "./components/films.js";
 import {render} from "./utils/render.js";
 import StatComponent from "./components/stat.js";
 
-const AUTHORIZATION = `Basic dwef=f4echiudfn9`;
+const AUTHORIZATION = `Basic dwef=fdshiudfn9`;
 
 
 const siteHeaderElement = document.querySelector(`.header`);

@@ -16,9 +16,6 @@ const truncateDescription = (description, maxLength = MAX_DESCRIPTION_LENGTH) =>
   return description;
 };
 
-const formatYearDate = (date) =>
-  `${date.getFullYear()}`;
-
 const createFilmCardTemplate = (film) => {
 
   const {
