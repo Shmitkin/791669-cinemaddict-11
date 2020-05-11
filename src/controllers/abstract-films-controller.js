@@ -17,7 +17,6 @@ export default class AbstractFilmsController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._updateFilm = this._updateFilm.bind(this);
-    this._onViewChange = this._onViewChange.bind(this);
     this._closeFilmDetails = this._closeFilmDetails.bind(this);
   }
 
@@ -31,7 +30,7 @@ export default class AbstractFilmsController {
 
   _renderFilms(films) {
     const renderedFilms = films.map((film)=> {
-      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._onViewChange, this._api);
+      const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._api);
       filmController.render(film);
       return filmController;
     });
@@ -48,6 +47,13 @@ export default class AbstractFilmsController {
         break;
       case `delete-comment`:
         this._filmsModel.updateFilm(id, newData);
+        break;
+      case `add-comment`:
+        this._filmsModel.updateFilm(id, newData);
+        break;
+      case `view-change`:
+        this._filmsModel.closeOpenedFilmDetails();
+        break;
     }
   }
 
@@ -60,10 +66,6 @@ export default class AbstractFilmsController {
     const updatedFilm = this._filmsModel.getFilmById(id);
 
     this._showedFilmsControllers[index].render(updatedFilm);
-  }
-
-  _onViewChange() {
-    this._filmsModel.closeOpenedFilmDetails();
   }
 
   _closeFilmDetails() {

@@ -53,6 +53,19 @@ export default class API {
       .then(API._checkStatus);
   }
 
+  addComment(filmId, comment) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`, {
+      method: `POST`,
+      headers,
+      body: JSON.stringify(comment)
+    })
+      .then(API._checkStatus);
+  }
+
   static _checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;
