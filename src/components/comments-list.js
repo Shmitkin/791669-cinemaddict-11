@@ -1,4 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
+import moment from "moment";
 
 export default class CommentsList extends AbstractComponent {
   constructor({status, comments}) {
@@ -51,12 +52,16 @@ export default class CommentsList extends AbstractComponent {
            <p class="film-details__comment-text">${text}</p>
            <p class="film-details__comment-info">
              <span class="film-details__comment-author">${author}</span>
-             <span class="film-details__comment-day">${date}</span>
+             <span class="film-details__comment-day">${CommentsList._formatCommentdate(date)}</span>
              <button id="${id}" class="film-details__comment-delete">Delete</button>
            </p>
          </div>
       </li>`
     );
+  }
+
+  static _formatCommentdate(date) {
+    return moment(date).fromNow();
   }
 }
 

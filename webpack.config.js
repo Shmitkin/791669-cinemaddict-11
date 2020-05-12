@@ -1,6 +1,6 @@
 'use strict';
 const path = require('path');
-const MomentLocalesPlugin = require(`moment-locales-webpack-plugin`);
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const pathToPublic = path.join(__dirname, 'public');
 
 module.exports = {
@@ -18,6 +18,6 @@ module.exports = {
   },
 
   plugins: [
-      new MomentLocalesPlugin()
+      new MomentLocalesPlugin(),
   ]
 };
