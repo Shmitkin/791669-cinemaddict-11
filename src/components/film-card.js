@@ -54,7 +54,7 @@ export default class FilmCard extends AbstractComponent {
          <p class="film-card__rating">${rating}</p>
          <p class="film-card__info">
            <span class="film-card__year">${FilmCard._getReleaseYear(release)}</span>
-           <span class="film-card__duration">${formatDuration(duration)}</span>
+           <span class="film-card__duration">${formatDuration(duration, `film-stat`)}</span>
            <span class="film-card__genre">${genres[GENRE_MAIN]}</span>
          </p>
          <img src="${poster}" alt="" class="film-card__poster">

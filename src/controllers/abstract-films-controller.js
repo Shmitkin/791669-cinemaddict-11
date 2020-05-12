@@ -32,6 +32,7 @@ export default class AbstractFilmsController {
     const renderedFilms = films.map((film)=> {
       const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._api);
       filmController.render(film);
+      console.log(film.watchingDate);
       return filmController;
     });
     this._showedFilmsControllers = this._showedFilmsControllers.concat(renderedFilms);

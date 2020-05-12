@@ -1,15 +1,19 @@
-import {KeyboardKey, SortType} from "../consts.js";
-import moment from "moment";
+import {KeyboardKey, SortType, MINUTES_IN_HOUR} from "../consts.js";
 
 export const addProperty = (statement, ifTrue, ifFalse = ``) =>
   statement ? ifTrue : ifFalse;
 
-export const formatDuration = (duration) => {
-  return moment(duration * 60 * 1000).utc().format(`h[h] m[m]`);
-};
+export const formatDuration = (duration, type) => {
+  const hours = parseInt(duration / MINUTES_IN_HOUR, 10);
+  const minutes = duration % MINUTES_IN_HOUR;
+  switch (type) {
+    case `film-stat`:
+      return `${hours}h ${minutes}m`;
+    case `user-stat`:
+      return {hours, minutes};
+    default: throw new Error(`Unknown type to format duration`);
 
-export const getReleaseDate = (date) => {
-  return moment(date).format(`DD MMMM YYYY`);
+  }
 };
 
 export const isEscKey = ({key}) => key === KeyboardKey.ESCAPE || key === KeyboardKey.ESC;

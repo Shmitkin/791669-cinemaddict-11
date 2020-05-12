@@ -1,6 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
-import {formatDuration, addProperty, getReleaseDate} from "../utils/common.js";
+import {formatDuration, addProperty} from "../utils/common.js";
 import {CardButtonType} from "../consts.js";
+import moment from "moment";
 
 const Title = {
   GENRE: `Genre`,
@@ -47,6 +48,10 @@ export default class FilmDetailsInfo extends AbstractComponent {
     return genres.length > 1 ? Title.GENRES : Title.GENRE;
   }
 
+  static _formatReleaseDate(date) {
+    return moment(date).format(`DD MMMM YYYY`);
+  };
+
   static _createFilmDetailsRowTemplate([term, cell]) {
     return (
       `<tr class="film-details__row">
@@ -70,8 +75,8 @@ export default class FilmDetailsInfo extends AbstractComponent {
       [`Director`, director],
       [`Writers`, writers.join(`, `)],
       [`Actors`, actors.join(`, `)],
-      [`Release Date`, getReleaseDate(release)],
-      [`Runtime`, formatDuration(duration)],
+      [`Release Date`, FilmDetailsInfo._formatReleaseDate(release)],
+      [`Runtime`, formatDuration(duration, `film-stat`)],
       [`Country`, country],
       [FilmDetailsInfo._getGenreTitle(genres), FilmDetailsInfo._createGenresTemplate(genres)]
     ];

@@ -97,6 +97,7 @@ export default class FilmController {
         return newFilm;
       case CardButtonType.WATCHED:
         newFilm.watched = !newFilm.watched;
+        newFilm.watchingDate = newFilm.watched ? new Date() : null;
         return newFilm;
       case CardButtonType.FAVORITE:
         newFilm.favorite = !newFilm.favorite;

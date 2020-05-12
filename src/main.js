@@ -6,6 +6,7 @@ import MainNavigationController from "./controllers/main-navigation-controller.j
 import FilmsComponent from "./components/films.js";
 import {render} from "./utils/render.js";
 import StatComponent from "./components/stat.js";
+import UserStatComponent from "./components/user-stats.js";
 
 const AUTHORIZATION = `Basic dwef=fdshiudfn9`;
 
@@ -30,5 +31,6 @@ api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
     filmsController.render();
+    render(siteMainElement, new UserStatComponent(filmsModel.getFilmsAll()));
     render(siteFooterElement, new StatComponent(filmsModel.getFilmsAll().length));
   });
