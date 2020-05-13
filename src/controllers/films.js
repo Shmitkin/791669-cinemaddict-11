@@ -1,7 +1,6 @@
 import FilmsListComponent from "../components/films-list.js";
 import FilmsListController from "./films-list";
 import {render, replace, RenderPosition} from "../utils/render.js";
-import SortComponent from "../components/sort.js";
 import TopRatedController from "./films-top-rated.js";
 import {SortType} from "../consts.js";
 import MostCommentedController from "./films-most-commented.js";
@@ -15,23 +14,12 @@ export default class FilmsController {
     this._container = container;
     this._siteFooterElement = siteFooterElement;
 
-    this._sortType = SortType.DEFAULT;
-
     this._sortComponent = null;
     this._filmsController = null;
     this._filmsListComponent = null;
-
-    this._onSortChange = this._onSortChange.bind(this);
-    this._onFilterChange = this._onFilterChange.bind(this);
-
-    this._filmsModel.addFilterChangeHandler(this._onFilterChange);
-
   }
 
   render() {
-
-    this._renderSortComponent();
-
     const films = this._filmsModel.getFilms();
 
     if (films.length === 0) {
@@ -78,26 +66,5 @@ export default class FilmsController {
       return true;
     }
     return false;
-  }
-
-  _renderSortComponent() {
-    const oldSortComponent = this._sortComponent;
-    this._sortComponent = new SortComponent();
-    this._sortComponent.setSortTypeChangeHandler(this._onSortChange);
-    if (oldSortComponent) {
-      replace(this._sortComponent, oldSortComponent);
-    } else {
-      render(this._container, this._sortComponent, RenderPosition.BEFOREBEGIN);
-    }
-  }
-
-  _onFilterChange() {
-    this._onSortChange(SortType.DEFAULT);
-    this._renderSortComponent();
-  }
-
-  _onSortChange(sortType) {
-    this._sortType = sortType;
-    this._filmsController.updateFilmsContainer(sortType);
   }
 }

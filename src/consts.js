@@ -34,7 +34,13 @@ export const FilterType = {
   ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
-  FAVORITES: `favorites`
+  FAVORITES: `favorites`,
+  STATS: `stats`
+};
+
+export const ViewMode = {
+  DEFAULT: `default`,
+  STATS: `stats`
 };
 
 export const CardCount = {

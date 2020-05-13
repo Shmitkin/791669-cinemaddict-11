@@ -1,20 +1,25 @@
-import {FilterType} from "../consts.js";
+import {FilterType, SortType, ViewMode} from "../consts.js";
 
 import {getFilteredFilms} from "../utils/filter.js";
+
+import {getSortedFilms} from "../utils/common.js";
 
 export default class FilmsModel {
   constructor() {
     this._films = [];
 
-    this._activeFilterType = FilterType.ALL;
+    this._filterType = FilterType.ALL;
+    this._sortType = SortType.DEFAULT;
+    this._viewMode = ViewMode.DEFAULT;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
     this._viewChangeHandlers = [];
+    this._sortChangeHandlers = [];
   }
 
   getFilms() {
-    return getFilteredFilms(this._films, this._activeFilterType);
+    return getSortedFilms(getFilteredFilms(this._films, this._filterType), this._sortType);
   }
 
   getFilmsAll() {
@@ -31,8 +36,14 @@ export default class FilmsModel {
   }
 
   setFilter(filterType) {
-    this._activeFilterType = filterType;
+    this._sortType = SortType.DEFAULT;
+    this._filterType = filterType;
     FilmsModel._callHandlers(this._filterChangeHandlers);
+  }
+
+  setSortType(sortType) {
+    this._sortType = sortType;
+    FilmsModel._callHandlers(this._sortChangeHandlers);
   }
 
   closeOpenedFilmDetails() {
@@ -45,9 +56,7 @@ export default class FilmsModel {
     if (index === -1) {
       return;
     }
-
     this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-
     FilmsModel._callHandlers(this._dataChangeHandlers, id);
   }
 
@@ -61,6 +70,10 @@ export default class FilmsModel {
 
   addViewChangeHandler(handler) {
     this._viewChangeHandlers.push(handler);
+  }
+
+  addSortChangeHandler(handler) {
+    this._sortChangeHandlers.push(handler);
   }
 
   static _callHandlers(handlers, id) {

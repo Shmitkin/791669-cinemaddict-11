@@ -50,7 +50,7 @@ export default class FilmDetailsInfo extends AbstractComponent {
 
   static _formatReleaseDate(date) {
     return moment(date).format(`DD MMMM YYYY`);
-  };
+  }
 
   static _createFilmDetailsRowTemplate([term, cell]) {
     return (

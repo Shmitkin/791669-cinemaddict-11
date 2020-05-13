@@ -25,12 +25,12 @@ export default class MainNavigation extends AbstractComponent {
           <a href="#history" data-filter-type="${FilterType.HISTORY}" class="main-navigation__item ${activeFilter === FilterType.HISTORY ? ACTIVE_CLASS : ``}">History <span class="main-navigation__item-count">${history.length}</span></a>
           <a href="#favorites" data-filter-type="${FilterType.FAVORITES}" class="main-navigation__item ${activeFilter === FilterType.FAVORITES ? ACTIVE_CLASS : ``}">Favorites <span class="main-navigation__item-count">${favorites.length}</span></a>
         </div>
-        <a href="#stats" class="main-navigation__additional">Stats</a>
+        <a href="#stats" data-filter-type="${FilterType.STATS}" class="main-navigation__additional">Stats</a>
       </nav>`
     );
   }
 
-  setFilerTypeChangeHandler(handler) {
+  setFilterTypeChangeHandler(handler) {
     let activeElement = this.getElement().querySelector(`.${ACTIVE_CLASS}`);
 
     this.getElement().addEventListener(`click`, (evt) => {
@@ -42,10 +42,6 @@ export default class MainNavigation extends AbstractComponent {
       const filterType = evt.target.dataset.filterType;
 
       if (this._currentFilterType === filterType) {
-        return;
-      }
-
-      if (filterType === undefined) {
         return;
       }
 

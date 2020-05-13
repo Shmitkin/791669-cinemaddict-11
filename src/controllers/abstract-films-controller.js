@@ -28,15 +28,16 @@ export default class AbstractFilmsController {
     render(this._container, this._filmsListContainerComponent);
   }
 
+
   _renderFilms(films) {
     const renderedFilms = films.map((film)=> {
       const filmController = new FilmController(this._filmsListContainerComponent.getElement(), this._modalContainer, this._onDataChange, this._api);
       filmController.render(film);
-      console.log(film.watchingDate);
       return filmController;
     });
     this._showedFilmsControllers = this._showedFilmsControllers.concat(renderedFilms);
   }
+
 
   _onDataChange({type, id, newData}) {
     switch (type) {
@@ -58,16 +59,16 @@ export default class AbstractFilmsController {
     }
   }
 
+
   _updateFilm(id) {
     const index = this._showedFilmsControllers.findIndex((controller) => controller._film.id === id);
     if (index === -1) {
       return;
     }
-
     const updatedFilm = this._filmsModel.getFilmById(id);
-
     this._showedFilmsControllers[index].render(updatedFilm);
   }
+
 
   _closeFilmDetails() {
     this._showedFilmsControllers.forEach((controller) => controller.removeFilmDetails());
