@@ -7,10 +7,10 @@ import FilmsComponent from "./components/films.js";
 import {render} from "./utils/render.js";
 import StatComponent from "./components/stat.js";
 import {ViewMode} from "./consts.js";
-import UserStatsComponent from "./components/user-stats-container.js";
+import UserStatsComponent from "./components/user-stats.js";
 import UserStatsController from "./controllers/user-stats.js";
 
-const AUTHORIZATION = `Basic dwef=fdshiudfn9`;
+const AUTHORIZATION = `Basic dwef=fdddshiudfn9`;
 
 const onViewModeChange = (viewMode) => {
   switch (viewMode) {

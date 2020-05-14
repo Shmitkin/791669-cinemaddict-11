@@ -30,6 +30,14 @@ export const SortType = {
   DEFAULT: `default`,
 };
 
+export const StatisticsFilterType = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
 export const FilterType = {
   ALL: `all`,
   WATCHLIST: `watchlist`,
