@@ -13,7 +13,6 @@ export default class AbstractFilmsController {
     this._filmsListContainerComponent = new FilmsListContainerComponent();
 
     this._showedFilmsControllers = [];
-    this._films = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._updateFilm = this._updateFilm.bind(this);
@@ -21,7 +20,6 @@ export default class AbstractFilmsController {
   }
 
   render() {
-    this._films = this._filmsModel.getFilms();
     this._filmsModel.addDataChangeHandler(this._updateFilm);
     this._filmsModel.addViewChangeHandler(this._closeFilmDetails);
 

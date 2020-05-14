@@ -1,30 +1,31 @@
 import AbstractComponent from "./abstract-component.js";
 import {addProperty} from "../utils/common.js";
-import {StatisticsFilterType} from "../consts.js";
+import {StatsControlType} from "../consts.js";
+
 const ACTIVE_INPUT = `checked`;
 
-const StatisticsFilterControls = [
-  [StatisticsFilterType.ALL, `All time`, true],
-  [StatisticsFilterType.TODAY, `Today`, false],
-  [StatisticsFilterType.WEEK, `Week`, false],
-  [StatisticsFilterType.MONTH, `Month`, false],
-  [StatisticsFilterType.YEAR, `Year`, false]
+const StatsFilters = [
+  [StatsControlType.ALL, `All time`, true],
+  [StatsControlType.TODAY, `Today`, false],
+  [StatsControlType.WEEK, `Week`, false],
+  [StatsControlType.MONTH, `Month`, false],
+  [StatsControlType.YEAR, `Year`, false]
 ];
 
-const createStatisticsControlTemplate = ([filterType, label, isActive]) =>{
+const createFilterTemplate = ([filterType, label, isActive]) =>{
   return (
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${filterType}" value="${filterType}" ${addProperty(isActive, ACTIVE_INPUT)}>
     <label for="statistic-${filterType}" class="statistic__filters-label">${label}</label>`
   );
 };
 
-export default class UserStatsFilter extends AbstractComponent {
+export default class StatsFilter extends AbstractComponent {
   constructor() {
     super();
-    //  this._activeFilter = StatisticsFilterType.ALL;
   }
+
   getTemplate() {
-    return UserStatsFilter._createTemplate();
+    return StatsFilter._createTemplate();
   }
 
   setFilterChangeHandler(handler) {
@@ -39,7 +40,7 @@ export default class UserStatsFilter extends AbstractComponent {
     return (
       `<form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
-      ${StatisticsFilterControls.map(createStatisticsControlTemplate).join(``)}
+      ${StatsFilters.map(createFilterTemplate).join(``)}
     </form>`
     );
   }

@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-export default class UserStatsContainer extends AbstractComponent {
+export default class StatsContainer extends AbstractComponent {
   getTemplate() {
     return this._createTemplate();
   }

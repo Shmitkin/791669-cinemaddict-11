@@ -1,14 +1,23 @@
-import {FilterType, SortType, ViewMode} from "../consts.js";
+import {FilterType, SortType, ViewMode, CardCount} from "../consts.js";
 
-import {getFilteredFilms} from "../utils/filter.js";
+import {filterFilms} from "../utils/filter.js";
 
-import {getSortedFilms} from "../utils/common.js";
+import {sortFilms} from "../utils/sort.js";
 
 export default class FilmsModel {
   constructor() {
     this._films = [];
+    this._filteredFilms = {
+      watchlist: [],
+      history: [],
+      favorites: [],
+      watchedToday: [],
+      watchedWeek: [],
+      watchedMonth: [],
+      watchedYear: []
+    };
 
-    this._filterType = FilterType.ALL;
+    this._filterType = FilterType.DEFAULT;
     this._sortType = SortType.DEFAULT;
     this._viewMode = ViewMode.DEFAULT;
 
@@ -19,7 +28,7 @@ export default class FilmsModel {
   }
 
   getFilms() {
-    return getSortedFilms(getFilteredFilms(this._films, this._filterType), this._sortType);
+    return sortFilms(this.getFilteredFilms(this._filterType), this._sortType);
   }
 
   getFilmsAll() {
@@ -30,8 +39,17 @@ export default class FilmsModel {
     return this._films.find((film) => film.id === id);
   }
 
+  getFilmsTopRated() {
+    return sortFilms(this._films, SortType.RATING_DOWN).slice(0, CardCount.TOP_RATED);
+  }
+
+  getFilmsMostCommented() {
+    return sortFilms(this._films, SortType.COMMENTS_DOWN).slice(0, CardCount.MOST_COMMENTED);
+  }
+
   setFilms(films) {
     this._films = Array.from(films);
+    this._filterFilms();
     FilmsModel._callHandlers(this._dataChangeHandlers);
   }
 
@@ -57,7 +75,50 @@ export default class FilmsModel {
       return;
     }
     this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
+    this._filteredFilms = filterFilms(this._films);
     FilmsModel._callHandlers(this._dataChangeHandlers, id);
+  }
+
+  _filterFilms() {
+    this._filteredFilms = filterFilms(this._films);
+  }
+
+  getStats(dataSet) {
+    switch (dataSet) {
+      case `user-statistics`:
+        return this._filteredFilms.history;
+      case `main-navigation`:
+        return {
+          watchlist: this._filteredFilms.watchlist.length,
+          history: this._filteredFilms.history.length,
+          favorites: this._filteredFilms.favorites.length
+        };
+      case `profile-rating`:
+        return this._filteredFilms.history.length;
+      default: throw new Error(`Unknown DATASET`);
+    }
+  }
+
+  getFilteredFilms(filterType) {
+    switch (filterType) {
+      case FilterType.DEFAULT:
+        return this._films;
+      case FilterType.FAVORITES:
+        return this._filteredFilms.favorites;
+      case FilterType.WATCHED:
+        return this._filteredFilms.history;
+      case FilterType.WATCHLIST:
+        return this._filteredFilms.watchlist;
+      case FilterType.TODAY:
+        return this._filteredFilms.watchedToday;
+      case FilterType.WEEK:
+        return this._filteredFilms.watchedWeek;
+      case FilterType.MONTH:
+        return this._filteredFilms.watchedMonth;
+      case FilterType.YEAR:
+        return this._filteredFilms.watchedYear;
+      default: return this._filteredFilms;
+    }
   }
 
   addDataChangeHandler(handler) {

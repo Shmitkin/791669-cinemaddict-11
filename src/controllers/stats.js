@@ -1,11 +1,10 @@
 import {render, replace} from "../utils/render.js";
 import {formatDuration} from "../utils/common.js";
-import UserStatsFilterComponent from "../components/user-stats-filter.js";
-import UserStatsChartComponent from "../components/user-stats-chart.js";
-import UserStatsInfoComponent from "../components/user-stats-info.js";
-import {StatisticsFilterType} from "../consts.js";
-
-import moment from "moment";
+import StatsFilterComponent from "../components/stats-filter.js";
+import StatsChartComponent from "../components/stats-chart.js";
+import StatsInfoComponent from "../components/user-stats-info.js";
+import {FilterType} from "../consts.js";
+import StatsUserRankComponent from "../components/stats-user-rank.js";
 
 const Chart = require(`chart.js`);
 const ChartDataLabels = require(`chartjs-plugin-datalabels`);
@@ -15,13 +14,14 @@ export default class UserStatsController {
     this._container = container;
     this._filmsModel = filmsModel;
 
-    this._userStatsComponent = null;
+    this._statsInfoComponent = null;
     this._chart = null;
-    this._userStats = null;
-    this._userFilms = null;
-    this._userStatsFilterComponent = null;
+    this._stats = null;
+    this._films = null;
+    this._statsFilterComponent = null;
+    this._statsUserRankComponent = null;
 
-    this._activeFilterType = StatisticsFilterType.ALL;
+    this._activeFilterType = FilterType.WATCHED;
 
     this._updateUserStats = this._updateUserStats.bind(this);
     this._onStatsFilterChange = this._onStatsFilterChange.bind(this);
@@ -32,28 +32,36 @@ export default class UserStatsController {
   }
 
   render() {
-    this._userFilms = this._filmsModel.getFilmsAll();
-    this._userStats = UserStatsController._getUserStats(this._userFilms);
+    this._films = this._filmsModel.getFilmsAll();
+    this._stats = UserStatsController._getUserStats(this._filmsModel.getStats(`user-statistics`));
+    this._statsUserRankComponent = new StatsUserRankComponent(this._films);
 
-    this._userStatsFilterComponent = new UserStatsFilterComponent();
-    this._userStatsFilterComponent.setFilterChangeHandler(this._onStatsFilterChange);
+    this._statsFilterComponent = new StatsFilterComponent();
+    this._statsFilterComponent.setFilterChangeHandler(this._onStatsFilterChange);
 
-    this._userStatsComponent = new UserStatsInfoComponent(this._userStats);
+    this._statsInfoComponent = new StatsInfoComponent(this._stats);
 
-    render(this._container, this._userStatsFilterComponent);
-    render(this._container, this._userStatsComponent);
-    render(this._container, new UserStatsChartComponent());
+    render(this._container, this._statsUserRankComponent);
+
+    render(this._container, this._statsFilterComponent);
+    render(this._container, this._statsInfoComponent);
+    render(this._container, new StatsChartComponent());
   }
 
   _updateUserStats() {
-    this._userFilms = this._filmsModel.getFilmsAll();
-    this._userStats = UserStatsController._getUserStats(this._filterUserFilms(this._userFilms));
-    const oldUserStatsComponent = this._userStatsComponent;
-    this._userStatsComponent = new UserStatsInfoComponent(this._userStats);
-    replace(this._userStatsComponent, oldUserStatsComponent);
+    this._films = this._filmsModel.getFilteredFilms(this._activeFilterType);
+    this._stats = UserStatsController._getUserStats(this._films);
+    const labels = this._stats.genresCount.map((genre) => genre[0]);
+    const data = this._stats.genresCount.map((genre) => genre[1]);
 
-    const labels = this._userStats.genresCount.map((genre) => genre[0]);
-    const data = this._userStats.genresCount.map((genre) => genre[1]);
+
+    const oldStatsInfoComponent = this._statsInfoComponent;
+    this._statsInfoComponent = new StatsInfoComponent(this._stats);
+    replace(this._statsInfoComponent, oldStatsInfoComponent);
+
+    const oldStatsUserRankComponent = this._statsUserRankComponent;
+    this._statsUserRankComponent = new StatsUserRankComponent(this._stats);
+    replace(this._statsUserRankComponent, oldStatsUserRankComponent);
 
     if (this._chart === null) {
       this._chart = this._createChart(labels, data);
@@ -69,55 +77,14 @@ export default class UserStatsController {
   }
 
   _onFilterChange() {
-    this._activeFilterType = StatisticsFilterType.ALL;
-    const oldUserStatsFilterComponent = this._userStatsFilterComponent;
+    this._activeFilterType = FilterType.WATCHED;
+    const oldStatsFilterComponent = this._statsFilterComponent;
 
-    this._userStatsFilterComponent = new UserStatsFilterComponent();
-    this._userStatsFilterComponent.setFilterChangeHandler(this._onStatsFilterChange);
+    this._statsFilterComponent = new StatsFilterComponent();
+    this._statsFilterComponent.setFilterChangeHandler(this._onStatsFilterChange);
 
-    replace(this._userStatsFilterComponent, oldUserStatsFilterComponent);
+    replace(this._statsFilterComponent, oldStatsFilterComponent);
     this._updateUserStats();
-  }
-
-  _filterUserFilms(films) {
-    const allFilms = films;
-    let filteredFilms = [];
-
-    switch (this._activeFilterType) {
-      case StatisticsFilterType.ALL:
-        filteredFilms = allFilms;
-        break;
-      case StatisticsFilterType.TODAY:
-        filteredFilms = allFilms.reduce((newFilms, film) => {
-          return moment(film.watchingDate).diff(moment(), `days`) === 0
-            ? newFilms.concat(film)
-            : newFilms;
-        }, []);
-        break;
-      case StatisticsFilterType.WEEK:
-        filteredFilms = allFilms.reduce((newFilms, film) => {
-          return moment(film.watchingDate).diff(moment(), `weeks`) === 0
-            ? newFilms.concat(film)
-            : newFilms;
-        }, []);
-        break;
-      case StatisticsFilterType.MONTH:
-        filteredFilms = allFilms.reduce((newFilms, film) => {
-          return moment(film.watchingDate).diff(moment(), `months`) === 0
-            ? newFilms.concat(film)
-            : newFilms;
-        }, []);
-        break;
-      case StatisticsFilterType.YEAR:
-        filteredFilms = allFilms.reduce((newFilms, film) => {
-          return moment(film.watchingDate).diff(moment(), `years`) === 0
-            ? newFilms.concat(film)
-            : newFilms;
-        }, []);
-        break;
-      default: throw new Error(`Unknown USER STATISTIC FilterType`);
-    }
-    return filteredFilms;
   }
 
   static _getUserStats(films) {

@@ -8,6 +8,8 @@ export default class FilmsListController extends AbstractFilmsController {
   constructor(container, modalContainer, filmsModel, api) {
     super(container, modalContainer, filmsModel, api);
 
+    this._films = null;
+
     this._showingCardsCount = CardCount.DEFAULT_SHOW;
     this._prevCardsCount = this._showingCardsCount;
 
@@ -24,6 +26,7 @@ export default class FilmsListController extends AbstractFilmsController {
   render() {
     super.render();
     this._sortController.render();
+    this._films = this._filmsModel.getFilms();
 
     this._renderFilms(this._films.slice(0, CardCount.DEFAULT_SHOW));
     if (this._films.length > CardCount.DEFAULT_SHOW) {

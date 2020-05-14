@@ -1,23 +1,4 @@
-export const MONTH_NAMES = [
-  `January`,
-  `February`,
-  `March`,
-  `April`,
-  `May`,
-  `June`,
-  `July`,
-  `August`,
-  `September`,
-  `October`,
-  `November`,
-  `December`,
-];
-
 export const MINUTES_IN_HOUR = 60;
-
-export const HOURS_IN_DAY = 24;
-
-export const DAYS_IN_MONTH = 30;
 
 export const KeyboardKey = {
   ESCAPE: `Escape`,
@@ -27,10 +8,11 @@ export const KeyboardKey = {
 export const SortType = {
   DATE_DOWN: `date-down`,
   RATING_DOWN: `rating-down`,
+  COMMENTS_DOWN: `comments-down`,
   DEFAULT: `default`,
 };
 
-export const StatisticsFilterType = {
+export const StatsControlType = {
   ALL: `all-time`,
   TODAY: `today`,
   WEEK: `week`,
@@ -39,11 +21,15 @@ export const StatisticsFilterType = {
 };
 
 export const FilterType = {
-  ALL: `all`,
+  DEFAULT: `all`,
   WATCHLIST: `watchlist`,
-  HISTORY: `history`,
+  WATCHED: `history`,
   FAVORITES: `favorites`,
-  STATS: `stats`
+  STATS: `stats`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
 };
 
 export const ViewMode = {
@@ -52,7 +38,6 @@ export const ViewMode = {
 };
 
 export const CardCount = {
-  SUMMARY: 10,
   DEFAULT_SHOW: 5,
   SHOW_MORE: 5,
   TOP_RATED: 2,

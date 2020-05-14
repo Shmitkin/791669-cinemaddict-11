@@ -9,10 +9,7 @@ export default class TopRatedController extends AbstractFilmsController {
 
   render() {
     super.render();
-    this._renderFilms(this._getTopRatedFilms());
-  }
-
-  _getTopRatedFilms() {
-    return getSortedArrayByKey(this._filmsModel.getFilmsAll(), `rating`).slice(0, CardCount.TOP_RATED);
+    const topRatedFilms = this._filmsModel.getFilmsTopRated();
+    this._renderFilms(topRatedFilms);
   }
 }

@@ -7,8 +7,8 @@ import FilmsComponent from "./components/films.js";
 import {render} from "./utils/render.js";
 import StatComponent from "./components/stat.js";
 import {ViewMode} from "./consts.js";
-import UserStatsComponent from "./components/user-stats.js";
-import UserStatsController from "./controllers/user-stats.js";
+import StatsComponent from "./components/stats.js";
+import StatsController from "./controllers/stats.js";
 
 const AUTHORIZATION = `Basic dwef=fdddshiudfn9`;
 
@@ -16,11 +16,11 @@ const onViewModeChange = (viewMode) => {
   switch (viewMode) {
     case ViewMode.DEFAULT:
       filmsComponent.show();
-      userStatsComponent.hide();
+      statsComponent.hide();
       break;
     case ViewMode.STATS:
       filmsComponent.hide();
-      userStatsComponent.show();
+      statsComponent.show();
       break;
   }
 };
@@ -32,19 +32,19 @@ const siteFooterElement = document.querySelector(`.footer`);
 const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
 const filmsComponent = new FilmsComponent();
-const userStatsComponent = new UserStatsComponent();
+const statsComponent = new StatsComponent();
 
 const filmsController = new FilmsController(filmsComponent.getElement(), filmsModel, siteFooterElement, api);
 const headerProfileController = new HeaderProfileController(siteHeaderElement, filmsModel);
 const mainNavigationController = new MainNavigationController(siteMainElement, filmsModel, onViewModeChange);
-const userStatsController = new UserStatsController(userStatsComponent.getElement(), filmsModel);
+const userStatsController = new StatsController(statsComponent.getElement(), filmsModel);
 
-headerProfileController.render();
 mainNavigationController.render();
+headerProfileController.render();
 userStatsController.render();
 render(siteMainElement, filmsComponent);
-render(siteMainElement, userStatsComponent);
-userStatsComponent.hide();
+render(siteMainElement, statsComponent);
+statsComponent.hide();
 
 api.getFilms()
   .then((films) => {
