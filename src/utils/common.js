@@ -1,4 +1,4 @@
-import {KeyboardKey, MINUTES_IN_HOUR} from "../consts.js";
+import {KeyboardKey, MINUTES_IN_HOUR, RATING_TITLES} from "../consts.js";
 
 export const addProperty = (statement, ifTrue, ifFalse = ``) =>
   statement ? ifTrue : ifFalse;
@@ -18,3 +18,6 @@ export const formatDuration = (duration, type) => {
 
 export const isEscKey = ({key}) => key === KeyboardKey.ESCAPE || key === KeyboardKey.ESC;
 
+export const getRatingTitle = (profileRating) => {
+  return RATING_TITLES.find(({rating}) => profileRating >= rating).title;
+};

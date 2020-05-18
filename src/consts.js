@@ -25,7 +25,7 @@ export const FilterType = {
   WATCHLIST: `watchlist`,
   WATCHED: `history`,
   FAVORITES: `favorites`,
-  STATS: `stats`,  //   цдалить! это страница а не фильтр
+  STATS: `stats`, //   цдалить! это страница а не фильтр
   WATCHED_ALL: `all-time`,
   WATCHED_TODAY: `today`,
   WATCHED_WEEK: `week`,
@@ -50,3 +50,10 @@ export const CardButtonType = {
   WATCHED: `watched`,
   FAVORITE: `favorite`
 };
+
+export const RATING_TITLES = [
+  {rating: 21, title: `movie buff`},
+  {rating: 11, title: `fan`},
+  {rating: 1, title: `novice`},
+  {rating: 0, title: ``},
+];

@@ -32,17 +32,16 @@ export default class UserStatsController {
   }
 
   render() {
-    this._films = this._filmsModel.getFilmsAll();
+    this._films = this._filmsModel.getFilteredFilms(this._activeFilterType);
     this._stats = UserStatsController._getUserStats(this._filmsModel.getData(`user-statistics`));
-    this._statsUserRankComponent = new StatsUserRankComponent(this._films);
 
     this._statsFilterComponent = new StatsFilterComponent();
-    this._statsFilterComponent.setFilterChangeHandler(this._onStatsFilterChange);
-
+    this._statsUserRankComponent = new StatsUserRankComponent(this._stats.films.length);
     this._statsInfoComponent = new StatsInfoComponent(this._stats);
 
-    render(this._container, this._statsUserRankComponent);
+    this._statsFilterComponent.setFilterChangeHandler(this._onStatsFilterChange);
 
+    render(this._container, this._statsUserRankComponent);
     render(this._container, this._statsFilterComponent);
     render(this._container, this._statsInfoComponent);
     render(this._container, new StatsChartComponent());
@@ -54,14 +53,14 @@ export default class UserStatsController {
     const labels = this._stats.genresCount.map((genre) => genre[0]);
     const data = this._stats.genresCount.map((genre) => genre[1]);
 
+    const oldStatsUserRankComponent = this._statsUserRankComponent;
+    this._statsUserRankComponent = new StatsUserRankComponent(this._stats.films.length);
+    replace(this._statsUserRankComponent, oldStatsUserRankComponent);
+
 
     const oldStatsInfoComponent = this._statsInfoComponent;
     this._statsInfoComponent = new StatsInfoComponent(this._stats);
     replace(this._statsInfoComponent, oldStatsInfoComponent);
-
-    const oldStatsUserRankComponent = this._statsUserRankComponent;
-    this._statsUserRankComponent = new StatsUserRankComponent(this._stats);
-    replace(this._statsUserRankComponent, oldStatsUserRankComponent);
 
     if (this._chart === null) {
       this._chart = this._createChart(labels, data);
