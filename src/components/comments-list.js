@@ -27,15 +27,16 @@ export default class CommentsList extends AbstractComponent {
   _createTemplate(status) {
     switch (status) {
       case `loading`:
-        return (`<ul class="film-details__comments-list">
-        <li> LOADING </li>
-        </ul>`
+        return (
+          `<ul class="film-details__comments-list">
+            <li> LOADING </li>
+          </ul>`
         );
       case `loaded`:
         return (
           `<ul class="film-details__comments-list">
             ${this._comments.map(CommentsList._createCommentTemplate).join(``)}
-            </ul>`
+          </ul>`
         );
       default: throw new Error(`UNKNOWN STATUS`);
     }
@@ -52,7 +53,7 @@ export default class CommentsList extends AbstractComponent {
            <p class="film-details__comment-text">${text}</p>
            <p class="film-details__comment-info">
              <span class="film-details__comment-author">${author}</span>
-             <span class="film-details__comment-day">${CommentsList._formatCommentdate(date)}</span>
+             <span class="film-details__comment-day">${CommentsList._formatCommentDate(date)}</span>
              <button id="${id}" class="film-details__comment-delete">Delete</button>
            </p>
          </div>
@@ -60,7 +61,7 @@ export default class CommentsList extends AbstractComponent {
     );
   }
 
-  static _formatCommentdate(date) {
+  static _formatCommentDate(date) {
     return moment(date).fromNow();
   }
 }

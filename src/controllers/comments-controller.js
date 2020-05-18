@@ -9,6 +9,7 @@ import CommentsTitleComponent from "../components/comments-title.js";
 import CommentsListComponent from "../components/comments-list.js";
 
 const KEY_CODES = [91, 13];
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export default class CommentsController {
   constructor(container, onCommentsDataChange, api, filmId) {
@@ -87,19 +88,27 @@ export default class CommentsController {
   }
 
   _onNewCommentSubmit() {
+    const oldNewCommentComponent = this._newCommentComponent;
     const userComment = this._newCommentComponent.getNewCommentData();
     const newComment = CommentModel.parseUserComment(userComment);
+    const newCommentElement = this._newCommentComponent.getElement();
+
+    newCommentElement.querySelector(`.film-details__comment-input`).disabled = true;
+    newCommentElement.querySelector(`.film-details__comment-input`).style.border = ``;
 
     this._api.addComment(this._filmId, newComment)
     .then((response) => response.json())
     .then((newData) => {
       this._commentsModel.setComments(CommentModel.parseComments(newData.comments));
       this._onCommentsDataChange({type: `adding-comment`, data: newData.movie});
+      this._newCommentComponent = new NewComment();
+      replace(this._newCommentComponent, oldNewCommentComponent);
+    })
+    .catch(() => {
+      CommentsController._shake(newCommentElement);
+      newCommentElement.querySelector(`.film-details__comment-input`).disabled = false;
+      newCommentElement.querySelector(`.film-details__comment-input`).style.border = `3px solid red`;
     });
-
-    const oldNewCommentComponent = this._newCommentComponent;
-    this._newCommentComponent = new NewComment();
-    replace(this._newCommentComponent, oldNewCommentComponent);
   }
 
   _updateComments() {
@@ -118,6 +127,12 @@ export default class CommentsController {
   }
 
   _onDeleteButtonClick(commentId) {
+    const buttonElement = document.getElementById(`${commentId}`);
+    const commentElement = buttonElement.closest(`.film-details__comment`);
+
+    buttonElement.innerText = `Deleting...`;
+    buttonElement.disabled = true;
+
     this._api.deleteComment(commentId)
     .then(() => {
       const index = this._comments.findIndex((comment) => comment.id === commentId);
@@ -125,6 +140,19 @@ export default class CommentsController {
       this._filmCommentsList.splice(index, 1);
       this._updateComments();
       this._onCommentsDataChange({type: `deleting-comment`, data: this._filmCommentsList});
+    })
+    .catch(() => {
+      buttonElement.innerText = `Delete`;
+      buttonElement.disabled = false;
+      CommentsController._shake(commentElement);
     });
+  }
+
+  static _shake(container) {
+    container.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      container.style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 }
