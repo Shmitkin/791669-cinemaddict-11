@@ -71,4 +71,15 @@ export default class AbstractFilmsController {
   _closeFilmDetails() {
     this._showedFilmsControllers.forEach((controller) => controller.removeFilmDetails());
   }
+
+  _removeFilms() {
+    const activeControllers = this._showedFilmsControllers.map((controller) => controller.destroy());
+    this._showedFilmsControllers = [];
+    activeControllers.forEach((controller) => {
+      if (controller !== null) {
+        controller.setDelayedRemove();
+        this._showedFilmsControllers = [].concat(controller);
+      }
+    });
+  }
 }

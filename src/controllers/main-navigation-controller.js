@@ -20,7 +20,7 @@ export default class MainNavigationController {
   }
 
   render() {
-    const watchStats = this._filmsModel.getStats(`main-navigation`);
+    const watchStats = this._filmsModel.getData(`main-navigation`);
     this._mainNavigationComponent = new MainNavigationComponent(watchStats, this._activeFilterType);
 
     this._mainNavigationComponent.setFilterTypeChangeHandler(this._onFilterChange);
@@ -38,7 +38,7 @@ export default class MainNavigationController {
   }
 
   _update() {
-    const watchStats = this._filmsModel.getStats(`main-navigation`);
+    const watchStats = this._filmsModel.getData(`main-navigation`);
 
     const oldMainNavigationComponent = this._mainNavigationComponent;
     this._mainNavigationComponent = new MainNavigationComponent(watchStats, this._activeFilterType);

@@ -1,6 +1,5 @@
 import HeaderProfileComponent from "../components/header-profile.js";
 import {render, replace} from "../utils/render.js";
-import {FilterType} from "../consts.js";
 
 export default class HeaderProfileController {
   constructor(container, filmsModel) {
@@ -13,13 +12,13 @@ export default class HeaderProfileController {
   }
 
   render() {
-    this._headerProfileComponent = new HeaderProfileComponent(this._filmsModel.getStats(`profile-rating`));
+    this._headerProfileComponent = new HeaderProfileComponent(this._filmsModel.getData(`profile-rating`));
     render(this._container, this._headerProfileComponent);
   }
 
   _update() {
     const oldHeaderProfileComponent = this._headerProfileComponent;
-    this._headerProfileComponent = new HeaderProfileComponent(this._filmsModel.getFilteredFilms(FilterType.WATCHED).length);
+    this._headerProfileComponent = new HeaderProfileComponent(this._filmsModel.getData(`profile-rating`));
     replace(this._headerProfileComponent, oldHeaderProfileComponent);
   }
 }

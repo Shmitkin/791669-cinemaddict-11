@@ -33,7 +33,7 @@ export default class UserStatsController {
 
   render() {
     this._films = this._filmsModel.getFilmsAll();
-    this._stats = UserStatsController._getUserStats(this._filmsModel.getStats(`user-statistics`));
+    this._stats = UserStatsController._getUserStats(this._filmsModel.getData(`user-statistics`));
     this._statsUserRankComponent = new StatsUserRankComponent(this._films);
 
     this._statsFilterComponent = new StatsFilterComponent();

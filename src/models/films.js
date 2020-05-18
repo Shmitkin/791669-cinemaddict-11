@@ -40,11 +40,23 @@ export default class FilmsModel {
   }
 
   getFilmsTopRated() {
-    return sortFilms(this._films, SortType.RATING_DOWN).slice(0, CardCount.TOP_RATED);
+    const topRatedFilms = this._films.reduce((films, film) => {
+      if (film.rating !== 0) {
+        films.push(film);
+      }
+      return films;
+    }, []);
+    return (sortFilms(topRatedFilms, SortType.RATING_DOWN)).slice(0, CardCount.TOP_RATED);
   }
 
   getFilmsMostCommented() {
-    return sortFilms(this._films, SortType.COMMENTS_DOWN).slice(0, CardCount.MOST_COMMENTED);
+    const mostCommentedFilms = this._films.reduce((films, film) => {
+      if (film.comments.length !== 0) {
+        films.push(film);
+      }
+      return films;
+    }, []);
+    return (sortFilms(mostCommentedFilms, SortType.COMMENTS_DOWN)).slice(0, CardCount.MOST_COMMENTED);
   }
 
   setFilms(films) {
@@ -83,7 +95,7 @@ export default class FilmsModel {
     this._filteredFilms = filterFilms(this._films);
   }
 
-  getStats(dataSet) {
+  getData(dataSet) {
     switch (dataSet) {
       case `user-statistics`:
         return this._filteredFilms.history;
@@ -95,6 +107,18 @@ export default class FilmsModel {
         };
       case `profile-rating`:
         return this._filteredFilms.history.length;
+      case `films-list`:
+        return sortFilms(this.getFilteredFilms(this._filterType), this._sortType);
+      case `films`:
+        return {
+          count: this._films.length,
+          mostCommented: this.getFilmsMostCommented(),
+          topRated: this.getFilmsTopRated(),
+        };
+      case `most-commented-films`:
+        return this.getFilmsMostCommented();
+      case `top-rated-films`:
+        return this.getFilmsTopRated();
       default: throw new Error(`Unknown DATASET`);
     }
   }
@@ -109,13 +133,15 @@ export default class FilmsModel {
         return this._filteredFilms.history;
       case FilterType.WATCHLIST:
         return this._filteredFilms.watchlist;
-      case FilterType.TODAY:
+      case FilterType.WATCHED_ALL:
+        return this._filteredFilms.history;
+      case FilterType.WATCHED_TODAY:
         return this._filteredFilms.watchedToday;
-      case FilterType.WEEK:
+      case FilterType.WATCHED_WEEK:
         return this._filteredFilms.watchedWeek;
-      case FilterType.MONTH:
+      case FilterType.WATCHED_MONTH:
         return this._filteredFilms.watchedMonth;
-      case FilterType.YEAR:
+      case FilterType.WATCHED_YEAR:
         return this._filteredFilms.watchedYear;
       default: return this._filteredFilms;
     }

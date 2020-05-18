@@ -6,40 +6,36 @@ export default class MostCommentedController extends AbstractFilmsController {
 
     this._updateMostCommentedFilms = this._updateMostCommentedFilms.bind(this);
     this._filmsModel.addDataChangeHandler(this._updateMostCommentedFilms);
-
   }
 
   render() {
-    this._films = this._filmsModel.getFilmsMostCommented();
+    this._films = this._filmsModel.getData(`most-commented-films`);
     super.render();
     this._renderFilms(this._films);
   }
 
   _updateMostCommentedFilms() {
-    this._films = this._filmsModel.getFilmsMostCommented();
+    const newFilms = this._filmsModel.getData(`most-commented-films`);
 
-    const currentFilmsIds = this._showedFilmsControllers.map((controller) => controller._film.id);
-    const newFilmsIds = this._films.map((film) => film.id);
-
-    const isFilmsIndent = (newFilms, oldFilms) => {
-      for (let i = 0; i < newFilms.length; i++) {
-        if (newFilms[i] !== oldFilms[i]) {
-          return false;
-        }
-      }
-      return true;
-    };
-
-    if (isFilmsIndent(newFilmsIds, currentFilmsIds)) {
+    if (MostCommentedController._isFilmsIndent(newFilms, this._films)) {
       return;
     }
 
+    this._films = newFilms;
     this._removeFilms();
     this._renderFilms(this._films);
   }
 
-  _removeFilms() {
-    this._showedFilmsControllers.forEach((controller) => controller.destroy());
-    this._showedFilmsControllers = [];
+  static _isFilmsIndent(newFilms, oldFilms) {
+    if (newFilms.length !== oldFilms.length) {
+      return false;
+    }
+    for (let i = 0; i < newFilms.length; i++) {
+      if (newFilms[i].id !== oldFilms[i].id) {
+        return false;
+      }
+    }
+    return true;
   }
 }
+

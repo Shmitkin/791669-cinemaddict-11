@@ -2,11 +2,8 @@ import FilmDetailsInfoComponent from "../components/film-details-info.js";
 import FilmDetailsComponent from "../components/film-details.js";
 import FilmCardComponent from "../components/film-card.js";
 import CommentsController from "./comments-controller.js";
-
 import FilmModel from "../models/film.js";
-
 import {CardButtonType} from "../consts.js";
-
 import {isEscKey} from "../utils/common.js";
 import {render, remove, replace, RenderPosition} from "../utils/render.js";
 
@@ -21,6 +18,8 @@ export default class FilmController {
     this._filmCardComponent = null;
     this._film = null;
     this._commentsController = null;
+    this._filmDetailsOpened = false;
+    this._needToRemove = false;
 
     this._onDataChange = onDataChange;
 
@@ -50,16 +49,28 @@ export default class FilmController {
   }
 
   destroy() {
+    if (this._filmDetailsOpened) {
+      return this;
+    }
     remove(this._filmCardComponent);
     this.removeFilmDetails();
+    return null;
   }
 
   removeFilmDetails() {
-    if (this._filmDetailsComponent !== null) {
+    if (this._filmDetailsComponent !== null && this._filmDetailsOpened) {
+      this._filmDetailsOpened = false;
       remove(this._filmDetailsComponent);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
       this._commentsController.removeListeners();
+      if (this._needToRemove) {
+        this.destroy();
+      }
     }
+  }
+
+  setDelayedRemove() {
+    this._needToRemove = true;
   }
 
 
@@ -67,6 +78,7 @@ export default class FilmController {
     this._onDataChange({
       type: `view-change`
     });
+    this._filmDetailsOpened = true;
 
     this._filmDetailsComponent = new FilmDetailsComponent();
     this._filmDetailsInfoComponent = new FilmDetailsInfoComponent(this._film);

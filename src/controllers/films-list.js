@@ -26,7 +26,7 @@ export default class FilmsListController extends AbstractFilmsController {
   render() {
     super.render();
     this._sortController.render();
-    this._films = this._filmsModel.getFilms();
+    this._films = this._filmsModel.getData(`films-list`);
 
     this._renderFilms(this._films.slice(0, CardCount.DEFAULT_SHOW));
     if (this._films.length > CardCount.DEFAULT_SHOW) {
@@ -49,7 +49,7 @@ export default class FilmsListController extends AbstractFilmsController {
   }
 
   _updateFilmsContainer() {
-    this._films = this._filmsModel.getFilms();
+    this._films = this._filmsModel.getData(`films-list`);
     this._removeFilms();
     remove(this._showMoreButtonComponent);
 
@@ -57,11 +57,5 @@ export default class FilmsListController extends AbstractFilmsController {
     if (this._films.length > CardCount.DEFAULT_SHOW) {
       this._renderShowMoreButton();
     }
-  }
-
-  _removeFilms() {
-    this._showedFilmsControllers.forEach((controller) => controller.destroy());
-    this._showedFilmsControllers = [];
-    this._showingCardsCount = CardCount.DEFAULT_SHOW;
   }
 }

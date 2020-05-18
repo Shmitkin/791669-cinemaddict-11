@@ -25,11 +25,12 @@ export const FilterType = {
   WATCHLIST: `watchlist`,
   WATCHED: `history`,
   FAVORITES: `favorites`,
-  STATS: `stats`,
-  TODAY: `today`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`
+  STATS: `stats`,  //   цдалить! это страница а не фильтр
+  WATCHED_ALL: `all-time`,
+  WATCHED_TODAY: `today`,
+  WATCHED_WEEK: `week`,
+  WATCHED_MONTH: `month`,
+  WATCHED_YEAR: `year`
 };
 
 export const ViewMode = {
