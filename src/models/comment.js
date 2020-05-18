@@ -7,9 +7,11 @@ export default class CommentModel {
     this.date = comment[`date`];
   }
 
-  toRAW() {
+  static parseUserComment(comment) {
     return {
-
+      "comment": comment.text,
+      "date": comment.date,
+      "emotion": comment.emoji
     };
   }
 

@@ -1,39 +1,45 @@
 import AbstractComponent from "./abstract-component.js";
-import {castTimeFormat} from "../utils/common.js";
-
-const formatCommentDate = (date) =>
-  `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
+import moment from "moment";
 
 export default class CommentsList extends AbstractComponent {
-  constructor(comments) {
+  constructor({status, comments}) {
     super();
     this._comments = comments;
+    this._status = status;
   }
 
   getTemplate() {
-    return CommentsList._createTemplate(this._comments);
+    return this._createTemplate(this._status);
   }
 
   setOnCommentClickHandler(handler) {
     const commentsList = this.getElement();
     commentsList.addEventListener(`click`, (evt) => {
       evt.preventDefault();
-
       if (evt.target.tagName !== `BUTTON`) {
         return;
       }
-
       handler(evt.target.id);
     });
 
   }
 
-  static _createTemplate(comments) {
-    return (
-      `<ul class="film-details__comments-list">
-      ${comments.map(CommentsList._createCommentTemplate).join(``)}
-      </ul>`
-    );
+  _createTemplate(status) {
+    switch (status) {
+      case `loading`:
+        return (
+          `<ul class="film-details__comments-list">
+            <li> LOADING </li>
+          </ul>`
+        );
+      case `loaded`:
+        return (
+          `<ul class="film-details__comments-list">
+            ${this._comments.map(CommentsList._createCommentTemplate).join(``)}
+          </ul>`
+        );
+      default: throw new Error(`UNKNOWN STATUS`);
+    }
   }
 
   static _createCommentTemplate(comment) {
@@ -47,12 +53,16 @@ export default class CommentsList extends AbstractComponent {
            <p class="film-details__comment-text">${text}</p>
            <p class="film-details__comment-info">
              <span class="film-details__comment-author">${author}</span>
-             <span class="film-details__comment-day">${date}</span>
+             <span class="film-details__comment-day">${CommentsList._formatCommentDate(date)}</span>
              <button id="${id}" class="film-details__comment-delete">Delete</button>
            </p>
          </div>
       </li>`
     );
+  }
+
+  static _formatCommentDate(date) {
+    return moment(date).fromNow();
   }
 }
 

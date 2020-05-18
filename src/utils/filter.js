@@ -1,4 +1,4 @@
-import {FilterType} from "../consts.js";
+import moment from "moment";
 
 const reduceFilms = (stats, film) => {
   if (film.watchlist) {
@@ -10,26 +10,31 @@ const reduceFilms = (stats, film) => {
   if (film.favorite) {
     stats.favorites.push(film);
   }
+  if (moment(film.watchingDate).diff(moment(), `days`) === 0) {
+    stats.watchedToday.push(film);
+  }
+  if (moment(film.watchingDate).diff(moment(), `weeks`) === 0) {
+    stats.watchedWeek.push(film);
+  }
+  if (moment(film.watchingDate).diff(moment(), `months`) === 0) {
+    stats.watchedMonth.push(film);
+  }
+  if (moment(film.watchingDate).diff(moment(), `years`) === 0) {
+    stats.watchedYear.push(film);
+  }
   return stats;
 };
 
-export const getFilteredFilms = (films, filterType) => {
+export const filterFilms = (films) => {
   const filteredFilms = films.reduce(reduceFilms, {
     watchlist: [],
     history: [],
-    favorites: []
+    favorites: [],
+    watchedToday: [],
+    watchedWeek: [],
+    watchedMonth: [],
+    watchedYear: []
   });
-
-  switch (filterType) {
-    case FilterType.ALL:
-      return films;
-    case FilterType.FAVORITES:
-      return filteredFilms.favorites;
-    case FilterType.HISTORY:
-      return filteredFilms.history;
-    case FilterType.WATCHLIST:
-      return filteredFilms.watchlist;
-    default: return filteredFilms;
-  }
+  return filteredFilms;
 };
 

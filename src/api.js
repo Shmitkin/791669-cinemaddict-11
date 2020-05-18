@@ -39,7 +39,31 @@ export default class API {
     .then(API._checkStatus)
     .then((response) => response.json())
     .then(Comment.parseComments);
+  }
 
+  deleteComment(commentId) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${commentId}`, {
+      method: `DELETE`,
+      headers,
+    })
+      .then(API._checkStatus);
+  }
+
+  addComment(filmId, comment) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`, {
+      method: `POST`,
+      headers,
+      body: JSON.stringify(comment)
+    })
+      .then(API._checkStatus);
   }
 
   static _checkStatus(response) {

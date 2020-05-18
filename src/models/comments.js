@@ -15,6 +15,7 @@ export default class CommentsModel {
 
   setComments(comments) {
     this._comments = Array.from(comments);
+    CommentsModel._callHandlers(this._dataChangeHandlers);
   }
 
   deleteComment(id) {

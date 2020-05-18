@@ -10,6 +10,10 @@ export default class Stat extends AbstractComponent {
   }
 
   _createTemplate() {
-    return `<p>${this._filmsCount} movies inside</p>`;
+    return (
+      `<section class="footer__statistics">
+        <p>${this._filmsCount} movies inside</p>
+      </section>`
+    );
   }
 }
