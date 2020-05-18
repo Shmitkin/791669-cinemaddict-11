@@ -140,6 +140,7 @@ export default class UserStatsController {
         labels,
         datasets: [{
           data,
+          barThickness: 24,
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
           anchor: `start`
@@ -168,7 +169,6 @@ export default class UserStatsController {
               display: false,
               drawBorder: false
             },
-            barThickness: 24
           }],
           xAxes: [{
             ticks: {

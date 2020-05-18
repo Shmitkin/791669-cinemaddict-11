@@ -48,6 +48,11 @@ export default class FilmsController {
     const mostCommentedFilmsController = new MostCommentedController(this._mostCommentedFilmsComponent.getElement(), this._siteFooterElement, this._filmsModel, this._api);
     render(this._container, this._mostCommentedFilmsComponent);
     mostCommentedFilmsController.render();
+
+    if (films.mostCommented.length === 0) {
+      this._mostCommentedFilmsComponent.hide();
+      this._isMostCommentedFilmsHidden = true;
+    }
   }
 
   _update() {
