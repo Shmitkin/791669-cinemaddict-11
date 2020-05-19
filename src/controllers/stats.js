@@ -20,6 +20,7 @@ export default class UserStatsController {
     this._films = null;
     this._statsFilterComponent = null;
     this._statsUserRankComponent = null;
+    this._profileRating = this._filmsModel.getData(`profile-rating`);
 
     this._activeFilterType = FilterType.WATCHED;
 
@@ -36,8 +37,8 @@ export default class UserStatsController {
     this._stats = UserStatsController._getUserStats(this._filmsModel.getData(`user-statistics`));
 
     this._statsFilterComponent = new StatsFilterComponent();
-    this._statsUserRankComponent = new StatsUserRankComponent(this._stats.films.length);
     this._statsInfoComponent = new StatsInfoComponent(this._stats);
+    this._statsUserRankComponent = new StatsUserRankComponent(this._profileRating);
 
     this._statsFilterComponent.setFilterChangeHandler(this._onStatsFilterChange);
 
@@ -45,17 +46,31 @@ export default class UserStatsController {
     render(this._container, this._statsFilterComponent);
     render(this._container, this._statsInfoComponent);
     render(this._container, new StatsChartComponent());
+
+    if (this._profileRating === 0) {
+      this._statsUserRankComponent.hide();
+    }
   }
 
   _updateUserStats() {
     this._films = this._filmsModel.getFilteredFilms(this._activeFilterType);
     this._stats = UserStatsController._getUserStats(this._films);
+
+    const oldProfileRating = this._profileRating;
+    this._profileRating = this._filmsModel.getData(`profile-rating`);
+
+    if (oldProfileRating !== this._profileRating) {
+      const oldStatsUserRankComponent = this._statsUserRankComponent;
+      this._statsUserRankComponent = new StatsUserRankComponent(this._profileRating);
+      replace(this._statsUserRankComponent, oldStatsUserRankComponent);
+
+      if (this._profileRating === 0) {
+        this._statsUserRankComponent.hide();
+      }
+    }
+
     const labels = this._stats.genresCount.map((genre) => genre[0]);
     const data = this._stats.genresCount.map((genre) => genre[1]);
-
-    const oldStatsUserRankComponent = this._statsUserRankComponent;
-    this._statsUserRankComponent = new StatsUserRankComponent(this._stats.films.length);
-    replace(this._statsUserRankComponent, oldStatsUserRankComponent);
 
 
     const oldStatsInfoComponent = this._statsInfoComponent;

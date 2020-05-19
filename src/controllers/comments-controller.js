@@ -42,10 +42,10 @@ export default class CommentsController {
   render(filmCommentsList) {
     this._filmCommentsList = filmCommentsList;
 
-    this._api.getComments(this._filmId).then((comments) => {
+    this._api.getComments(this._filmId)
+    .then((comments) => {
       this._commentsModel.setComments(comments);
     });
-
 
     this._commentsListComponent = new CommentsListComponent({status: `loading`});
     this._commentsTitleComponent = new CommentsTitleComponent(filmCommentsList.length);
@@ -91,10 +91,7 @@ export default class CommentsController {
     const oldNewCommentComponent = this._newCommentComponent;
     const userComment = this._newCommentComponent.getNewCommentData();
     const newComment = CommentModel.parseUserComment(userComment);
-    const newCommentElement = this._newCommentComponent.getElement();
-
-    newCommentElement.querySelector(`.film-details__comment-input`).disabled = true;
-    newCommentElement.querySelector(`.film-details__comment-input`).style.border = ``;
+    this._newCommentComponent.setViewMode(`disabled`);
 
     this._api.addComment(this._filmId, newComment)
     .then((response) => response.json())
@@ -105,9 +102,8 @@ export default class CommentsController {
       replace(this._newCommentComponent, oldNewCommentComponent);
     })
     .catch(() => {
-      CommentsController._shake(newCommentElement);
-      newCommentElement.querySelector(`.film-details__comment-input`).disabled = false;
-      newCommentElement.querySelector(`.film-details__comment-input`).style.border = `3px solid red`;
+      CommentsController._shake(this._newCommentComponent.getElement());
+      this._newCommentComponent.setViewMode(`error`);
     });
   }
 

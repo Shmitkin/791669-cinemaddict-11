@@ -8,8 +8,6 @@ export default class FilmsController {
   constructor(container, filmsModel, siteFooterElement, api) {
     this._filmsModel = filmsModel;
     this._api = api;
-
-
     this._container = container;
     this._siteFooterElement = siteFooterElement;
 
@@ -31,7 +29,6 @@ export default class FilmsController {
       render(this._container, this._filmsListComponent);
       return;
     }
-
 
     this._filmsListComponent = new FilmsListComponent({title: `All movies. Upcoming`, isHidden: true});
     this._filmsController = new FilmsListController(this._filmsListComponent.getElement(), this._siteFooterElement, this._filmsModel, this._api);

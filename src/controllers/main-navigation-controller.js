@@ -7,43 +7,51 @@ export default class MainNavigationController {
   constructor(container, filmsModel, onViewModeChange) {
     this._container = container;
     this._filmsModel = filmsModel;
+    this._onViewModeChange = onViewModeChange;
 
     this._activeFilterType = FilterType.DEFAULT;
     this._mainNavigationComponent = null;
+    this._watchStats = null;
 
     this._update = this._update.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
-
-    this._onViewModeChange = onViewModeChange;
+    this._onStatsClick = this._onStatsClick.bind(this);
 
     this._filmsModel.addDataChangeHandler(this._update);
   }
 
   render() {
-    const watchStats = this._filmsModel.getData(`main-navigation`);
-    this._mainNavigationComponent = new MainNavigationComponent(watchStats, this._activeFilterType);
-
+    this._watchStats = this._filmsModel.getData(`main-navigation`);
+    this._mainNavigationComponent = new MainNavigationComponent(this._watchStats, this._activeFilterType);
     this._mainNavigationComponent.setFilterTypeChangeHandler(this._onFilterChange);
+    this._mainNavigationComponent.setStatsClickHandler(this._onStatsClick);
     render(this._container, this._mainNavigationComponent);
   }
 
-  _onFilterChange(filterType) {
-    if (filterType === FilterType.STATS) {
-      this._onViewModeChange(ViewMode.STATS);
-      return;
+  _update() {
+    const oldWatchStats = this._watchStats;
+    this._watchStats = this._filmsModel.getData(`main-navigation`);
+    console.log(oldWatchStats !== this._watchStats)
+    console.log(oldWatchStats);
+    console.log(this._watchStats);
+
+    if (oldWatchStats !== this._watchStats) {
+      const oldMainNavigationComponent = this._mainNavigationComponent;
+      this._mainNavigationComponent = new MainNavigationComponent(this._watchStats, this._activeFilterType);
+      this._mainNavigationComponent.setFilterTypeChangeHandler(this._onFilterChange);
+      this._mainNavigationComponent.setStatsClickHandler(this._onStatsClick);
+      replace(this._mainNavigationComponent, oldMainNavigationComponent);
     }
+  }
+
+  _onStatsClick() {
+    this._onViewModeChange(ViewMode.STATS);
+  }
+
+  _onFilterChange(filterType) {
     this._filmsModel.setFilter(filterType);
     this._activeFilterType = filterType;
     this._onViewModeChange(ViewMode.DEFAULT);
-  }
-
-  _update() {
-    const watchStats = this._filmsModel.getData(`main-navigation`);
-
-    const oldMainNavigationComponent = this._mainNavigationComponent;
-    this._mainNavigationComponent = new MainNavigationComponent(watchStats, this._activeFilterType);
-    this._mainNavigationComponent.setFilterTypeChangeHandler(this._onFilterChange);
-    replace(this._mainNavigationComponent, oldMainNavigationComponent);
   }
 }
 
